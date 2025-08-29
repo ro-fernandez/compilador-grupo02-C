@@ -1,72 +1,76 @@
-# Plantilla para TP Integrador usando Flex y Bison (C)
+# Compilador en C
 
-## Prerequisitos. 
+## Universidad Nacional de La Matanza
 
-Para poder usar esta plantilla deberá:
+Departamento de Ingeniería e Investigaciones Tecnológicas
 
-1. Instalar [flex](https://github.com/westes/flex)
+## Integrantes del Proyecto
 
-2. Instalar [bison](https://www.gnu.org/software/bison/)
+- Coronati, Augusto Martin
+- Fernández, Rocío Belén
+- Garin, Matías
+- Guardati, Francisco
+- Portillo, Jonathan Leonel
 
-3. Instalar [gcc](https://gcc.gnu.org/)
+## Descripción del Proyecto
 
+El siguiente repositorio contiene el desarrollo de un compilador en C.
 
-### Windows
+### Temas del Proyecto
 
-Descargue los instaladores para Windows de las siguientes páginas:
+#### Temas Comunes del Proyecto
 
-1. [Flex](http://gnuwin32.sourceforge.net/packages/flex.htm)
-2. [Bison](http://gnuwin32.sourceforge.net/packages/bison.htm)
-3. [GCC](https://sourceforge.net/projects/mingw/files/)
-4. Siga el siguiente [instructivo](https://issuu.com/lilianachisaguano/docs/instalacion_de_flex__bison_y_mingw)
+- While
+- If / if - else
+- Asignaciones
+- Operaciones Aritméticas
+- Tipos de datos: Float (32 bits), Int (16 bits), String
+- Declaración de variables
+- Comentarios
+- Entrada y Salida
+- Condiciones
+- Tabla de Símbolos
 
-* Tanto para los binarios instalados flex y bison, es recomendable instalarlos en C:\GnuWin32 y luego agregar "C:\GnuWin32\bin" en variables de entorno -> variables del sistema -> editar variable path y agregar a la lista.
-* Lo mismo para gcc, agregar el path donde sea instalado (ej: C:\MinGW\bin) a las variables del sistema en la variable path.
+#### Temas Especiales del Proyecto
 
-### Ubuntu
+- triangleAreaMaximum: Se desea implementar una función llamada triangleAreaMaximum que, dadas las coordenadas de dos triángulos en el plano cartesiano, determine cuál de los dos tiene mayor área y devuelva dicho valor numérico.
+- convDate: Se desea implementar una función llamada convDate que convierta una fecha representada por tres números enteros (día, mes y año) en un único valor numérico con el formato YYYYMMDD.
 
-1. Abra una terminal
-2. Ejecute los siguientes comandos:
+### Entregas del Proyecto
 
-```sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get install flex
-sudo apt-get install bison
-sudo apt install gcc
-```
+#### Primera Entrega
 
-3. Verifique la instalación ha sido exitosa ejecutándo los siguientes comandos
+**Objetivo**: Realizar un analizador léxico y sintáctico con las herramientas provistas.
 
-```
-which flex
-which bison
-which gcc
-```
+La entrega 1.0.0 incluirá:
 
-### Mac
+- El archivo lexer con la definición de todos los componentes léxicos.
+- El archivo parser con la definición de la gramática del lenguaje y la lógica de generación de la tabla de símbolos.
+- El archivo symbol-table.txt deberá contener la lista de variables y constantes con sus respectivos atributos.
+- El archivo ejecutable lyc-compiler-1.0.0.
 
-1. Abra una terminal
-2. Ejecute los siguientes comandos:
+#### Segunda Entrega
 
-```sudo apt-get update
-brew install flex
-brew install bison
-brew install gcc
-```
-3. Verifique la instalación ha sido exitosa ejecutándo los siguientes comandos
+**Objetivo:** Realizar un generador de código intermedio utilizando el archivo parser generado en la primera entrega.
 
-```
-which flex
-which bison
-which gcc
-```
+La entrega 2.0.0 incluirá:
 
-## Ejecución  
+- El archivo lexer con la definición de todos los componentes léxicos.
+- El archivo parser con la definición de la gramática del lenguaje y la lógica de generación de la tabla de símbolos.
+- El archivo symbol-table.txt deberá contener la lista de variables y constantes con sus respectivos atributos.
+- El archivo intermediate-code.txt y que contiene el código intermedio generado.
+- El archivo ejecutable lyc-compiler-2.0.0.
 
-### Windows
+#### Entrega Final
 
-Ejecutar el archivo run.bat
+***Objetivo***: Realizar un compilador utilizando el archivo generado en la segunda entrega. 
+El programa ejecutable deberá procesar el archivo de entrada (test.txt), compilarlo y ejecutarlo.
 
-### Linux / Unix
+La entrega 3.0.0 incluirá:
 
-Ejecutar el archivo run.sh
+- El archivo lexer con la definición de todos los componentes léxicos.
+- El archivo parser con la definición de la gramática del lenguaje y la lógica de generación de la tabla de símbolos.
+- El archivo symbol-table.txt deberá contener la lista de variables y constantes con sus respectivos atributos.
+- El archivo intermediate-code.txt y que contiene el código intermedio generado.
+- El archivo ejecutable lyc-compiler-3.0.0.
+
