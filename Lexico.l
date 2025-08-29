@@ -83,8 +83,8 @@ COMENTARIO_ANID // A DEFINIR
 {OP_MUL}    {printf("\nMultiplicacion: %s\n", yytext);return OP_MUL;}
 {OP_RES}    {printf("\nResta: %s\n", yytext);return OP_RES;}
 {OP_DIV}    {printf("\nDivision: %s\n", yytext);return OP_DIV;}
-{PA}      {printf("\nParAbre: %s\n", yytext);return PA;}
-{PC}      {printf("\nParCierra: %s\n", yytext);return PC;}
+{PAR_A}      {printf("\nParAbre: %s\n", yytext);return PAR_A;}
+{PAR_C}      {printf("\nParCierra: %s\n", yytext);return PAR_C;}
 "\n"          
 "\t"
 "\n\t"

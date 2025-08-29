@@ -63,7 +63,7 @@ La entrega 2.0.0 incluirá:
 
 #### Entrega Final
 
-***Objetivo***: Realizar un compilador utilizando el archivo generado en la segunda entrega. 
+**Objetivo**: Realizar un compilador utilizando el archivo generado en la segunda entrega. 
 El programa ejecutable deberá procesar el archivo de entrada (test.txt), compilarlo y ejecutarlo.
 
 La entrega 3.0.0 incluirá:
