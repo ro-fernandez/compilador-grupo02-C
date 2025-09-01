@@ -19,11 +19,28 @@ FILE  *yyin;
 %token CTE_STRING
 %token PAR_A
 %token PAR_C
+%token COR_A
+%token COR_C
+%token LLA_A
+%token LLA_C
+%token PUNTO
+%token COMA
+%token PyC
+%token DOS_PUNTOS
 %token OP_AS
 %token OP_SUM
 %token OP_MUL
 %token OP_RES
 %token OP_DIV
+%token OP_AND
+%token OP_OR
+%token OP_NOT
+%token CMP_EQ
+%token CMP_NE
+%token CMP_LT
+%token CMP_LE
+%token CMP_GT
+%token CMP_GE
 %token IF
 %token ELSE
 %token WHILE
@@ -33,6 +50,8 @@ FILE  *yyin;
 %token T_STRING
 %token READ
 %token WRITE
+%token TRI_AR_MAX
+%token CONV_D
 
 %%
 sentencia:  	   
