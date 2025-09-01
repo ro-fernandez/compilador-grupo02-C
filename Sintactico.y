@@ -13,15 +13,26 @@ FILE  *yyin;
 
 %}
 
-%token CTE_INT
 %token ID
+%token CTE_INT
+%token CTE_REAL
+%token CTE_STRING
+%token PAR_A
+%token PAR_C
 %token OP_AS
 %token OP_SUM
 %token OP_MUL
 %token OP_RES
 %token OP_DIV
-%token PAR_A
-%token PAR_C
+%token IF
+%token ELSE
+%token WHILE
+%token FOR
+%token T_INT
+%token T_FLOAT
+%token T_STRING
+%token READ
+%token WRITE
 
 %%
 sentencia:  	   
