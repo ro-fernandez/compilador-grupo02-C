@@ -88,6 +88,7 @@ READ            "read"
 WRITE           "write"
 TRI_AR_MAX      "triangleAreaMaximum"
 CONV_D          "convDate"
+INIT            "init"
 
 %%
 
@@ -130,6 +131,7 @@ CONV_D          "convDate"
 {WRITE}         { printf("\nWrite\n",yytext); return WRITE;}
 {TRI_AR_MAX}    { printf("\nTrianguloAreaMax\n",yytext); return TRI_AR_MAX;}
 {CONV_D}        { printf("\nConvDate\n",yytext); return CONV_D;}
+{INIT}        { printf("\nINIT\n",yytext); return INIT;}
 {COM_A}    { /* ignorar comentarios */ }
 {COM_C}    { /* ignorar comentarios */ }
 {COMENTARIO}    { /* ignorar comentarios */ }

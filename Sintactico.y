@@ -52,6 +52,7 @@ FILE  *yyin;
 %token WRITE
 %token TRI_AR_MAX
 %token CONV_D
+%token INIT
 
 %%
 sentencia:  	   
