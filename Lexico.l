@@ -73,6 +73,8 @@ CTE_REAL        ({DIGITO}*{PUNTO}{DIGITO}+)|(\(-{DIGITO}*{PUNTO}{DIGITO}+\))
 CTE_INT         {DIGITO}+
 CTE_STRING      \"([^\\"]|\\.)*\"
 ID              "_"({LETRA}({LETRA}|{DIGITO})*)
+COMENTARIO_ANID {COM_A}([^+]|\+[^#])*{COMENTARIO}([^+]|\+[^#])*{COM_C}
+
 
 /* COMENTARIO_ANID: a definir más adelante */
 
@@ -131,10 +133,11 @@ INIT            "init"
 {WRITE}         { printf("\nWrite\n",yytext); return WRITE;}
 {TRI_AR_MAX}    { printf("\nTrianguloAreaMax\n",yytext); return TRI_AR_MAX;}
 {CONV_D}        { printf("\nConvDate\n",yytext); return CONV_D;}
-{INIT}        { printf("\nINIT\n",yytext); return INIT;}
-{COM_A}    { /* ignorar comentarios */ }
-{COM_C}    { /* ignorar comentarios */ }
-{COMENTARIO}    { /* ignorar comentarios */ }
+{INIT}          { printf("\nINIT\n",yytext); return INIT;}
+{COM_A}         { /* ignorar comentarios */ }
+{COM_C}         { /* ignorar comentarios */ }
+{COMENTARIO}    {printf("Comentario: %s\n", yytext);}
+{COMENTARIO_ANID} {printf("Comentario anidado: %s\n", yytext);}
 [ \t\r\n]+      { /* ignorar */ }
 .               { printf("ERROR LEXICO : Caracter no reconocido: %s\n", yytext); exit(0); }
 
