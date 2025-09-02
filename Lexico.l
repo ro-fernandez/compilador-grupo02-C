@@ -17,9 +17,9 @@ char *yyltext;
 FILE *yyin;
 int yyerror(void);
 
-int validateStringLength(char* str);
-int validateFloatRange(char* str);
-int validateIntRange(char* str);
+void validateStringLength(char* str);
+void validateFloatRange(char* str);
+void validateIntRange(char* str);
 
 %}
 
@@ -93,9 +93,9 @@ INIT            "init"
 %%
 
 {ID}            { printf("\nIdentificador: %s\n", yytext); return ID; }
-{CTE_INT}       { if(validateIntRange(yytext)){printf("\nConstanteEntera: %s\n", yytext); return CTE_INT;}}
-{CTE_REAL}      { if(validateFloatRange(yytext)){printf("\nConstanteFlotante: %s\n", yytext); return CTE_REAL;}}
-{CTE_STRING}    { if(validateStringLength(yytext)){printf("\nConstanteString: %s\n", yytext); return CTE_STRING;}}
+{CTE_INT}       { validateIntRange(yytext);printf("\nConstanteEntera: %s\n", yytext); return CTE_INT;}
+{CTE_REAL}      { validateFloatRange(yytext);printf("\nConstanteFlotante: %s\n", yytext); return CTE_REAL;}
+{CTE_STRING}    { validateStringLength(yytext);printf("\nConstanteString: %s\n", yytext); return CTE_STRING;}
 {PAR_A}         { printf("\nParAbre: %s\n", yytext); return PAR_A; }
 {PAR_C}         { printf("\nParCierra: %s\n", yytext); return PAR_C; }
 {COR_A}         { printf("\nCorAbre: %s\n", yytext); return COR_A; }
@@ -141,16 +141,25 @@ INIT            "init"
 %%
 
 
-int validateIntRange(char* str){
-    int value = atoi(str);
-    return (value >= INT_MIN && value <= INT_MAX);
+void validateIntRange(char* str){
+    int val = atoi(str);
+    if(val < INT_MIN || val > INT_MAX){
+        printf("\nERROR: Constante entera %s fuera de rango\n", yytext);
+        exit(1);
+    }
 }
 
-int validateFloatRange(char* str){
-    float value = atof(str);
-    return (value >= FLOAT_MIN && value <= FLOAT_MAX);
+void validateFloatRange(char* str){
+    float val = atof(str);
+    if(val < FLOAT_MIN || val > FLOAT_MAX){
+        printf("\nERROR: Constante flotante %s fuera de rango\n", yytext);
+        exit(1);
+    }
 }
 
-int validateStringLength(char* str){
-    return (strlen(str) - 2 <= MAX_STR_LEN);
+void validateStringLength(char* str){
+        if(strlen(str) - 2 > MAX_STR_LEN) {
+        printf("\nERROR: String %s tiene longitud mayor a la permitida de %d caracteres\n", yytext, MAX_STR_LEN);
+        exit(1);
+    }
 }
