@@ -13,6 +13,7 @@ FILE  *yyin;
 
 %}
 
+/* Tokens */
 %token ID
 %token CTE_INT
 %token CTE_REAL
@@ -54,31 +55,53 @@ FILE  *yyin;
 %token CONV_D
 %token INIT
 
+/* Start Symbol */
+%start programa
+
 %%
+
+programa:
+    sentencia ;
+
 sentencia:  	   
-	asignacion {printf(" FIN\n");} ;
+	  asignacion {printf(" FIN\n");} ;
 
 asignacion: 
-          ID OP_AS expresion {printf("    ID = Expresion es ASIGNACION\n");}
+    ID OP_AS expresion {printf("    ID = Expresion es ASIGNACION\n");}
 	  ;
 
 expresion:
-         termino {printf("    Termino es Expresion\n");}
-	 |expresion OP_SUM termino {printf("    Expresion+Termino es Expresion\n");}
-	 |expresion OP_RES termino {printf("    Expresion-Termino es Expresion\n");}
-	 ;
+    termino {printf("    Termino es Expresion\n");}
+    |expresion OP_SUM termino {printf("    Expresion+Termino es Expresion\n");}
+    |expresion OP_RES termino {printf("    Expresion-Termino es Expresion\n");}
+    ;
 
 termino: 
-       factor {printf("    Factor es Termino\n");}
-       |termino OP_MUL factor {printf("     Termino*Factor es Termino\n");}
-       |termino OP_DIV factor {printf("     Termino/Factor es Termino\n");}
-       ;
+    factor {printf("    Factor es Termino\n");}
+    |termino OP_MUL factor {printf("     Termino*Factor es Termino\n");}
+    |termino OP_DIV factor {printf("     Termino/Factor es Termino\n");}
+    ;
 
 factor: 
-      ID {printf("    ID es Factor \n");}
-      | CTE_INT {printf("    CTE_INT es Factor\n");}
-	| PAR_A expresion PAR_C {printf("    Expresion entre parentesis es Factor\n");}
-     	;
+    ID {printf("    ID es Factor \n");}
+    | CTE_INT {printf("    CTE_INT es Factor\n");}
+    | CTE_REAL {printf("    CTE_REAL es Factor\n");}
+	  | PAR_A expresion PAR_C {printf("    Expresion entre parentesis es Factor\n");}
+    ;
+
+operador_logico:
+    OP_AND {printf("    OP_AND es Operador Logico\n");}
+    | OP_OR {printf("    OP_OR es Operador Logico\n");}
+    ;
+
+comparador:
+    CMP_EQ {printf("    CMP_EQ es Comparador\n");}
+    | CMP_NE {printf("    CMP_NE es Comparador\n");}
+    | CMP_LT {printf("    CMP_LT es Comparador\n");}
+    | CMP_LE {printf("    CMP_LE es Comparador\n");}
+    | CMP_GT {printf("    CMP_GT es Comparador\n");}
+    | CMP_GE {printf("    CMP_GE es Comparador\n");}
+
 %%
 
 
@@ -98,9 +121,9 @@ int main(int argc, char *argv[])
 	fclose(yyin);
         return 0;
 }
-int yyerror(void)
-     {
-       printf("Error Sintactico\n");
-	 exit (1);
-     }
 
+int yyerror(void)
+{
+    printf("Error Sintactico\n");
+    exit (1);
+}
