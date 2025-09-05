@@ -1,5 +1,3 @@
-// Usa Lexico_ClasePractica
-//Solo expresiones sin ()
 %{
 #include <stdio.h>
 #include <stdlib.h>
@@ -61,14 +59,27 @@ FILE  *yyin;
 %%
 
 programa:
-    sentencia ;
+    bloque
+    ;
+
+bloque:
+    sentencia {printf("    Sentencia es Bloque\n");}
+    | bloque sentencia {printf("    Bloque Sentencia es Bloque\n");}
+    ;
 
 sentencia:  	   
-	  asignacion {printf(" FIN\n");} ;
+	asignacion {printf(" Asignacion\n");}
+    | while {printf(" While\n");}
+    ;
+
 
 asignacion: 
     ID OP_AS expresion {printf("    ID = Expresion es ASIGNACION\n");}
-	  ;
+	;
+
+while:
+    WHILE PAR_A condicion PAR_C LLA_A bloque LLA_C
+    ;
 
 expresion:
     termino {printf("    Termino es Expresion\n");}
@@ -86,12 +97,17 @@ factor:
     ID {printf("    ID es Factor \n");}
     | CTE_INT {printf("    CTE_INT es Factor\n");}
     | CTE_REAL {printf("    CTE_REAL es Factor\n");}
-	  | PAR_A expresion PAR_C {printf("    Expresion entre parentesis es Factor\n");}
+	| PAR_A expresion PAR_C {printf("    Expresion entre parentesis es Factor\n");}
     ;
 
-operador_logico:
-    OP_AND {printf("    OP_AND es Operador Logico\n");}
-    | OP_OR {printf("    OP_OR es Operador Logico\n");}
+condicion:
+    comparacion {printf("    Comparacion es Condicion\n");}
+    | comparacion operador_logico comparacion {printf("    Comparacion Operador_Logico Comparacion es Condicion\n");}
+    | OP_NOT comparacion {printf("    OP_NOT Comparacion es Condicion\n");}
+    ;
+
+comparacion:
+    expresion comparador expresion {printf("    Expresion Comparador Expresion es Comparacion\n");}
     ;
 
 comparador:
@@ -101,6 +117,11 @@ comparador:
     | CMP_LE {printf("    CMP_LE es Comparador\n");}
     | CMP_GT {printf("    CMP_GT es Comparador\n");}
     | CMP_GE {printf("    CMP_GE es Comparador\n");}
+
+operador_logico:
+    OP_AND {printf("    OP_AND es Operador Logico\n");}
+    | OP_OR {printf("    OP_OR es Operador Logico\n");}
+    ;
 
 %%
 
