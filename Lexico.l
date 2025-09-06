@@ -68,8 +68,9 @@ CMP_GE              ">="
 /* Comentarios Tipo #+ ... +# */
 COM_A               "#+"
 COM_C               "+#"
-COMENTARIO          {COM_A}([^+]|\+[^#])*{COM_C}
-COMENTARIO_ANID     {COM_A}([^+]|\+[^#])*{COMENTARIO}([^+]|\+[^#])*{COM_C}
+COMENTARIO          {COM_A}.*{COM_C}     /* {COM_A}([^+]|\+[^#])*{COM_C} */
+COMENTARIO_ANID     {COM_A}.*{COMENTARIO}.*{COM_C}      /* {COM_A}([^+]|\+[^#])*{COMENTARIO}([^+]|\+[^#])*{COM_C} */
+
 
 /* Literales y Otros */
 CTE_REAL            ({DIGITO}*{PUNTO}{DIGITO}+)|(\(-{DIGITO}*{PUNTO}{DIGITO}+\))
@@ -82,9 +83,9 @@ IF                  "if"
 ELSE                "else"
 WHILE               "while"
 FOR                 "for"
-T_INT               "int"
-T_FLOAT             "float"
-T_STRING            "string"
+T_INT               "Int"
+T_FLOAT             "Float"
+T_STRING            "String"
 READ                "read"
 WRITE               "write"
 TRI_AR_MAX          "triangleAreaMaximum"
@@ -133,8 +134,8 @@ INIT                "init"
 {TRI_AR_MAX}        { printf("\nTrianguloAreaMax: %s\n",yytext); return TRI_AR_MAX; }
 {CONV_D}            { printf("\nConvDate: %s\n",yytext); return CONV_D; }
 {INIT}              { printf("\nInit: %s\n",yytext); return INIT; }
-{COMENTARIO}        { printf("Comentario: %s\n", yytext); }
-{COMENTARIO_ANID}   { printf("Comentario Anidado: %s\n", yytext); }
+{COMENTARIO}        { printf("\nComentario: %s\n", yytext); }
+{COMENTARIO_ANID}   { printf("\nComentario Anidado: %s\n", yytext); }
 {COM_A}
 {COM_C}
 "\n"

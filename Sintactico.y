@@ -59,7 +59,9 @@ FILE  *yyin;
 %%
 
 programa:
-    bloque
+    init {printf("    Init es Programa\n");}
+    | bloque {printf("    Bloque es Programa\n");}
+    | init bloque {printf("    Init Bloque es Programa\n");}
     ;
 
 bloque:
@@ -67,11 +69,46 @@ bloque:
     | bloque sentencia {printf("    Bloque Sentencia es Bloque\n");}
     ;
 
+init:
+    INIT LLA_A declaraciones LLA_C {printf("    INIT LLA_A Declaraciones LLA_C es Init\n");}
+    ;
+
+declaraciones:
+    declaracion                 {printf("    Declaracion es Declaraciones\n");}
+    | declaraciones declaracion    {printf("    Declaraciones Declaracion es Declaraciones\n");}
+    ;
+
+declaracion:
+    ids DOS_PUNTOS tipo_dato {printf("    Ids DOS_PUNTOS Tipo_dato es Declaracion\n");}
+    ;
+
+ids:
+    ID              {printf("    ID es ids\n");}
+    | ids COMA ID {printf("    ids COMA ID es ids\n");}
+    ;
+
+tipo_dato:
+    T_STRING {printf("    T_STRING es Tipo_dato\n");}
+    | T_FLOAT {printf("    T_FLOAT es Tipo_dato\n");}
+    | T_INT   {printf("    T_INT es Tipo_dato\n"); }
+    ;
+
+leer:
+    READ PAR_A ID PAR_C     {printf("    READ PAR_A ID PAR_C es Leer\n");}
+    ;
+
+escribir:
+    WRITE PAR_A CTE_STRING PAR_C        {printf("    WRITE PAR_OP CTE_STRING PAR_CL es Escribir\n");}
+    | WRITE PAR_A expresion PAR_C       {printf("    WRITE PAR_OP Expresion PAR_CL es Escribir\n");}
+    ;
+
 sentencia:  	   
 	asignacion {printf(" Asignacion\n");}
     | while {printf(" While\n");}
     | triangleAreaMax {printf("   triangleAreaMax es Sentencia\n");}
     | convDate  {printf("   convDate es Sentencia\n");}
+    | leer  {printf("   Leer es Sentencia\n");}
+    | escribir  {printf("   Escribir es Sentencia\n");}
     ;
 
 
@@ -79,6 +116,7 @@ asignacion:
     ID OP_AS expresion {printf("    ID = Expresion es ASIGNACION\n");}
     | ID OP_AS triangleAreaMax {printf("    ID = triangleAreaMax es ASIGNACION\n");}
     | ID OP_AS convDate {printf("    ID = convDate es ASIGNACION\n");}
+    | ID OP_AS CTE_STRING {printf("    ID = CTE_STRING es ASIGNACION\n");}
 	;
 
 while:
