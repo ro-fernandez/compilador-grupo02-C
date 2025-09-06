@@ -4,3 +4,14 @@ while (_a > _b OR _c > _b)
 {
     _c->_d*(_e-21)/1000
 }
+
+while(_c < _b)
+{
+    _d -> _e
+}
+
+triangleAreaMaximum([_a,2.3,6];[1.0,2,_c])
+_a -> triangleAreaMaximum([_a,2.3,6];[1.0,2,_c])
+
+convDate(05-19-2025)
+_b -> convDate(05-09-2025)

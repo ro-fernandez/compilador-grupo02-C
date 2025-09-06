@@ -70,11 +70,15 @@ bloque:
 sentencia:  	   
 	asignacion {printf(" Asignacion\n");}
     | while {printf(" While\n");}
+    | triangleAreaMax {printf("   triangleAreaMax es Sentencia\n");}
+    | convDate  {printf("   convDate es Sentencia\n");}
     ;
 
 
 asignacion: 
     ID OP_AS expresion {printf("    ID = Expresion es ASIGNACION\n");}
+    | ID OP_AS triangleAreaMax {printf("    ID = triangleAreaMax es ASIGNACION\n");}
+    | ID OP_AS convDate {printf("    ID = convDate es ASIGNACION\n");}
 	;
 
 while:
@@ -121,6 +125,28 @@ comparador:
 operador_logico:
     OP_AND {printf("    OP_AND es Operador Logico\n");}
     | OP_OR {printf("    OP_OR es Operador Logico\n");}
+    ;
+
+triangleAreaMax:
+    TRI_AR_MAX PAR_A triangulo PyC triangulo PAR_C {printf("    TRI_AR_MAX es triangleAreaMax\n");}
+    ;
+
+triangulo:
+    COR_A coordenada COMA coordenada COMA coordenada COR_C {printf("    COR_A coordenada COMA coordenada COMA coordenada COR_C es triangulo\n");}
+    ;
+
+coordenada:
+    CTE_INT     {printf("    CTE_INT es coordenada\n");}
+    | CTE_REAL  {printf("    CTE_REAL es coordenada\n");}
+    | ID        {printf("    ID es coordenada\n");}
+    ;
+
+convDate:
+    CONV_D PAR_A fecha PAR_C {printf("    CONV_D PAR_A fecha PAR_C es convDate\n");}
+    ;
+
+fecha:
+    CTE_INT OP_RES CTE_INT OP_RES CTE_INT {printf("    CTE_INT OP_RES CTE_INT OP_RES CTE_INT es fecha\n");}
     ;
 
 %%
