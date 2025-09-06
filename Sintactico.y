@@ -109,6 +109,8 @@ sentencia:
     | convDate  {printf("   convDate es Sentencia\n");}
     | leer  {printf("   Leer es Sentencia\n");}
     | escribir  {printf("   Escribir es Sentencia\n");}
+    | if {printf("if es Sentencia\n");}
+    | else {printf("else es Sentencia\n");}
     ;
 
 
@@ -121,6 +123,14 @@ asignacion:
 
 while:
     WHILE PAR_A condicion PAR_C LLA_A bloque LLA_C
+    ;
+
+if:
+    IF PAR_A condicion PAR_C LLA_A bloque LLA_C
+    ;
+    
+else:
+    IF PAR_A condicion PAR_C LLA_A bloque LLA_C ELSE LLA_A bloque LLA_C   
     ;
 
 expresion:

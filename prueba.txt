@@ -1,30 +1,13 @@
 #+_c->_d*(_e-21)/451561#+561+#561561566+#
 
-init {
-    _a1, _b1 : Float
-    _var1 : Int
-    _p1, _p2, _p3 : String
-}
-
-read(_a) #+ variable +#
-write("test")  #+ cte string +#
-write(_var1)  #+ variable numérica +#
-write(1 + _var1)  #+ Expresión +#
-
-while (_a > _b OR _c > _b)
+if (_a > _b OR _c > _b)
 {
-    _c->_d*(_e-21)/1000
+    if(_a == 2)
+	{
+		_a -> 1
+	}
 }
-
-while(_c < _b)
+else
 {
-    _d -> _e
+	_A -> "a"
 }
-
-triangleAreaMaximum([_a,2.3,6];[1.0,2,_c])
-_a -> triangleAreaMaximum([_a,2.3,6];[1.0,2,_c])
-
-convDate(05-19-2025)
-_b -> convDate(05-09-2025)
-
-_d -> "prueba \"string\" en variable"  #+ "test"+#
