@@ -1,0 +1,60 @@
+#include "Tabla.h"
+
+void crearLista(lista* lista)
+{
+    *lista = NULL;
+}
+
+t_nodo* crearNodo()
+{
+    t_nodo* nodo;
+
+    nodo = (t_nodo*) malloc(sizeof(t_nodo));
+
+    if(!nodo)
+    {
+        return NULL;
+    }
+
+    return nodo;
+}
+
+void copiarLexema(t_lexema* destino, t_lexema origen)
+{
+    strcpy(destino->nombre; origen.nombre);
+    strcpy(destino->tipo; origen.tipo);
+    strcpy(destino->valor; origen.valor);
+    strcpy(destino->tam; origen.tam);
+}
+
+int insertarSimbolo(lista* lista, t_lexema lex)
+{
+    t_nodo nuevo = crearNodo();
+
+    If(!nuevo)
+    {
+        return -1;
+    }
+
+    while(*lista)
+    {
+        lista = &(*lista)->siguiente;
+    }
+
+    copiarLexema(&(nuevo->lex), lex)
+}
+
+int buscarSimbolo(lista* lista, t_lexema* lex, char* lexBuscado)
+{
+    while(*lista && strcmp((*lista)->lex.nombre, lexBuscado.nombre) != 0)
+    {
+        lista = &(*lista)->siguiente
+    }
+
+    if(!lista)
+    {
+        return 0;
+    }
+
+    return 1;
+}

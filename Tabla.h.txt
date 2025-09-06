@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define TAM_MAX 200
+
+typedef struct
+{
+    char nombre[TAM_MAX];
+    char tipo[TAM_MAX];
+    char valor[TAM_MAX];
+    char tam[TAM_MAX];
+
+}t_lexema;
+
+typedef struct Nodo
+{
+    t_lexema lex;
+    struct Nodo* siguiente;
+}t_nodo;
+
+typedef t_nodo* lista;
+
+void crearLista(lista* lista);
+
+t_nodo* crearNodo();
+
+/* Se inserta al final */
+int insertarSimbolo(lista* lista, t_lexema lex);
+
+int buscarSimbolo(lista* lista, t_lexema* lex, char* lexBuscado); 
+
+t_nodo* obtenerSimbolo(lista* lista, t_lexema* lex); 
+
+void mostrarTabla(lista* lista);
+
+void vaciarLista(lista* lista);
+
+void copiarLexema(t_lexema* destino, t_lexema origen);
