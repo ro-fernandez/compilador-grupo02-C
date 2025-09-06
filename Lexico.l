@@ -68,14 +68,14 @@ CMP_GE              ">="
 /* Comentarios Tipo #+ ... +# */
 COM_A               "#+"
 COM_C               "+#"
-COMENTARIO          {COM_A}.*{COM_C}     /* {COM_A}([^+]|\+[^#])*{COM_C} */
-COMENTARIO_ANID     {COM_A}.*{COMENTARIO}.*{COM_C}      /* {COM_A}([^+]|\+[^#])*{COMENTARIO}([^+]|\+[^#])*{COM_C} */
+COMENTARIO          {COM_A}.*{COM_C}
+COMENTARIO_ANID     {COM_A}.*{COMENTARIO}.*{COM_C}
 
 
 /* Literales y Otros */
 CTE_REAL            ({DIGITO}*{PUNTO}{DIGITO}+)|(\(-{DIGITO}*{PUNTO}{DIGITO}+\))
 CTE_INT             {DIGITO}+
-CTE_STRING          {COMILLAS}([^\{COMILLAS}]|\\.)*{COMILLAS}
+CTE_STRING          {COMILLAS}([^"\\]|\\.)*{COMILLAS}
 ID                  {GUION_BAJO}({LETRA}({LETRA}|{DIGITO})*)
 
 /* Palabras Reservadas */

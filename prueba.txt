@@ -27,4 +27,4 @@ _a -> triangleAreaMaximum([_a,2.3,6];[1.0,2,_c])
 convDate(05-19-2025)
 _b -> convDate(05-09-2025)
 
-_d -> "hola"  #+ "sad" +#
+_d -> "prueba \"string\" en variable"  #+ "test"+#
