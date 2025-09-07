@@ -22,6 +22,7 @@ void validateStringLength(char* str);
 void validateFloatRange(char* str);
 void validateIntRange(char* str);
 void insertInSymbolTable(char* lex, TipoSimbolo tipo);
+void eliminar_caracter(char *s, char c);
 
 extern lista tabla_simbolos;
 
@@ -190,19 +191,41 @@ void insertInSymbolTable(char* lex, TipoSimbolo tipo)
     char lexValue[TAM_MAX];
     t_lexema newLexema;
 
+    strcpy(lexValue, lex);
+
     switch (tipo)
     {
         case SIMBOLO_ID:
-            strcpy(newLexema.tipo, "SIMBOLO_ID");
+            strcpy(newLexema.tipo, "");
+            strcpy(newLexema.valor, "");
+
             break;
         case SIMBOLO_INT:
-            strcpy(newLexema.tipo, "SIMBOLO_INT");
+            strcpy(newLexema.tipo, "CONST_INT");
+            strcpy(newLexema.valor, lexValue);
+
             break;
         case SIMBOLO_REAL:
-            strcpy(newLexema.tipo, "SIMBOLO_REAL");
+        
+            if (lex[0] == '.') 
+            {
+                strcpy(lexValue, "0");
+                strcat(lexValue, lex);
+            } 
+            else if (lex[strlen(lex) - 1] == '.') 
+            {
+                strcpy(lexValue, lex);
+                strcat(lexValue, "0");
+            }
+            strcpy(newLexema.tipo, "CONST_REAL");
+            strcpy(newLexema.valor, lexValue);
+
             break;
         case SIMBOLO_STRING:
-            strcpy(newLexema.tipo, "SIMBOLO_STRING");
+            strcpy(newLexema.tipo, "CONST_STR");
+            eliminar_caracter(lexValue, '"');
+            strcpy(newLexema.valor,  lexValue);
+
             break;
         default:
             break;
@@ -210,10 +233,24 @@ void insertInSymbolTable(char* lex, TipoSimbolo tipo)
 
     strcpy(newLexema.nombre, "_");
     strcat(newLexema.nombre, lexValue);
-
-    strcpy(newLexema.valor, lexValue);
-
     strcpy(newLexema.longitud, "");
 
     insertarSimboloSinDuplicados(&tabla_simbolos, newLexema);
+}
+
+void eliminar_caracter(char *s, char c)
+{
+    int i = 0, j = 0;
+
+    while (s[j])
+    {
+        if (s[j]!=c) 
+        {   
+            s[i++] = s[j];
+        }
+
+        j++;       
+    }
+
+    s[i]=0;
 }

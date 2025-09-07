@@ -98,7 +98,7 @@ t_nodo* obtenerSimbolo(lista* lista, char* lexBuscado)
         return NULL;
     }
 
-    return lista;
+    return *lista;
 }
 
 void mostrarTabla(lista* lista)

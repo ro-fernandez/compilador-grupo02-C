@@ -37,7 +37,7 @@ t_nodo* crearNodo();
 
 int insertarSimbolo(lista* lista, t_lexema lex);
 
-int insertarSimboloSinDuplicados(lista* lista, t_lexema lex);
+int insertarSimboloSinDuplicados(lista* lista, t_lexema lex);    
 
 int buscarSimbolo(lista* lista, char* lexBuscado); 
 
