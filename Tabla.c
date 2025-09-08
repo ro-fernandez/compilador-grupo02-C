@@ -63,10 +63,13 @@ int insertarSimboloSinDuplicados(lista* lista, t_lexema lex)
         lista = &(*lista)->siguiente;
     }
 
-    copiarLexema(&(nuevo->lex), lex);
+    if(!*lista)
+    {
+        copiarLexema(&(nuevo->lex), lex);
 
-    nuevo->siguiente = NULL;
-    *lista = nuevo;
+        nuevo->siguiente = NULL;
+        *lista = nuevo;
+    }
 
     return 1;
 }
@@ -105,18 +108,18 @@ void mostrarTabla(lista* lista)
 {
     t_nodo* actual = *lista;
 
-    if (!actual)
+    if(!actual)
     {
         printf("La tabla está vacía.\n");
         return;
     }
 
-    printf("\n%-20s %-20s %-20s %-20s\n", "NOMBRE", "TIPO", "VALOR", "LONGITUD");
-    printf("--------------------------------------------------------------------------------\n");
+    printf("\n%-40s %-15s %-40s %-10s\n", "NOMBRE", "TIPO", "VALOR", "LONGITUD");
+    printf("------------------------------------------------------------------------------------------------------------\n");
 
-    while (actual)
+    while(actual)
     {
-        printf("%-20s %-20s %-20s %-20s\n",
+        printf("%-40s %-15s %-40s %-10s\n",
                actual->lex.nombre,
                actual->lex.tipo,
                actual->lex.valor,
@@ -135,4 +138,37 @@ void vaciarLista(lista* lista)
         *lista = eliminado->siguiente;
         free(eliminado);
     }
+}
+
+void guardarYVaciarLista(lista* lista, char* nombre_archivo)
+{
+    t_nodo* actual = *lista;
+    t_nodo* eliminado;
+
+    FILE* archivo = fopen(nombre_archivo, "wt");
+
+    if(!archivo || !actual)
+    {
+        printf("\nError al intentar guardar en la tabla de simbolos");
+        return;
+    }
+
+    fprintf(archivo, "\n%-40s %-15s %-40s %-10s\n", "NOMBRE", "TIPO", "VALOR", "LONGITUD");
+    fprintf(archivo, "------------------------------------------------------------------------------------------------------------\n");
+
+    while(actual)
+    {
+        fprintf(archivo, "%-40s %-15s %-40s %-10s\n",
+               actual->lex.nombre,
+               actual->lex.tipo,
+               actual->lex.valor,
+               actual->lex.longitud);
+
+        eliminado = actual;
+        actual = actual->siguiente;
+        free(eliminado);
+    }
+
+    *lista = NULL;
+    fclose(archivo);
 }

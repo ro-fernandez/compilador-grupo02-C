@@ -47,4 +47,6 @@ void mostrarTabla(lista* lista);
 
 void vaciarLista(lista* lista);
 
+void guardarYVaciarLista(lista* lista, char* nombre_archivo);
+
 void copiarLexema(t_lexema* destino, t_lexema origen);
