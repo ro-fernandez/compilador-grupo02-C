@@ -2,13 +2,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "y.tab.h"
+#include "Tabla.h"
+
 int yystopparser=0;
 FILE  *yyin;
 
-  int yyerror();
-  int yylex();
+int yyerror();
+int yylex();
 
-
+lista tabla_simbolos;
+char* archivo_tabla_simbolos = "TablaSimbolos.txt";
 %}
 
 /* Tokens */
@@ -202,6 +205,8 @@ fecha:
 
 int main(int argc, char *argv[])
 {
+    crearLista(&tabla_simbolos);
+
     if((yyin = fopen(argv[1], "rt"))==NULL)
     {
         printf("\nNo se puede abrir el archivo de prueba: %s\n", argv[1]);
@@ -211,10 +216,13 @@ int main(int argc, char *argv[])
     { 
         
         yyparse();
-        
     }
+
 	fclose(yyin);
-        return 0;
+
+    guardarYVaciarLista(&tabla_simbolos, archivo_tabla_simbolos);
+    
+    return 0;
 }
 
 int yyerror(void)
