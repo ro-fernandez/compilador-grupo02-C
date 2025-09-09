@@ -82,12 +82,12 @@ declaraciones:
     ;
 
 declaracion:
-    ids DOS_PUNTOS tipo_dato {printf("    Ids DOS_PUNTOS Tipo_dato es Declaracion\n");}
+    lista_ids DOS_PUNTOS tipo_dato {printf("    Lista_Ids DOS_PUNTOS Tipo_dato es Declaracion\n");}
     ;
 
-ids:
-    ID              {printf("    ID es ids\n");}
-    | ids COMA ID {printf("    ids COMA ID es ids\n");}
+lista_ids:
+    ID              {printf("    ID es Lista_Ids\n");}
+    | lista_ids COMA ID {printf("    Lista_Ids COMA ID es Lista_Ids\n");}
     ;
 
 tipo_dato:
@@ -106,34 +106,34 @@ escribir:
     ;
 
 sentencia:  	   
-	asignacion {printf(" Asignacion\n");}
-    | while {printf(" While\n");}
-    | triangleAreaMax {printf("   triangleAreaMax es Sentencia\n");}
-    | convDate  {printf("   convDate es Sentencia\n");}
-    | leer  {printf("   Leer es Sentencia\n");}
-    | escribir  {printf("   Escribir es Sentencia\n");}
-    | if {printf("if es Sentencia\n");}
-    | else {printf("else es Sentencia\n");}
+	asignacion {printf("    Asignacion es Sentencia\n");}
+    | while {printf("    While es Sentencia\n");}
+    | triangleAreaMax {printf("     TriangleAreaMax es Sentencia\n");}
+    | convDate  {printf("    ConvDate es Sentencia\n");}
+    | leer  {printf("    Leer es Sentencia\n");}
+    | escribir  {printf("    Escribir es Sentencia\n");}
+    | if {printf("    If es Sentencia\n");}
+    | else {printf("    Else es Sentencia\n");}
     ;
 
 
 asignacion: 
-    ID OP_AS expresion {printf("    ID = Expresion es ASIGNACION\n");}
-    | ID OP_AS triangleAreaMax {printf("    ID = triangleAreaMax es ASIGNACION\n");}
-    | ID OP_AS convDate {printf("    ID = convDate es ASIGNACION\n");}
-    | ID OP_AS CTE_STRING {printf("    ID = CTE_STRING es ASIGNACION\n");}
+    ID OP_AS expresion {printf("    ID -> Expresion es Asignacion\n");}
+    | ID OP_AS triangleAreaMax {printf("    ID -> TriangleAreaMax es Asignacion\n");}
+    | ID OP_AS convDate {printf("    ID -> ConvDate es Asignacion\n");}
+    | ID OP_AS CTE_STRING {printf("    ID -> CTE_STRING es Asignacion\n");}
 	;
 
 while:
-    WHILE PAR_A condicion PAR_C LLA_A bloque LLA_C
+    WHILE PAR_A condicion PAR_C LLA_A bloque LLA_C {printf("    WHILE PAR_A Condicion PAR_C LLA_A Bloque LLA_C es While\n");}
     ;
 
 if:
-    IF PAR_A condicion PAR_C LLA_A bloque LLA_C
+    IF PAR_A condicion PAR_C LLA_A bloque LLA_C {printf("    IF PAR_A Condicion PAR_C LLA_A Bloque LLA_C es If\n");}
     ;
     
 else:
-    IF PAR_A condicion PAR_C LLA_A bloque LLA_C ELSE LLA_A bloque LLA_C   
+    IF PAR_A condicion PAR_C LLA_A bloque LLA_C ELSE LLA_A bloque LLA_C {printf("    IF PAR_A Condicion PAR_C LLA_A Bloque LLA_C ELSE LLA_A Bloque LLA_C es Else\n");}
     ;
 
 expresion:
@@ -152,7 +152,7 @@ factor:
     ID {printf("    ID es Factor \n");}
     | CTE_INT {printf("    CTE_INT es Factor\n");}
     | CTE_REAL {printf("    CTE_REAL es Factor\n");}
-	| PAR_A expresion PAR_C {printf("    Expresion entre parentesis es Factor\n");}
+	| PAR_A expresion PAR_C {printf("    PAR_A Expresion PAR_C es Factor\n");}
     ;
 
 condicion:
@@ -179,25 +179,25 @@ operador_logico:
     ;
 
 triangleAreaMax:
-    TRI_AR_MAX PAR_A triangulo PyC triangulo PAR_C {printf("    TRI_AR_MAX es triangleAreaMax\n");}
+    TRI_AR_MAX PAR_A triangulo PyC triangulo PAR_C {printf("    TRI_AR_MAX es TriangleAreaMax\n");}
     ;
 
 triangulo:
-    COR_A coordenada COMA coordenada COMA coordenada COR_C {printf("    COR_A coordenada COMA coordenada COMA coordenada COR_C es triangulo\n");}
+    COR_A coordenada COMA coordenada COMA coordenada COR_C {printf("    COR_A Coordenada COMA Coordenada COMA Coordenada COR_C es Triangulo\n");}
     ;
 
 coordenada:
-    CTE_INT     {printf("    CTE_INT es coordenada\n");}
-    | CTE_REAL  {printf("    CTE_REAL es coordenada\n");}
-    | ID        {printf("    ID es coordenada\n");}
+    CTE_INT     {printf("    CTE_INT es Coordenada\n");}
+    | CTE_REAL  {printf("    CTE_REAL es Coordenada\n");}
+    | ID        {printf("    ID es Coordenada\n");}
     ;
 
 convDate:
-    CONV_D PAR_A fecha PAR_C {printf("    CONV_D PAR_A fecha PAR_C es convDate\n");}
+    CONV_D PAR_A fecha PAR_C {printf("    CONV_D PAR_A Fecha PAR_C es ConvDate\n");}
     ;
 
 fecha:
-    CTE_INT OP_RES CTE_INT OP_RES CTE_INT {printf("    CTE_INT OP_RES CTE_INT OP_RES CTE_INT es fecha\n");}
+    CTE_INT OP_RES CTE_INT OP_RES CTE_INT {printf("    CTE_INT OP_RES CTE_INT OP_RES CTE_INT es Fecha\n");}
     ;
 
 %%
