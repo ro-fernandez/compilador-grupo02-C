@@ -241,7 +241,7 @@ void insertInSymbolTable(char* lex, TipoSimbolo tipo)
 
     strcpy(newLexema.nombre, "_");
     strcat(newLexema.nombre, lexValue);
-    strcpy(newLexema.longitud, "");
+    newLexema.longitud = strlen(newLexema.valor);
 
     insertarSimboloSinDuplicados(&tabla_simbolos, newLexema);
 }
