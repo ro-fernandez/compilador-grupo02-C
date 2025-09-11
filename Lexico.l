@@ -81,6 +81,7 @@ COMENTARIO_ANID     {COM_A}.*{COMENTARIO}.*{COM_C}
 CTE_REAL            ({DIGITO}*{PUNTO}{DIGITO}*)|(\(-{DIGITO}*{PUNTO}{DIGITO}*\))
 CTE_INT             {DIGITO}+
 CTE_STRING          {COMILLAS}([^"\\]|\\.)*{COMILLAS}
+CTE_FECHA           {DIGITO}{DIGITO}-{DIGITO}{DIGITO}-{DIGITO}{DIGITO}{DIGITO}{DIGITO}
 ID                  {GUION_BAJO}({LETRA}({LETRA}|{DIGITO})*)
 
 /* Palabras Reservadas */
@@ -91,6 +92,7 @@ FOR                 "for"
 T_INT               "Int"
 T_FLOAT             "Float"
 T_STRING            "String"
+T_DATE_CONV         "DateConverted"
 READ                "read"
 WRITE               "write"
 TRI_AR_MAX          "triangleAreaMaximum"
@@ -103,6 +105,8 @@ INIT                "init"
 {CTE_INT}           { validateIntRange(yytext); insertInSymbolTable(yytext, SIMBOLO_INT); return CTE_INT; }
 {CTE_REAL}          { validateFloatRange(yytext); insertInSymbolTable(yytext, SIMBOLO_REAL); return CTE_REAL; }
 {CTE_STRING}        { validateStringLength(yytext); insertInSymbolTable(yytext, SIMBOLO_STRING); return CTE_STRING; }
+{CTE_FECHA}         { insertInSymbolTable(yytext,SIMBOLO_FECHA); return CTE_FECHA; }
+
 
 {PAR_A}             { return PAR_A; }
 {PAR_C}             { return PAR_C; }
@@ -135,6 +139,7 @@ INIT                "init"
 {T_INT}             { return T_INT; }
 {T_FLOAT}           { return T_FLOAT; }
 {T_STRING}          { return T_STRING; }
+{T_DATE_CONV}       { return T_DATE_CONV; }
 {READ}              { return READ; }
 {WRITE}             { return WRITE; }
 {TRI_AR_MAX}        { return TRI_AR_MAX; }
@@ -227,6 +232,9 @@ void insertInSymbolTable(char* lex, TipoSimbolo tipo)
             strcpy(newLexema.valor,  lexValue);
 
             break;
+        case SIMBOLO_FECHA:
+            strcpy(newLexema.tipo, "CONST_FECHA");
+            strcpy(newLexema.valor, lexValue);
         default:
             break;
     }

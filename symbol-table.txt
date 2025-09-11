@@ -7,6 +7,8 @@ __var1
 __p1                                                                                                        
 __p2                                                                                                        
 __p3                                                                                                        
+__f1                                                                                                        
+__f2                                                                                                        
 __a                                                                                                         
 _test                                    CONST_STR       test                                               
 _1                                       CONST_INT       1                                                  
@@ -20,10 +22,9 @@ _2.3                                     CONST_REAL      2.3
 _6                                       CONST_INT       6                                                  
 _1.0                                     CONST_REAL      1.0                                                
 _2                                       CONST_INT       2                                                  
-_05                                      CONST_INT       05                                                 
-_19                                      CONST_INT       19                                                 
-_2025                                    CONST_INT       2025                                               
-_09                                      CONST_INT       09                                                 
+_03-07-2025                              CONST_FECHA     03-07-2025                                         
+__fecha                                                                                                     
+_10-09-2025                              CONST_FECHA     10-09-2025                                         
 _prueba \string\ en variable             CONST_STR       prueba \string\ en variable                        
 __A                                                                                                         
 _a                                       CONST_STR       a                                                  

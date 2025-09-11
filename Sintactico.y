@@ -11,7 +11,7 @@ int yyerror();
 int yylex();
 
 lista tabla_simbolos;
-char* archivo_tabla_simbolos = "TablaSimbolos.txt";
+char* archivo_tabla_simbolos = "symbol-table.txt";
 %}
 
 /* Tokens */
@@ -19,6 +19,7 @@ char* archivo_tabla_simbolos = "TablaSimbolos.txt";
 %token CTE_INT
 %token CTE_REAL
 %token CTE_STRING
+%token CTE_FECHA
 %token PAR_A
 %token PAR_C
 %token COR_A
@@ -50,6 +51,7 @@ char* archivo_tabla_simbolos = "TablaSimbolos.txt";
 %token T_INT
 %token T_FLOAT
 %token T_STRING
+%token T_DATE_CONV
 %token READ
 %token WRITE
 %token TRI_AR_MAX
@@ -94,6 +96,7 @@ tipo_dato:
     T_STRING {printf("    T_STRING es Tipo_dato\n");}
     | T_FLOAT {printf("    T_FLOAT es Tipo_dato\n");}
     | T_INT   {printf("    T_INT es Tipo_dato\n"); }
+    | T_DATE_CONV {printf("    T_DATE_CONV es Tipo_dato\n"); }
     ;
 
 leer:
@@ -193,11 +196,7 @@ coordenada:
     ;
 
 convDate:
-    CONV_D PAR_A fecha PAR_C {printf("    CONV_D PAR_A Fecha PAR_C es ConvDate\n");}
-    ;
-
-fecha:
-    CTE_INT OP_RES CTE_INT OP_RES CTE_INT {printf("    CTE_INT OP_RES CTE_INT OP_RES CTE_INT es Fecha\n");}
+    CONV_D PAR_A CTE_FECHA PAR_C {printf("    CONV_D PAR_A CTE_FECHA PAR_C es ConvDate\n");}
     ;
 
 %%

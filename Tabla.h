@@ -9,7 +9,8 @@ typedef enum
     SIMBOLO_ID,
     SIMBOLO_INT,
     SIMBOLO_REAL,
-    SIMBOLO_STRING
+    SIMBOLO_STRING,
+    SIMBOLO_FECHA
 } TipoSimbolo;
 
 typedef struct
