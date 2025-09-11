@@ -1,5 +1,6 @@
 #+_c->_d*(_e-21)/451561#+561+#561561566+#
 
+
 init {
     _a1, _b1 : Float
     _var1 : Int
@@ -11,6 +12,8 @@ read(_a) #+ variable +#
 write("test")  #+ cte string +#
 write(_var1)  #+ variable numérica +#
 write(1 + _var1)  #+ Expresión +#
+
+_cuentita -> 10-25-1234
 
 while (_a > _b OR _c > _b)
 {
@@ -25,8 +28,8 @@ while(_c < _b)
 triangleAreaMaximum([_a,2.3,6];[1.0,2,_c])
 _a -> triangleAreaMaximum([_a,2.3,6];[1.0,2,_c])
 
-convDate(03-07-2025)
-_fecha -> convDate(10-09-2025)
+convDate(03.07.2025)
+_fecha -> convDate(10.09.2025)
 
 _d -> "prueba \"string\" en variable"  #+ "test"+#
 
