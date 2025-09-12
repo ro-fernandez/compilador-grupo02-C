@@ -9,26 +9,26 @@ __p2                                                                            
 __p3                                                                                              0         
 __f1                                                                                              0         
 __f2                                                                                              0         
+__d                                                                                               0         
+_prueba \string\ en variable             CONST_STR       prueba \string\ en variable              27        
 __a                                                                                               0         
-_test                                    CONST_STR       test                                     4         
-_1                                       CONST_INT       1                                        1         
-__cuentita                                                                                        0         
-_10                                      CONST_INT       10                                       2         
-_25                                      CONST_INT       25                                       2         
-_1234                                    CONST_INT       1234                                     4         
+_12345                                   CONST_INT       12345                                    5         
+_3.1415                                  CONST_REAL      3.1415                                   6         
+__g                                                                                               0         
+_Hola mundo                              CONST_STR       Hola mundo                               10        
 __b                                                                                               0         
 __c                                                                                               0         
-__d                                                                                               0         
+_1                                       CONST_INT       1                                        1         
+__A                                                                                               0         
+_a                                       CONST_STR       a                                        1         
+_2                                       CONST_INT       2                                        1         
 __e                                                                                               0         
 _21                                      CONST_INT       21                                       2         
 _1000                                    CONST_INT       1000                                     4         
+_test                                    CONST_STR       test                                     4         
 _2.3                                     CONST_REAL      2.3                                      3         
 _6                                       CONST_INT       6                                        1         
 _1.0                                     CONST_REAL      1.0                                      3         
-_2                                       CONST_INT       2                                        1         
 _03.07.2025                              CONST_FECHA     03.07.2025                               10        
 __fecha                                                                                           0         
 _10.09.2025                              CONST_FECHA     10.09.2025                               10        
-_prueba \string\ en variable             CONST_STR       prueba \string\ en variable              27        
-__A                                                                                               0         
-_a                                       CONST_STR       a                                        1         
