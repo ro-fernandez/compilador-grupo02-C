@@ -203,12 +203,12 @@ void insertInSymbolTable(char* lex, TipoSimbolo tipo)
         case SIMBOLO_ID:
             strcpy(newLexema.tipo, "");
             strcpy(newLexema.valor, "");
-
+            strcpy(newLexema.longitud, "");
             break;
         case SIMBOLO_INT:
             strcpy(newLexema.tipo, "CONST_INT");
             strcpy(newLexema.valor, lexValue);
-
+            strcpy(newLexema.longitud, "");
             break;
         case SIMBOLO_REAL:
         
@@ -224,24 +224,24 @@ void insertInSymbolTable(char* lex, TipoSimbolo tipo)
             }
             strcpy(newLexema.tipo, "CONST_REAL");
             strcpy(newLexema.valor, lexValue);
-
+            strcpy(newLexema.longitud, "");
             break;
         case SIMBOLO_STRING:
             strcpy(newLexema.tipo, "CONST_STR");
             eliminar_caracter(lexValue, '"');
             strcpy(newLexema.valor,  lexValue);
-
+            itoa(strlen(newLexema.valor), newLexema.longitud, 10);
             break;
         case SIMBOLO_FECHA:
             strcpy(newLexema.tipo, "CONST_FECHA");
             strcpy(newLexema.valor, lexValue);
+            strcpy(newLexema.longitud, "");
         default:
             break;
     }
 
     strcpy(newLexema.nombre, "_");
     strcat(newLexema.nombre, lexValue);
-    newLexema.longitud = strlen(newLexema.valor);
 
     insertarSimboloSinDuplicados(&tabla_simbolos, newLexema);
 }

@@ -20,7 +20,7 @@ _g -> "Hola mundo"
 #+_f -> 2147483648546456.+#
 #+_c -> 32768+#
 
-#+ condicional anidado +#
+#+ condicional con else +#
 if (_a > _b OR _c > _b)
 {
 	_a -> 1
@@ -33,7 +33,7 @@ else
 #+ condicional anidado +#
 if (_a > _b OR _c > _b)
 {
-    if(_a == 2)
+    if(NOT _a == 2)
 	{
 		_a -> 1
 	}

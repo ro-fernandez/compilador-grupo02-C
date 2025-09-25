@@ -24,7 +24,7 @@ void copiarLexema(t_lexema* destino, t_lexema origen)
     strcpy(destino->nombre, origen.nombre);
     strcpy(destino->tipo, origen.tipo);
     strcpy(destino->valor, origen.valor);
-    destino->longitud = origen.longitud;
+    strcpy(destino->longitud, origen.longitud);
 }
 
 int insertarSimbolo(lista* lista, t_lexema lex)
@@ -119,7 +119,7 @@ void mostrarTabla(lista* lista)
 
     while(actual)
     {
-        printf("%-40s %-15s %-40s %-10zu\n",
+        printf("%-40s %-15s %-40s %-10s\n",
                actual->lex.nombre,
                actual->lex.tipo,
                actual->lex.valor,
@@ -158,7 +158,7 @@ void guardarYVaciarLista(lista* lista, char* nombre_archivo)
 
     while(actual)
     {
-        fprintf(archivo, "%-40s %-15s %-40s %-10zu\n",
+        fprintf(archivo, "%-40s %-15s %-40s %-10s\n",
                actual->lex.nombre,
                actual->lex.tipo,
                actual->lex.valor,

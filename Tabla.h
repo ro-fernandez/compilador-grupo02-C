@@ -18,7 +18,7 @@ typedef struct
     char nombre[TAM_MAX];
     char tipo[TAM_MAX];
     char valor[TAM_MAX];
-    size_t longitud;
+    char longitud [TAM_MAX];
 
 } t_lexema;
 
