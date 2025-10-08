@@ -10,10 +10,8 @@
 #define FLOAT_MAX_VALUE 2147483648
 #define FLOAT_MIN_VALUE -2147483648
 #define MAX_STR_LEN 50
-
-int yylval;
-char *yyltext;
-
+#define MIN_YEAR 1900
+#define MAX_YEAR 2100
 
 FILE *yyin;
 int yyerror(void);
@@ -21,8 +19,13 @@ int yyerror(void);
 void validateStringLength(char* str);
 void validateFloatRange(char* str);
 void validateIntRange(char* str);
+void validateDate(char* str);
+
 void insertInSymbolTable(char* lex, TipoSimbolo tipo);
-void eliminar_caracter(char *s, char c);
+void removeChar(char *s, char c);
+
+void handleError(char* str);
+void getLexema(char* str);
 
 extern lista tabla_simbolos;
 
@@ -101,11 +104,11 @@ INIT                "init"
 
 %%
 
-{ID}                { insertInSymbolTable(yytext, SIMBOLO_ID); return ID; }
-{CTE_INT}           { validateIntRange(yytext); insertInSymbolTable(yytext, SIMBOLO_INT); return CTE_INT; }
-{CTE_REAL}          { validateFloatRange(yytext); insertInSymbolTable(yytext, SIMBOLO_REAL); return CTE_REAL; }
-{CTE_STRING}        { validateStringLength(yytext); insertInSymbolTable(yytext, SIMBOLO_STRING); return CTE_STRING; }
-{CTE_FECHA}         { insertInSymbolTable(yytext,SIMBOLO_FECHA); return CTE_FECHA; }
+{ID}                { getLexema(yytext); insertInSymbolTable(yytext, SIMBOLO_ID); return ID; }
+{CTE_INT}           { validateIntRange(yytext); getLexema(yytext); insertInSymbolTable(yytext, SIMBOLO_INT); return CTE_INT; }
+{CTE_REAL}          { validateFloatRange(yytext); getLexema(yytext); insertInSymbolTable(yytext, SIMBOLO_REAL); return CTE_REAL; }
+{CTE_STRING}        { validateStringLength(yytext); getLexema(yytext); insertInSymbolTable(yytext, SIMBOLO_STRING); return CTE_STRING; }
+{CTE_FECHA}         { validateDate(yytext); getLexema(yytext); insertInSymbolTable(yytext,SIMBOLO_FECHA); return CTE_FECHA; }
 
 
 {PAR_A}             { return PAR_A; }
@@ -158,7 +161,7 @@ INIT                "init"
 " "
 "\r\n"
 
-.                   { printf("ERROR LEXICO : Caracter no reconocido: %s\n", yytext); exit(0); }
+.                   { handleError(yytext); }
 
 %%
 
@@ -189,6 +192,51 @@ void validateStringLength(char* str)
         printf("\nERROR: String %s tiene longitud mayor a la permitida de %d caracteres\n", yytext, MAX_STR_LEN);
         exit(1);
     }
+}
+
+void validateDate(char* str)
+{
+    int day, month, year;
+
+    if(sscanf(str, "%2d.%2d.%4d", &day, &month, &year) != 3)
+    {
+        printf("\nERROR: Fecha %s no es divisible por el formato DD.MM.YYYY\n", yytext);
+        exit(1);
+    }
+
+    if(year < MIN_YEAR || year > MAX_YEAR)
+    {
+        printf("\nERROR: Fecha %s no tiene un año valido\n", yytext);
+        exit(1);
+    }
+
+    if(month < 1 || month > 12)
+    {
+        printf("\nERROR: Fecha %s no tiene un mes valido\n", yytext);
+        exit(1);
+    }
+
+    int daysPerMonth[] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
+
+    if((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0))
+        daysPerMonth[2] = 29;
+
+    if(day < 1 || day > daysPerMonth[month])
+    {
+        printf("\nERROR: Fecha %s no tiene un dia valido\n", yytext);
+        exit(1);
+    }
+}
+
+void handleError(char* str)
+{
+    printf("ERROR LEXICO : Caracter no reconocido: %s\n", str);
+    exit(1);
+}
+
+void getLexema(char* str)
+{
+    strcpy(yylval.str_val, str);
 }
 
 void insertInSymbolTable(char* lex, TipoSimbolo tipo)
@@ -225,10 +273,11 @@ void insertInSymbolTable(char* lex, TipoSimbolo tipo)
             strcpy(newLexema.tipo, "CONST_REAL");
             strcpy(newLexema.valor, lexValue);
             strcpy(newLexema.longitud, "");
+            strcpy(yylval.str_val, newLexema.valor);
             break;
         case SIMBOLO_STRING:
             strcpy(newLexema.tipo, "CONST_STR");
-            eliminar_caracter(lexValue, '"');
+            removeChar(lexValue, '"');
             strcpy(newLexema.valor,  lexValue);
             itoa(strlen(newLexema.valor), newLexema.longitud, 10);
             break;
@@ -246,7 +295,7 @@ void insertInSymbolTable(char* lex, TipoSimbolo tipo)
     insertarSimboloSinDuplicados(&tabla_simbolos, newLexema);
 }
 
-void eliminar_caracter(char *s, char c)
+void removeChar(char *s, char c)
 {
     int i = 0, j = 0;
 

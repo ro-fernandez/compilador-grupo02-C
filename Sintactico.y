@@ -14,6 +14,11 @@ lista tabla_simbolos;
 char* archivo_tabla_simbolos = "symbol-table.txt";
 %}
 
+%union
+{
+	char str_val[400];
+}
+
 /* Tokens */
 %token ID
 %token CTE_INT
