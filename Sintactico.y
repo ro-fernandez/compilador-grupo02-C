@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "y.tab.h"
 #include "Tabla.h"
+#include "Pila.h"
 
 int yystopparser=0;
 FILE  *yyin;

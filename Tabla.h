@@ -1,6 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#ifndef TABLA_H
+#define TABLA_H
+
+#include "Utilitarios.h"
 
 #define TAM_MAX 200
 
@@ -36,11 +37,11 @@ t_nodo* crearNodo();
 
 /* Se inserta al final */
 
-int insertarSimbolo(lista* lista, t_lexema lex);
+booleano insertarSimbolo(lista* lista, t_lexema lex);
 
-int insertarSimboloSinDuplicados(lista* lista, t_lexema lex);    
+booleano insertarSimboloSinDuplicados(lista* lista, t_lexema lex);    
 
-int buscarSimbolo(lista* lista, char* lexBuscado); 
+booleano buscarSimbolo(lista* lista, char* lexBuscado); 
 
 t_nodo* obtenerSimbolo(lista* lista, char* lexBuscado); 
 
@@ -51,3 +52,5 @@ void vaciarLista(lista* lista);
 void guardarYVaciarLista(lista* lista, char* nombre_archivo);
 
 void copiarLexema(t_lexema* destino, t_lexema origen);
+
+#endif /* TABLA_H */

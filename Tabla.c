@@ -27,13 +27,13 @@ void copiarLexema(t_lexema* destino, t_lexema origen)
     strcpy(destino->longitud, origen.longitud);
 }
 
-int insertarSimbolo(lista* lista, t_lexema lex)
+booleano insertarSimbolo(lista* lista, t_lexema lex)
 {
     t_nodo* nuevo = crearNodo();
 
     if(!nuevo)
     {
-        return 0;
+        return FALSO;
     }
 
     while(*lista)
@@ -46,16 +46,16 @@ int insertarSimbolo(lista* lista, t_lexema lex)
     nuevo->siguiente = NULL;
     *lista = nuevo;
 
-    return 1;
+    return VERDADERO;
 }
 
-int insertarSimboloSinDuplicados(lista* lista, t_lexema lex)
+booleano insertarSimboloSinDuplicados(lista* lista, t_lexema lex)
 {
     t_nodo* nuevo = crearNodo();
 
     if(!nuevo)
     {
-        return 0;
+        return FALSO;
     }
 
     while(*lista && strcmp((*lista)->lex.nombre, lex.nombre) != 0)
@@ -71,10 +71,10 @@ int insertarSimboloSinDuplicados(lista* lista, t_lexema lex)
         *lista = nuevo;
     }
 
-    return 1;
+    return VERDADERO;
 }
 
-int buscarSimbolo(lista* lista, char* lexBuscado)
+booleano buscarSimbolo(lista* lista, char* lexBuscado)
 {
     while(*lista && strcmp((*lista)->lex.nombre, lexBuscado) != 0)
     {
@@ -83,10 +83,10 @@ int buscarSimbolo(lista* lista, char* lexBuscado)
 
     if(!lista)
     {
-        return 0;
+        return FALSO;
     }
 
-    return 1;
+    return VERDADERO;
 }
 
 t_nodo* obtenerSimbolo(lista* lista, char* lexBuscado)
