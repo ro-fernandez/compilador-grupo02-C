@@ -4,6 +4,7 @@
 #include "y.tab.h"
 #include "Tabla.h"
 #include "Pila.h"
+#include "Polaca.h"
 
 int yystopparser=0;
 FILE  *yyin;
@@ -13,6 +14,11 @@ int yylex();
 
 lista tabla_simbolos;
 char* archivo_tabla_simbolos = "symbol-table.txt";
+
+listaPolaca polaca;
+char* archivo_polaca = "intermediate-code.txt";
+
+
 %}
 
 %union
@@ -21,11 +27,11 @@ char* archivo_tabla_simbolos = "symbol-table.txt";
 }
 
 /* Tokens */
-%token ID
-%token CTE_INT
-%token CTE_REAL
-%token CTE_STRING
-%token CTE_FECHA
+%token <str_val> ID
+%token <str_val> CTE_INT 
+%token <str_val> CTE_REAL
+%token <str_val> CTE_STRING
+%token <str_val> CTE_FECHA
 %token PAR_A
 %token PAR_C
 %token COR_A
@@ -127,7 +133,7 @@ sentencia:
 
 
 asignacion: 
-    ID OP_AS expresion {printf("    ID -> Expresion es Asignacion\n");}
+    ID OP_AS expresion {printf("    ID -> Expresion es Asignacion\n"); insertarPolaca(&polaca,$1); insertarPolaca(&polaca,"->");}
     | ID OP_AS triangleAreaMax {printf("    ID -> TriangleAreaMax es Asignacion\n");}
     | ID OP_AS convDate {printf("    ID -> ConvDate es Asignacion\n");}
     | ID OP_AS CTE_STRING {printf("    ID -> CTE_STRING es Asignacion\n");}
@@ -147,20 +153,20 @@ else:
 
 expresion:
     termino {printf("    Termino es Expresion\n");}
-    |expresion OP_SUM termino {printf("    Expresion+Termino es Expresion\n");}
-    |expresion OP_RES termino {printf("    Expresion-Termino es Expresion\n");}
+    |expresion OP_SUM termino {printf("    Expresion+Termino es Expresion\n"); insertarPolaca(&polaca,"+");}
+    |expresion OP_RES termino {printf("    Expresion-Termino es Expresion\n"); insertarPolaca(&polaca,"-");}
     ;
 
 termino: 
     factor {printf("    Factor es Termino\n");}
-    |termino OP_MUL factor {printf("     Termino*Factor es Termino\n");}
-    |termino OP_DIV factor {printf("     Termino/Factor es Termino\n");}
+    |termino OP_MUL factor {printf("     Termino*Factor es Termino\n"); insertarPolaca(&polaca,"*");}
+    |termino OP_DIV factor {printf("     Termino/Factor es Termino\n"); insertarPolaca(&polaca,"/");}
     ;
 
 factor: 
-    ID {printf("    ID es Factor \n");}
-    | CTE_INT {printf("    CTE_INT es Factor\n");}
-    | CTE_REAL {printf("    CTE_REAL es Factor\n");}
+    ID {printf("    ID es Factor \n"); insertarPolaca(&polaca,$1); }
+    | CTE_INT {printf("    CTE_INT es Factor\n"); insertarPolaca(&polaca,$1);}
+    | CTE_REAL {printf("    CTE_REAL es Factor\n"); insertarPolaca(&polaca,$1);}
 	| PAR_A expresion PAR_C {printf("    PAR_A Expresion PAR_C es Factor\n");}
     ;
 
@@ -211,6 +217,7 @@ convDate:
 int main(int argc, char *argv[])
 {
     crearLista(&tabla_simbolos);
+    crearListaPolaca(&polaca);
 
     if((yyin = fopen(argv[1], "rt"))==NULL)
     {
@@ -226,7 +233,8 @@ int main(int argc, char *argv[])
 	fclose(yyin);
 
     guardarYVaciarLista(&tabla_simbolos, archivo_tabla_simbolos);
-    
+    guardarYVaciarListaPolaca(&polaca,archivo_polaca);
+
     return 0;
 }
 
