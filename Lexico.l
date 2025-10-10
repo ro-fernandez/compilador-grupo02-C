@@ -104,11 +104,11 @@ INIT                "init"
 
 %%
 
-{ID}                { getLexema(yytext); insertInSymbolTable(yytext, SIMBOLO_ID); return ID; }
-{CTE_INT}           { validateIntRange(yytext); getLexema(yytext); insertInSymbolTable(yytext, SIMBOLO_INT); return CTE_INT; }
-{CTE_REAL}          { validateFloatRange(yytext); getLexema(yytext); insertInSymbolTable(yytext, SIMBOLO_REAL); return CTE_REAL; }
-{CTE_STRING}        { validateStringLength(yytext); getLexema(yytext); insertInSymbolTable(yytext, SIMBOLO_STRING); return CTE_STRING; }
-{CTE_FECHA}         { validateDate(yytext); getLexema(yytext); insertInSymbolTable(yytext,SIMBOLO_FECHA); return CTE_FECHA; }
+{ID}                { getLexema(yytext); insertInSymbolTable(yytext, SIMBOLO_ID); printf("\nIdentificador: %s\n", yytext); return ID; }
+{CTE_INT}           { validateIntRange(yytext); getLexema(yytext); insertInSymbolTable(yytext, SIMBOLO_INT); printf("\nConstante Entera: %s\n", yytext); return CTE_INT; }
+{CTE_REAL}          { validateFloatRange(yytext); getLexema(yytext); insertInSymbolTable(yytext, SIMBOLO_REAL); printf("\nConstante Flotante: %s\n", yytext); return CTE_REAL; }
+{CTE_STRING}        { validateStringLength(yytext); getLexema(yytext); insertInSymbolTable(yytext, SIMBOLO_STRING); printf("\nConstante String: %s\n", yytext); return CTE_STRING; }
+{CTE_FECHA}         { validateDate(yytext); getLexema(yytext); insertInSymbolTable(yytext,SIMBOLO_FECHA); printf("\nConstante Fecha: %s\n", yytext); return CTE_FECHA; }
 
 
 {PAR_A}             { return PAR_A; }
