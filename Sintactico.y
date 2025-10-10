@@ -15,9 +15,17 @@ int yylex();
 lista tabla_simbolos;
 char* archivo_tabla_simbolos = "symbol-table.txt";
 
-listaPolaca polaca;
+t_polaca polaca;
 char* archivo_polaca = "intermediate-code.txt";
 
+Pila pilaCeldas;
+
+char branchComparadorActual[4];
+booleano negadorCondicion = FALSO;
+
+char* negarCondicion();
+booleano insertarOperadorPolaca();
+booleano insertarEnPilaCeldaActual();
 
 %}
 
@@ -173,20 +181,20 @@ factor:
 condicion:
     comparacion {printf("    Comparacion es Condicion\n");}
     | comparacion operador_logico comparacion {printf("    Comparacion Operador_Logico Comparacion es Condicion\n");}
-    | OP_NOT comparacion {printf("    OP_NOT Comparacion es Condicion\n");}
+    | OP_NOT {negadorCondicion = VERDADERO;} comparacion {printf("    OP_NOT Comparacion es Condicion\n"); negadorCondicion = FALSO;}
     ;
 
 comparacion:
-    expresion comparador expresion {printf("    Expresion Comparador Expresion es Comparacion\n");}
+    expresion comparador expresion {printf("    Expresion Comparador Expresion es Comparacion\n"); insertarPolaca(&polaca,"CMP"); insertarOperadorPolaca(); insertarEnPilaCeldaActual(); avanzar(&polaca);}
     ;
 
 comparador:
-    CMP_EQ {printf("    CMP_EQ es Comparador\n");}
-    | CMP_NE {printf("    CMP_NE es Comparador\n");}
-    | CMP_LT {printf("    CMP_LT es Comparador\n");}
-    | CMP_LE {printf("    CMP_LE es Comparador\n");}
-    | CMP_GT {printf("    CMP_GT es Comparador\n");}
-    | CMP_GE {printf("    CMP_GE es Comparador\n");}
+    CMP_EQ {printf("    CMP_EQ es Comparador\n"); strcpy(branchComparadorActual, "BNE");}
+    | CMP_NE {printf("    CMP_NE es Comparador\n"); strcpy(branchComparadorActual, "BEQ");}
+    | CMP_LT {printf("    CMP_LT es Comparador\n"); strcpy(branchComparadorActual, "BGE");}
+    | CMP_LE {printf("    CMP_LE es Comparador\n"); strcpy(branchComparadorActual, "BGT");}
+    | CMP_GT {printf("    CMP_GT es Comparador\n"); strcpy(branchComparadorActual, "BLE");}
+    | CMP_GE {printf("    CMP_GE es Comparador\n"); strcpy(branchComparadorActual, "BLT");}
 
 operador_logico:
     OP_AND {printf("    OP_AND es Operador Logico\n");}
@@ -218,6 +226,7 @@ int main(int argc, char *argv[])
 {
     crearLista(&tabla_simbolos);
     crearListaPolaca(&polaca);
+    crearPila(&pilaCeldas);
 
     if((yyin = fopen(argv[1], "rt"))==NULL)
     {
@@ -242,4 +251,45 @@ int yyerror(void)
 {
     printf("Error Sintactico\n");
     exit (1);
+}
+
+booleano insertarEnPilaCeldaActual()
+{
+    char celdaActualStr[TAM_MAX];
+    itoa(polaca.celdaActual, celdaActualStr, 10);
+    insertarEnPila(&pilaCeldas, celdaActualStr);
+    return VERDADERO;
+}
+
+booleano insertarOperadorPolaca()
+{
+    if(negadorCondicion)
+        strcpy(branchComparadorActual, negarCondicion());
+    
+    insertarPolaca(&polaca,branchComparadorActual);
+
+    return VERDADERO;
+}
+
+char* negarCondicion()
+{
+    if(strcmp(branchComparadorActual, "BNE") == 0)
+        return "BEQ";
+
+    if(strcmp(branchComparadorActual, "BEQ") == 0)
+        return "BNE";
+    
+    if(strcmp(branchComparadorActual, "BGE") == 0)
+        return "BLT";
+
+    if(strcmp(branchComparadorActual, "BGT") == 0)
+        return "BLE";
+
+    if(strcmp(branchComparadorActual, "BLE") == 0)
+        return "BGT";
+    
+    if(strcmp(branchComparadorActual, "BLT") == 0)
+        return "BGE";
+
+    return NULL;
 }

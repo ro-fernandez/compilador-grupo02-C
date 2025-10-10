@@ -10,4 +10,6 @@ typedef enum
     FALSO, VERDADERO
 } booleano;
 
+#define TAM_MAX 200
+
 #endif /* UTILITARIOS_H */

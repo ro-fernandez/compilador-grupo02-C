@@ -19,7 +19,7 @@ booleano insertarEnPila(Pila* pp, const char* elem)
 
     strcpy(elemNodo, elem);
 
-    nue->elem = elemNodo;
+    strcpy(nue->elem, elemNodo);
     nue->sig = *pp;
 
     *pp = nue;
