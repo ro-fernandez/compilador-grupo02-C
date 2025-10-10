@@ -1,34 +1,5 @@
 
 NOMBRE                                   TIPO            VALOR                                    LONGITUD  
 ------------------------------------------------------------------------------------------------------------
-__a1                                                                                                        
-__b1                                                                                                        
-__var1                                                                                                      
-__p1                                                                                                        
-__p2                                                                                                        
-__p3                                                                                                        
-__f1                                                                                                        
-__f2                                                                                                        
-__d                                                                                                         
-_prueba \string\ en variable             CONST_STR       prueba \string\ en variable              27        
 __a                                                                                                         
-_12345                                   CONST_INT       12345                                              
-_3.1415                                  CONST_REAL      3.1415                                             
-__g                                                                                                         
-_Hola mundo                              CONST_STR       Hola mundo                               10        
-__b                                                                                                         
-__c                                                                                                         
-_1                                       CONST_INT       1                                                  
-__A                                                                                                         
-_a                                       CONST_STR       a                                        1         
-_2                                       CONST_INT       2                                                  
-__e                                                                                                         
-_21                                      CONST_INT       21                                                 
-_1000                                    CONST_INT       1000                                               
-_test                                    CONST_STR       test                                     4         
-_2.3                                     CONST_REAL      2.3                                                
-_6                                       CONST_INT       6                                                  
-_1.0                                     CONST_REAL      1.0                                                
-_03.07.2025                              CONST_FECHA     03.07.2025                                         
-__fecha                                                                                                     
-_10.09.2025                              CONST_FECHA     10.09.2025                                         
+_4                                       CONST_INT       4                                                  
