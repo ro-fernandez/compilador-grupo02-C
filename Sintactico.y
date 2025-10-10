@@ -21,6 +21,7 @@ char* archivo_polaca = "intermediate-code.txt";
 Pila pilaCeldas;
 
 char branchComparadorActual[4];
+char operadorLogicoActual[4];
 booleano negadorCondicion = FALSO;
 
 char* negarCondicion();
@@ -142,9 +143,9 @@ sentencia:
 
 asignacion: 
     ID OP_AS expresion {printf("    ID -> Expresion es Asignacion\n"); insertarPolaca(&polaca,$1); insertarPolaca(&polaca,"->");}
-    | ID OP_AS triangleAreaMax {printf("    ID -> TriangleAreaMax es Asignacion\n");}
-    | ID OP_AS convDate {printf("    ID -> ConvDate es Asignacion\n");}
-    | ID OP_AS CTE_STRING {printf("    ID -> CTE_STRING es Asignacion\n");}
+    | ID OP_AS triangleAreaMax {printf("    ID -> TriangleAreaMax es Asignacion\n"); insertarPolaca(&polaca,$1); insertarPolaca(&polaca,"->");}
+    | ID OP_AS convDate {printf("    ID -> ConvDate es Asignacion\n"); insertarPolaca(&polaca,$1); insertarPolaca(&polaca,"->");}
+    | ID OP_AS CTE_STRING {printf("    ID -> CTE_STRING es Asignacion\n"); insertarPolaca(&polaca,$3); insertarPolaca(&polaca,$1); insertarPolaca(&polaca,"->");}
 	;
 
 while:
@@ -197,8 +198,8 @@ comparador:
     | CMP_GE {printf("    CMP_GE es Comparador\n"); strcpy(branchComparadorActual, "BLT");}
 
 operador_logico:
-    OP_AND {printf("    OP_AND es Operador Logico\n");}
-    | OP_OR {printf("    OP_OR es Operador Logico\n");}
+    OP_AND {printf("    OP_AND es Operador Logico\n"); strcpy(operadorLogicoActual, "AND");}
+    | OP_OR {printf("    OP_OR es Operador Logico\n"); strcpy(operadorLogicoActual, "OR");}
     ;
 
 triangleAreaMax:
