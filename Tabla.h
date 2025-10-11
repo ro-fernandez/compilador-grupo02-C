@@ -3,8 +3,6 @@
 
 #include "Utilitarios.h"
 
-#define TAM_MAX 200
-
 typedef enum
 {
     SIMBOLO_ID,
