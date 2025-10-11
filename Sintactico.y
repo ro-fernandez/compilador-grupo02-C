@@ -28,6 +28,8 @@ char* negarCondicion();
 booleano insertarOperadorPolaca();
 booleano insertarEnPilaCeldaActual();
 booleano resolverOperadorOR();
+booleano insertarCeldaEnValorDePila();
+booleano completarBranchOR();
 
 %}
 
@@ -154,11 +156,11 @@ while:
     ;
 
 if:
-    IF PAR_A condicion PAR_C LLA_A bloque LLA_C {printf("    IF PAR_A Condicion PAR_C LLA_A Bloque LLA_C es If\n");}
+    IF PAR_A condicion PAR_C LLA_A {completarBranchOR();} bloque LLA_C {insertarCeldaEnValorDePila(); printf("    IF PAR_A Condicion PAR_C LLA_A Bloque LLA_C es If\n");}
     ;
-    
+
 else:
-    IF PAR_A condicion PAR_C LLA_A bloque LLA_C ELSE LLA_A bloque LLA_C {printf("    IF PAR_A Condicion PAR_C LLA_A Bloque LLA_C ELSE LLA_A Bloque LLA_C es Else\n");}
+    IF PAR_A condicion PAR_C LLA_A {completarBranchOR();} bloque LLA_C ELSE LLA_A {insertarCeldaEnValorDePila();} bloque LLA_C {printf("    IF PAR_A Condicion PAR_C LLA_A Bloque LLA_C ELSE LLA_A Bloque LLA_C es If\n");}
     ;
 
 expresion:
@@ -197,7 +199,8 @@ comparador:
     | CMP_LE {printf("    CMP_LE es Comparador\n"); strcpy(branchComparadorActual, "BGT");}
     | CMP_GT {printf("    CMP_GT es Comparador\n"); strcpy(branchComparadorActual, "BLE");}
     | CMP_GE {printf("    CMP_GE es Comparador\n"); strcpy(branchComparadorActual, "BLT");}
-
+    ;
+    
 operador_logico:
     OP_AND {printf("    OP_AND es Operador Logico\n"); strcpy(operadorLogicoActual, "AND");}
     | OP_OR {printf("    OP_OR es Operador Logico\n"); strcpy(operadorLogicoActual, "OR");}
@@ -263,6 +266,22 @@ booleano insertarEnPilaCeldaActual()
     return VERDADERO;
 }
 
+booleano insertarCeldaEnValorDePila()
+{
+    int posicion;
+    char celdaActualStr[TAM_MAX];
+    itoa(polaca.celdaActual,celdaActualStr,10);
+    posicion = atoi(sacarDePila(&pilaCeldas));
+    insertarEnPosicion(&polaca,posicion,celdaActualStr);
+    if(strcmp(operadorLogicoActual, "AND") == 0)
+    {
+        posicion = atoi(sacarDePila(&pilaCeldas));
+        insertarEnPosicion(&polaca,posicion,celdaActualStr);
+    }
+    return VERDADERO;
+}
+
+
 booleano insertarOperadorPolaca()
 {
     if(negadorCondicion)
@@ -296,6 +315,9 @@ char* negarCondicion()
     return NULL;
 }
 
+
+//FRAN: acá entiendo que lo que hacés es,
+//si el operador es OR, entonces insertas en polaca el BI y te guardas en pila el valor de la celda que sigue, para poner el inicio del IF/WHILE
 booleano resolverOperadorOR()
 {
     if(strcmp(operadorLogicoActual, "OR") == 0)
@@ -308,6 +330,22 @@ booleano resolverOperadorOR()
         insertarEnPosicion(&polaca, celda, celdaAInsertar);
         insertarEnPilaCeldaActual();
         avanzar(&polaca);
+    }
+
+    return VERDADERO;
+}
+
+booleano completarBranchOR()
+{
+    if(strcmp(operadorLogicoActual, "OR") == 0)
+    {
+        char* tope = sacarDePila(&pilaCeldas);
+        char* celdaStr = sacarDePila(&pilaCeldas);
+        int celda = atoi(celdaStr);
+        char celdaActualStr[TAM_MAX];
+        itoa(polaca.celdaActual,celdaActualStr,10);
+        insertarEnPosicion(&polaca,celda,celdaActualStr);
+        insertarEnPila(&pilaCeldas,tope);
     }
 
     return VERDADERO;
