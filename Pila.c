@@ -8,18 +8,19 @@ void crearPila(Pila* pp)
 booleano insertarEnPila(Pila* pp, const char* elem)
 {
     Nodo* nue = (Nodo*)malloc(sizeof(Nodo));
-    char* elemNodo = malloc(strlen(elem)+1);
 
-    if(!nue || !elemNodo)
+    if(!nue)
+        return FALSO;
+
+    nue->elem = strdup(elem);
+
+    if(!nue->elem)
     {
         free(nue);
-        free(elemNodo);
         return FALSO;
+    
     }
-
-    strcpy(elemNodo, elem);
-
-    strcpy(nue->elem, elemNodo);
+    
     nue->sig = *pp;
 
     *pp = nue;

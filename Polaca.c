@@ -62,7 +62,7 @@ booleano insertarEnPosicion(t_polaca* polaca,int posicion,char* valor)
         pp = &(*pp)->siguiente;
     }
 
-    strcpy((polaca->lista)->valor,valor);
+    strcpy((*pp)->valor,valor);
     
 
     return VERDADERO;

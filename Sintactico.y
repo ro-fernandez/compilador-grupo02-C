@@ -27,6 +27,7 @@ booleano negadorCondicion = FALSO;
 char* negarCondicion();
 booleano insertarOperadorPolaca();
 booleano insertarEnPilaCeldaActual();
+booleano resolverOperadorOR();
 
 %}
 
@@ -181,7 +182,7 @@ factor:
 
 condicion:
     comparacion {printf("    Comparacion es Condicion\n");}
-    | comparacion operador_logico comparacion {printf("    Comparacion Operador_Logico Comparacion es Condicion\n");}
+    | comparacion operador_logico {resolverOperadorOR();} comparacion {printf("    Comparacion Operador_Logico Comparacion es Condicion\n");}
     | OP_NOT {negadorCondicion = VERDADERO;} comparacion {printf("    OP_NOT Comparacion es Condicion\n"); negadorCondicion = FALSO;}
     ;
 
@@ -293,4 +294,21 @@ char* negarCondicion()
         return "BGE";
 
     return NULL;
+}
+
+booleano resolverOperadorOR()
+{
+    if(strcmp(operadorLogicoActual, "OR") == 0)
+    {
+        char celdaAInsertar[7];
+        char* celdaStr = sacarDePila(&pilaCeldas);
+        int celda = atoi(celdaStr);
+        insertarPolaca(&polaca, "BI");
+        itoa(polaca.celdaActual + 1, celdaAInsertar, 10);
+        insertarEnPosicion(&polaca, celda, celdaAInsertar);
+        insertarEnPilaCeldaActual();
+        avanzar(&polaca);
+    }
+
+    return VERDADERO;
 }

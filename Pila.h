@@ -5,7 +5,7 @@
 
 typedef struct sNodo
 {
-    char elem[TAM_MAX];
+    char* elem;
     struct sNodo* sig;
 } Nodo;
 
