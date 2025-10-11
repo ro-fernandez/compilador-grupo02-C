@@ -134,9 +134,9 @@ sentencia:
 
 asignacion: 
     ID OP_AS expresion {printf("    ID -> Expresion es Asignacion\n"); insertarPolaca(&polaca,$1); insertarPolaca(&polaca,"->");}
-    | ID OP_AS triangleAreaMax {printf("    ID -> TriangleAreaMax es Asignacion\n");}
-    | ID OP_AS convDate {printf("    ID -> ConvDate es Asignacion\n");}
-    | ID OP_AS CTE_STRING {printf("    ID -> CTE_STRING es Asignacion\n");}
+    | ID OP_AS triangleAreaMax {printf("    ID -> TriangleAreaMax es Asignacion\n"); insertarPolaca(&polaca,$1); insertarPolaca(&polaca,"->")};
+    | ID OP_AS convDate {printf("    ID -> ConvDate es Asignacion\n"); insertarPolaca(&polaca,$1); insertarPolaca(&polaca,"->");}
+    | ID OP_AS CTE_STRING {printf("    ID -> CTE_STRING es Asignacion\n"); insertarPolaca(&polaca,$3); insertarPolaca(&polaca,$1); insertarPolaca(&polaca,"->");}
 	;
 
 while:
