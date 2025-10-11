@@ -1,8 +1,9 @@
 #include "Polaca.h"
 
-void crearListaPolaca(listaPolaca* lista)
+void crearListaPolaca(t_polaca* polaca)
 {
-    *lista = NULL;
+    polaca->lista = NULL;
+    polaca->celdaActual = 0;
 }
 
 t_nodoPolaca* crearNodoPolaca()
@@ -19,7 +20,7 @@ t_nodoPolaca* crearNodoPolaca()
     return nodo;
 }
 
-booleano insertarPolaca(listaPolaca* lista,char* valor)
+booleano insertarPolaca(t_polaca* polaca,char* valor)
 {
     t_nodoPolaca* nuevo = crearNodoPolaca();
 
@@ -28,54 +29,61 @@ booleano insertarPolaca(listaPolaca* lista,char* valor)
         return FALSO;
     }
 
-    while(*lista)
+    t_nodoPolaca** pp = &polaca->lista;
+
+    while(*pp)
     {
-        lista = &(*lista)->siguiente;
+        pp = &(*pp)->siguiente;
     }
 
     strcpy(nuevo->valor,valor);
     
     nuevo->siguiente = NULL;
-    *lista = nuevo;
+    *pp = nuevo;
+    polaca->celdaActual++;
 
     return VERDADERO;
 }
 
 
-void avanzar(listaPolaca* lista)
+void avanzar(t_polaca* polaca)
 {
-    insertarPolaca(lista,"");
+    insertarPolaca(polaca,"");
 }
 
-booleano insertarEnPosicion(listaPolaca* lista,int posicion,char* valor)
+booleano insertarEnPosicion(t_polaca* polaca,int posicion,char* valor)
 {
     int i;
 
-    for(i = 0; i < posicion; i++){
-        lista = &(*lista)->siguiente;
+    t_nodoPolaca** pp = &polaca->lista;
+
+    for(i = 0; i < posicion; i++)
+    {
+        pp = &(*pp)->siguiente;
     }
 
-    strcpy((*lista)->valor,valor);
+    strcpy((*pp)->valor,valor);
     
 
     return VERDADERO;
 
 }
 
-void vaciarListaPolaca(listaPolaca* lista)
+void vaciarListaPolaca(t_polaca* polaca)
 {
     t_nodoPolaca* eliminado;
-    while(*lista)
+    while(polaca->lista)
     {
-        eliminado = *lista;
-        *lista = eliminado->siguiente;
+        eliminado = polaca->lista;
+        polaca->lista = eliminado->siguiente;
+        polaca->celdaActual--;
         free(eliminado);
     }
 }
 
-void guardarYVaciarListaPolaca(listaPolaca* lista, char* nombre_archivo)
+void guardarYVaciarListaPolaca(t_polaca* polaca, char* nombre_archivo)
 {
-    t_nodoPolaca* actual = *lista;
+    t_nodoPolaca* actual = polaca->lista;
     t_nodoPolaca* eliminado;
 
     FILE* archivo = fopen(nombre_archivo, "wt");
@@ -86,15 +94,22 @@ void guardarYVaciarListaPolaca(listaPolaca* lista, char* nombre_archivo)
         return;
     }
 
+    fprintf(archivo,"|%s|",actual->valor);
+    eliminado = actual;
+    actual = actual->siguiente;
+    free(eliminado);
+    polaca->celdaActual--;
+
     while(actual)
     {
         fprintf(archivo,"%s|",actual->valor);
         eliminado = actual;
         actual = actual->siguiente;
         free(eliminado);
+        polaca->celdaActual--;
     }
 
-    *lista = NULL;
+    polaca->lista = NULL;
     fclose(archivo);
 
 }

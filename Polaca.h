@@ -3,8 +3,6 @@
 
 #include "Utilitarios.h"
 
-#define TAM_MAX 200
-
 typedef struct NodoPolaca
 {
     char valor[TAM_MAX];
@@ -13,20 +11,23 @@ typedef struct NodoPolaca
 
 typedef t_nodoPolaca* listaPolaca;
 
-void crearListaPolaca(listaPolaca* lista);
+typedef struct {
+    listaPolaca lista;
+    int celdaActual;
+} t_polaca;
+
+void crearListaPolaca(t_polaca* polaca);
 
 t_nodoPolaca* crearNodoPolaca();
 
-/* Se inserta al final */
+booleano insertarPolaca(t_polaca* polaca,char* valor); 
 
-booleano insertarPolaca(listaPolaca* lista,char* valor); 
+booleano insertarEnPosicion(t_polaca* polaca,int posicion,char* valor);
 
-booleano insertarEnPosicion(listaPolaca* lista,int posicion,char* valor);
+void avanzar(t_polaca* polaca);
 
-void avanzar(listaPolaca* lista);
+void vaciarListaPolaca(t_polaca* polaca);
 
-void vaciarListaPolaca(listaPolaca* lista);
-
-void guardarYVaciarListaPolaca(listaPolaca* lista, char* nombre_archivo);
+void guardarYVaciarListaPolaca(t_polaca* polaca, char* nombre_archivo);
 
 #endif /* POLACA_H */
