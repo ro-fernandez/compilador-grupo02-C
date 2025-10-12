@@ -1,1 +1,1 @@
-|_a|_b|CMP|BLE|7|BI|12|_c|_b|CMP|BLE|15|1|_a|->|2|_a|->|
+|_a1|_b1|_var1|_p1|_p2|_p3|_f1|_f2|_a|LEER|

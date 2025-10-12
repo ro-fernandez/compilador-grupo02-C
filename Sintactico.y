@@ -112,8 +112,8 @@ declaracion:
     ;
 
 lista_ids:
-    ID              {printf("    ID es Lista_Ids\n");}
-    | lista_ids COMA ID {printf("    Lista_Ids COMA ID es Lista_Ids\n");}
+    ID              {printf("    ID es Lista_Ids\n"); insertarPolaca(&polaca, $1);}
+    | lista_ids COMA ID {printf("    Lista_Ids COMA ID es Lista_Ids\n"); insertarPolaca(&polaca, $3);}
     ;
 
 tipo_dato:
@@ -124,7 +124,7 @@ tipo_dato:
     ;
 
 leer:
-    READ PAR_A ID PAR_C     {printf("    READ PAR_A ID PAR_C es Leer\n");}
+    READ PAR_A ID PAR_C     {printf("    READ PAR_A ID PAR_C es Leer\n"); insertarPolaca(&polaca, $3); ; insertarPolaca(&polaca,"LEER");}
     ;
 
 escribir:

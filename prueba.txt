@@ -1,8 +1,8 @@
-if (_a > _b OR _c > _b)
-{
-	_a -> 1
+init {
+    _a1, _b1 : Float
+    _var1 : Int
+    _p1, _p2, _p3 : String
+    _f1, _f2 : DateConverted
 }
-else
-{
-	_a -> 2
-}
+
+read(_a) #+ variable +#
