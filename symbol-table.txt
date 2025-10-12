@@ -5,3 +5,4 @@ __a
 __b                                                                                                         
 __c                                                                                                         
 _1                                       CONST_INT       1                                                  
+_2                                       CONST_INT       2                                                  
