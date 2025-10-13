@@ -1,8 +1,28 @@
 init {
     _a1, _b1 : Float
-    _var1 : Int
+    _var1, _a : Int
     _p1, _p2, _p3 : String
     _f1, _f2 : DateConverted
+    _singleId : Int
+    _x, _y, _z : Float
+    _name, _email : String
+    _date1 : DateConverted
 }
 
-read(_a) #+ variable +#
+#+ Pruebas de leer (READ) +#
+read(_a1)
+read(_var1)
+read(_p1)
+read(_f1)
+read(_singleId)
+read(_x)
+read(_name)
+
+if (_a > _b OR _c > _b)
+{
+	_a -> 1
+}
+else
+{
+	_a -> 2
+}
