@@ -172,3 +172,25 @@ void guardarYVaciarLista(lista* lista, char* nombre_archivo)
     *lista = NULL;
     fclose(archivo);
 }
+
+char* obtenerTipoDatoID(lista* lista, char* lex)
+{
+    t_nodo* lexema = obtenerSimbolo(lista, lex);
+
+    if (!lexema)
+        return NULL;
+
+    return (lexema->lex).tipo;
+}
+
+booleano actualizarTipoDatoID(lista* lista, char* lex, char* tipo)
+{
+    t_nodo* lexema = obtenerSimbolo(lista, lex);
+
+    if (!lexema)
+        return FALSO;
+
+    strcpy((lexema->lex).tipo, tipo);
+
+    return VERDADERO;
+}

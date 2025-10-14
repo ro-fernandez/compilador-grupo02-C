@@ -6,6 +6,11 @@
 #include "Pila.h"
 #include "Polaca.h"
 
+#define TIPO_INT "INT"
+#define TIPO_FLOAT "FLOAT"
+#define TIPO_STRING "STRING"
+#define TIPO_DATE_CONV "DATE_CONV"
+
 int yystopparser=0;
 FILE  *yyin;
 
@@ -18,7 +23,7 @@ char* archivo_tabla_simbolos = "symbol-table.txt";
 t_polaca polaca;
 char* archivo_polaca = "intermediate-code.txt";
 
-Pila pilaCeldas;
+Pila pila_celdas;
 
 Pila pilaTriangulo;
 
@@ -32,11 +37,25 @@ booleano insertarEnPilaCeldaActual();
 booleano resolverOperadorOR();
 booleano insertarCeldaEnValorDePila();
 booleano completarBranchOR();
+
 booleano insertarTriangulo1EnPolaca();
 booleano insertarTriangulo2EnPolaca();
 booleano triangleAreaMaximum();
 booleano insertarCalculoArea1();
 booleano insertarCalculoArea2();
+
+Pila pila_IDs;
+char tipoDatoVariables[10];
+booleano actualizarTipoDatoVariables();
+
+Pila pila_tipos_dato_expresion;
+
+void validarTipoDatoAsignacion(const char* id_asignado, TipoAsignacion tipo_asignacion);
+void validarTiposDatoExpresion();
+void validarTiposDatoComparacion();
+
+char* generarNombreIDTS(const char* id);
+char* obtenerTipoDatoIDExistente(char* lex);
 
 %}
 
@@ -90,9 +109,13 @@ booleano insertarCalculoArea2();
 %token INIT
 
 /* Start Symbol */
-%start programa
+%start inicio_programa
 
 %%
+
+inicio_programa:
+    programa {printf("    Programa es Inicio_Programa\n");}
+    ;
 
 programa:
     init {printf("    Init es Programa\n");}
@@ -115,19 +138,19 @@ declaraciones:
     ;
 
 declaracion:
-    lista_ids DOS_PUNTOS tipo_dato {printf("    Lista_Ids DOS_PUNTOS Tipo_dato es Declaracion\n");}
+    lista_ids DOS_PUNTOS tipo_dato {printf("    Lista_Ids DOS_PUNTOS Tipo_dato es Declaracion\n"); actualizarTipoDatoVariables();}
     ;
 
 lista_ids:
-    ID              {printf("    ID es Lista_Ids\n"); insertarPolaca(&polaca, $1);}
-    | lista_ids COMA ID {printf("    Lista_Ids COMA ID es Lista_Ids\n"); insertarPolaca(&polaca, $3);}
+    ID              {printf("    ID es Lista_Ids\n"); insertarEnPila(&pila_IDs, $1);}
+    | lista_ids COMA ID {printf("    Lista_Ids COMA ID es Lista_Ids\n"); insertarEnPila(&pila_IDs, $3);}
     ;
 
 tipo_dato:
-    T_STRING {printf("    T_STRING es Tipo_dato\n");}
-    | T_FLOAT {printf("    T_FLOAT es Tipo_dato\n");}
-    | T_INT   {printf("    T_INT es Tipo_dato\n"); }
-    | T_DATE_CONV {printf("    T_DATE_CONV es Tipo_dato\n"); }
+    T_STRING {printf("    T_STRING es Tipo_dato\n"); strcpy(tipoDatoVariables, TIPO_STRING);}
+    | T_FLOAT {printf("    T_FLOAT es Tipo_dato\n"); strcpy(tipoDatoVariables, TIPO_FLOAT);}
+    | T_INT   {printf("    T_INT es Tipo_dato\n"); strcpy(tipoDatoVariables, TIPO_INT);}
+    | T_DATE_CONV {printf("    T_DATE_CONV es Tipo_dato\n"); strcpy(tipoDatoVariables, TIPO_DATE_CONV);}
     ;
 
 leer:
@@ -150,12 +173,11 @@ sentencia:
     | sentencia_else {printf("    Else es Sentencia\n");}
     ;
 
-
 asignacion: 
-    ID OP_AS expresion {printf("    ID -> Expresion es Asignacion\n"); insertarPolaca(&polaca,$1); insertarPolaca(&polaca,"->");}
-    | ID OP_AS triangleAreaMax {printf("    ID -> TriangleAreaMax es Asignacion\n"); insertarPolaca(&polaca,$1); insertarPolaca(&polaca,"->");}
-    | ID OP_AS convDate {printf("    ID -> ConvDate es Asignacion\n"); insertarPolaca(&polaca,$1); insertarPolaca(&polaca,"->");}
-    | ID OP_AS CTE_STRING {printf("    ID -> CTE_STRING es Asignacion\n"); insertarPolaca(&polaca,$3); insertarPolaca(&polaca,$1); insertarPolaca(&polaca,"->");}
+    ID OP_AS expresion {printf("    ID -> Expresion es Asignacion\n"); validarTipoDatoAsignacion($1, ASIG_EXPRESION); insertarPolaca(&polaca,$1); insertarPolaca(&polaca,"->");}
+    | ID OP_AS triangleAreaMax {printf("    ID -> TriangleAreaMax es Asignacion\n"); validarTipoDatoAsignacion($1, ASIG_TRIANGLE); insertarPolaca(&polaca,$1); insertarPolaca(&polaca,"->");}
+    | ID OP_AS convDate {printf("    ID -> ConvDate es Asignacion\n"); validarTipoDatoAsignacion($1, ASIG_CONVDATE); insertarPolaca(&polaca,$1); insertarPolaca(&polaca,"->");}
+    | ID OP_AS CTE_STRING {printf("    ID -> CTE_STRING es Asignacion\n"); validarTipoDatoAsignacion($1, ASIG_STRING); insertarPolaca(&polaca,$3); insertarPolaca(&polaca,$1); insertarPolaca(&polaca,"->");}
 	;
 
 while:
@@ -172,20 +194,20 @@ sentencia_else:
 
 expresion:
     termino {printf("    Termino es Expresion\n");}
-    |expresion OP_SUM termino {printf("    Expresion+Termino es Expresion\n"); insertarPolaca(&polaca,"+");}
-    |expresion OP_RES termino {printf("    Expresion-Termino es Expresion\n"); insertarPolaca(&polaca,"-");}
+    |expresion OP_SUM termino {printf("    Expresion+Termino es Expresion\n"); validarTiposDatoExpresion(); insertarPolaca(&polaca,"+");}
+    |expresion OP_RES termino {printf("    Expresion-Termino es Expresion\n"); validarTiposDatoExpresion(); insertarPolaca(&polaca,"-");}
     ;
 
 termino: 
     factor {printf("    Factor es Termino\n");}
-    |termino OP_MUL factor {printf("     Termino*Factor es Termino\n"); insertarPolaca(&polaca,"*");}
-    |termino OP_DIV factor {printf("     Termino/Factor es Termino\n"); insertarPolaca(&polaca,"/");}
+    |termino OP_MUL factor {printf("     Termino*Factor es Termino\n"); validarTiposDatoExpresion(); insertarPolaca(&polaca,"*");}
+    |termino OP_DIV factor {printf("     Termino/Factor es Termino\n"); validarTiposDatoExpresion(); insertarPolaca(&polaca,"/");}
     ;
 
 factor: 
-    ID {printf("    ID es Factor \n"); insertarPolaca(&polaca,$1); }
-    | CTE_INT {printf("    CTE_INT es Factor\n"); insertarPolaca(&polaca,$1);}
-    | CTE_REAL {printf("    CTE_REAL es Factor\n"); insertarPolaca(&polaca,$1);}
+    ID {printf("    ID es Factor \n"); insertarEnPila(&pila_tipos_dato_expresion, obtenerTipoDatoIDExistente(generarNombreIDTS($1))); insertarPolaca(&polaca,$1);}
+    | CTE_INT {printf("    CTE_INT es Factor\n"); insertarEnPila(&pila_tipos_dato_expresion, TIPO_INT); insertarPolaca(&polaca,$1);}
+    | CTE_REAL {printf("    CTE_REAL es Factor\n"); insertarEnPila(&pila_tipos_dato_expresion, TIPO_FLOAT); insertarPolaca(&polaca,$1);}
 	| PAR_A expresion PAR_C {printf("    PAR_A Expresion PAR_C es Factor\n");}
     ;
 
@@ -196,7 +218,7 @@ condicion:
     ;
 
 comparacion:
-    expresion comparador expresion {printf("    Expresion Comparador Expresion es Comparacion\n"); insertarPolaca(&polaca,"CMP"); insertarOperadorPolaca(); insertarEnPilaCeldaActual(); avanzar(&polaca);}
+    expresion comparador expresion {printf("    Expresion Comparador Expresion es Comparacion\n"); validarTiposDatoComparacion(); insertarPolaca(&polaca,"CMP"); insertarOperadorPolaca(); insertarEnPilaCeldaActual(); avanzar(&polaca);}
     ;
 
 comparador:
@@ -221,18 +243,15 @@ triangulo:
     COR_A coordenada PyC coordenada PyC coordenada COR_C {printf("    COR_A Coordenada COMA Coordenada COMA Coordenada COR_C es Triangulo\n");}
     ;
 
-
 coordenada:
     valor COMA valor {printf("    valor PyC valor es Coordenada\n");}
     ;
-
 
 valor:
     CTE_INT     {insertarEnPila(&pilaTriangulo,$1); printf("    CTE_INT es Valor\n");}
     | CTE_REAL  {insertarEnPila(&pilaTriangulo,$1); printf("    CTE_REAL es Valor\n");}
     | ID        {insertarEnPila(&pilaTriangulo,$1); printf("    ID es Valor\n");}
     ;
-
 
 convDate:
     CONV_D PAR_A CTE_FECHA PAR_C {printf("    CONV_D PAR_A CTE_FECHA PAR_C es ConvDate\n");}
@@ -245,8 +264,10 @@ int main(int argc, char *argv[])
 {
     crearLista(&tabla_simbolos);
     crearListaPolaca(&polaca);
-    crearPila(&pilaCeldas);
+    crearPila(&pila_celdas);
     crearPila(&pilaTriangulo);
+    crearPila(&pila_IDs);
+    crearPila(&pila_tipos_dato_expresion);
 
     if((yyin = fopen(argv[1], "rt"))==NULL)
     {
@@ -277,7 +298,7 @@ booleano insertarEnPilaCeldaActual()
 {
     char celdaActualStr[TAM_MAX];
     itoa(polaca.celdaActual, celdaActualStr, 10);
-    insertarEnPila(&pilaCeldas, celdaActualStr);
+    insertarEnPila(&pila_celdas, celdaActualStr);
     return VERDADERO;
 }
 
@@ -286,16 +307,17 @@ booleano insertarCeldaEnValorDePila()
     int posicion;
     char celdaActualStr[TAM_MAX];
     itoa(polaca.celdaActual,celdaActualStr,10);
-    posicion = atoi(sacarDePila(&pilaCeldas));
+    posicion = atoi(sacarDePila(&pila_celdas));
     insertarEnPosicion(&polaca,posicion,celdaActualStr);
     if(strcmp(operadorLogicoActual, "AND") == 0)
     {
-        posicion = atoi(sacarDePila(&pilaCeldas));
+        posicion = atoi(sacarDePila(&pila_celdas));
         insertarEnPosicion(&polaca,posicion,celdaActualStr);
     }
     return VERDADERO;
 }
 
+/* CONDICIONALES */
 
 booleano insertarOperadorPolaca()
 {
@@ -338,7 +360,7 @@ booleano resolverOperadorOR()
     if(strcmp(operadorLogicoActual, "OR") == 0)
     {
         char celdaAInsertar[7];
-        char* celdaStr = sacarDePila(&pilaCeldas);
+        char* celdaStr = sacarDePila(&pila_celdas);
         int celda = atoi(celdaStr);
         insertarPolaca(&polaca, "BI");
         itoa(polaca.celdaActual + 1, celdaAInsertar, 10);
@@ -354,13 +376,13 @@ booleano completarBranchOR()
 {
     if(strcmp(operadorLogicoActual, "OR") == 0)
     {
-        char* tope = sacarDePila(&pilaCeldas);
-        char* celdaStr = sacarDePila(&pilaCeldas);
+        char* tope = sacarDePila(&pila_celdas);
+        char* celdaStr = sacarDePila(&pila_celdas);
         int celda = atoi(celdaStr);
         char celdaActualStr[TAM_MAX];
         itoa(polaca.celdaActual,celdaActualStr,10);
         insertarEnPosicion(&polaca,celda,celdaActualStr);
-        insertarEnPila(&pilaCeldas,tope);
+        insertarEnPila(&pila_celdas,tope);
     }
 
     return VERDADERO;
@@ -617,4 +639,136 @@ booleano insertarCalculoArea2()
     insertarPolaca(&polaca,"->");
 
     return VERDADERO;
+}
+    
+/* VALIDACIONES */
+
+booleano actualizarTipoDatoVariables()
+{
+    char* idActual;
+    char* tipoDatoActual;
+    char* nombreIdActual;
+
+    while(!pilaVacia(&pila_IDs))
+    {
+        idActual = sacarDePila(&pila_IDs);
+
+        nombreIdActual = generarNombreIDTS(idActual);
+
+        tipoDatoActual = obtenerTipoDatoID(&tabla_simbolos, nombreIdActual);
+
+        if(strcmp(tipoDatoActual,"") != 0)
+        {
+            printf("\nERROR: Variable %s ya declarada\n", idActual);
+            exit(1);
+        }
+        
+        actualizarTipoDatoID(&tabla_simbolos, nombreIdActual, tipoDatoVariables);
+    }
+}
+
+void validarTipoDatoAsignacion(const char* id_asignado, TipoAsignacion tipo_asignacion)
+{
+    char* tipoDatoAsignado;
+    char* tipoExpresion;
+
+    tipoDatoAsignado = obtenerTipoDatoIDExistente(generarNombreIDTS(id_asignado));
+
+    switch (tipo_asignacion)
+    {
+        case ASIG_EXPRESION:
+            tipoExpresion = sacarDePila(&pila_tipos_dato_expresion);
+            if(strcmp(tipoDatoAsignado,tipoExpresion) != 0)
+            {
+                printf("\nERROR: Se intento asignar un %s a una variable %s\n", tipoExpresion, tipoDatoAsignado);
+                exit(1);
+            }
+            break;
+        case ASIG_TRIANGLE:
+            if(strcmp(tipoDatoAsignado, TIPO_FLOAT) != 0)
+            {
+                printf("\nERROR: Se intento asignar un número a una variable %s\n", tipoDatoAsignado);
+                exit(1);
+            }
+            break;
+        case ASIG_CONVDATE:
+            if(strcmp(tipoDatoAsignado, TIPO_DATE_CONV) != 0)
+            {
+                printf("\nERROR: Se intento asignar un CONV_DATE a una variable %s\n", tipoDatoAsignado);
+                exit(1);
+            }
+            break;
+        case ASIG_STRING:
+            if(strcmp(tipoDatoAsignado, TIPO_STRING) != 0)
+            {
+                printf("\nERROR: Se intento asignar un STRING a una variable %s\n", tipoDatoAsignado);
+                exit(1);
+            }
+            break;
+    }
+}
+
+void validarTiposDatoExpresion()
+{
+    char* tipo_1 = sacarDePila(&pila_tipos_dato_expresion);
+    char* tipo_2 = sacarDePila(&pila_tipos_dato_expresion);
+
+    if(strcmp(tipo_1, TIPO_STRING) == 0 || strcmp(tipo_2, TIPO_STRING) == 0)
+    {
+        printf("\nERROR: No se pueden realizar operaciones sobre tipos STRING\n");
+        exit(1);
+    }
+
+    if(strcmp(tipo_1,tipo_2) != 0)
+    {
+        printf("\nERROR: No se pueden realizar operaciones sobre tipos distintos\n");
+        exit(1);
+    }
+
+    insertarEnPila(&pila_tipos_dato_expresion, tipo_1);
+}
+
+void validarTiposDatoComparacion()
+{
+    char* tipo_1 = sacarDePila(&pila_tipos_dato_expresion);
+    char* tipo_2 = sacarDePila(&pila_tipos_dato_expresion);
+
+    if(strcmp(tipo_1, TIPO_STRING) == 0 || strcmp(tipo_2, TIPO_STRING) == 0)
+    {
+        printf("\nERROR: No se pueden realizar operaciones sobre tipos STRING\n");
+        exit(1);
+    }
+
+    if(strcmp(tipo_1,tipo_2) != 0)
+    {
+        printf("\nERROR: No se pueden realizar operaciones sobre tipos distintos\n");
+        exit(1);
+    }
+}
+
+char* generarNombreIDTS(const char* id)
+{
+    size_t tam_nombre = strlen(id) + 2;
+
+    char* nombre_id = malloc(tam_nombre);
+
+    if(!nombre_id)
+        return NULL;
+
+    snprintf(nombre_id, tam_nombre, "_%s", id);
+
+    return nombre_id;
+}
+
+char* obtenerTipoDatoIDExistente(char* lex)
+{
+    char* tipo_dato = obtenerTipoDatoID(&tabla_simbolos, lex);
+
+    if(strcmp(tipo_dato,"") == 0)
+    {
+        printf("\nERROR: Variable %s no declarada\n", lex+1);
+        exit(1);
+    }
+
+    return tipo_dato;
 }
