@@ -20,6 +20,8 @@ char* archivo_polaca = "intermediate-code.txt";
 
 Pila pilaCeldas;
 
+Pila pilaTriangulo;
+
 char branchComparadorActual[4];
 char operadorLogicoActual[4];
 booleano negadorCondicion = FALSO;
@@ -30,6 +32,9 @@ booleano insertarEnPilaCeldaActual();
 booleano resolverOperadorOR();
 booleano insertarCeldaEnValorDePila();
 booleano completarBranchOR();
+booleano insertarTriangulo1EnPolaca();
+booleano insertarTriangulo2EnPolaca();
+booleano triangleAreaMaximum();
 
 %}
 
@@ -139,8 +144,8 @@ sentencia:
     | convDate  {printf("    ConvDate es Sentencia\n");}
     | leer  {printf("    Leer es Sentencia\n");}
     | escribir  {printf("    Escribir es Sentencia\n");}
-    | if {printf("    If es Sentencia\n");}
-    | else {printf("    Else es Sentencia\n");}
+    | sentencia_if {printf("    If es Sentencia\n");}
+    | sentencia_else {printf("    Else es Sentencia\n");}
     ;
 
 
@@ -155,12 +160,12 @@ while:
     WHILE PAR_A condicion PAR_C LLA_A bloque LLA_C {printf("    WHILE PAR_A Condicion PAR_C LLA_A Bloque LLA_C es While\n");}
     ;
 
-if:
+sentencia_if:
     IF PAR_A condicion PAR_C LLA_A {completarBranchOR();} bloque LLA_C {insertarCeldaEnValorDePila(); printf("    IF PAR_A Condicion PAR_C LLA_A Bloque LLA_C es If\n");}
     ;
 
-else:
-    IF PAR_A condicion PAR_C LLA_A {completarBranchOR();} bloque LLA_C ELSE LLA_A {insertarCeldaEnValorDePila();} bloque LLA_C {printf("    IF PAR_A Condicion PAR_C LLA_A Bloque LLA_C ELSE LLA_A Bloque LLA_C es If\n");}
+sentencia_else:
+    sentencia_if ELSE LLA_A {insertarCeldaEnValorDePila();} bloque LLA_C {printf("    IF PAR_A Condicion PAR_C LLA_A Bloque LLA_C ELSE LLA_A Bloque LLA_C es If\n");}
     ;
 
 expresion:
@@ -207,18 +212,25 @@ operador_logico:
     ;
 
 triangleAreaMax:
-    TRI_AR_MAX PAR_A triangulo PyC triangulo PAR_C {printf("    TRI_AR_MAX es TriangleAreaMax\n");}
+    TRI_AR_MAX PAR_A triangulo {insertarTriangulo1EnPolaca();} PyC triangulo {insertarTriangulo2EnPolaca();} PAR_C {triangleAreaMaximum(); printf("    TRI_AR_MAX es TriangleAreaMax\n");}
     ;
 
 triangulo:
-    COR_A coordenada COMA coordenada COMA coordenada COR_C {printf("    COR_A Coordenada COMA Coordenada COMA Coordenada COR_C es Triangulo\n");}
+    COR_A coordenada PyC coordenada PyC coordenada COR_C {printf("    COR_A Coordenada COMA Coordenada COMA Coordenada COR_C es Triangulo\n");}
     ;
 
+
 coordenada:
-    CTE_INT     {printf("    CTE_INT es Coordenada\n");}
-    | CTE_REAL  {printf("    CTE_REAL es Coordenada\n");}
-    | ID        {printf("    ID es Coordenada\n");}
+    valor COMA valor {printf("    valor PyC valor es Coordenada\n");}
     ;
+
+
+valor:
+    CTE_INT     {insertarEnPila(&pilaTriangulo,$1); printf("    CTE_INT es Valor\n");}
+    | CTE_REAL  {insertarEnPila(&pilaTriangulo,$1); printf("    CTE_REAL es Valor\n");}
+    | ID        {insertarEnPila(&pilaTriangulo,$1); printf("    ID es Valor\n");}
+    ;
+
 
 convDate:
     CONV_D PAR_A CTE_FECHA PAR_C {printf("    CONV_D PAR_A CTE_FECHA PAR_C es ConvDate\n");}
@@ -232,6 +244,7 @@ int main(int argc, char *argv[])
     crearLista(&tabla_simbolos);
     crearListaPolaca(&polaca);
     crearPila(&pilaCeldas);
+    crearPila(&pilaTriangulo);
 
     if((yyin = fopen(argv[1], "rt"))==NULL)
     {
@@ -349,4 +362,97 @@ booleano completarBranchOR()
     }
 
     return VERDADERO;
+}
+
+booleano insertarTriangulo1EnPolaca()
+{
+    int i;
+    char* valor;
+    char* coordenada;
+    
+    //formato: x1,y1,x2,y2,x3,y3
+    //en polaca: val|y3|->|val|x3|->|val|y2|->|val|x2|->|val|y1|->|val|x1|->|
+    coordenada = sacarDePila(&pilaTriangulo);
+    insertarPolaca(&polaca,coordenada);
+    insertarPolaca(&polaca,"y3");
+    insertarPolaca(&polaca,"->");
+
+    coordenada = sacarDePila(&pilaTriangulo);
+    insertarPolaca(&polaca,coordenada);
+    insertarPolaca(&polaca,"x3");
+    insertarPolaca(&polaca,"->");
+
+    coordenada = sacarDePila(&pilaTriangulo);
+    insertarPolaca(&polaca,coordenada);
+    insertarPolaca(&polaca,"y2");
+    insertarPolaca(&polaca,"->");
+
+    coordenada = sacarDePila(&pilaTriangulo);
+    insertarPolaca(&polaca,coordenada);
+    insertarPolaca(&polaca,"x2");
+    insertarPolaca(&polaca,"->");
+
+    coordenada = sacarDePila(&pilaTriangulo);
+    insertarPolaca(&polaca,coordenada);
+    insertarPolaca(&polaca,"y1");
+    insertarPolaca(&polaca,"->");
+
+    coordenada = sacarDePila(&pilaTriangulo);
+    insertarPolaca(&polaca,coordenada);
+    insertarPolaca(&polaca,"x1");
+    insertarPolaca(&polaca,"->");
+
+    return VERDADERO;
+}
+
+booleano insertarTriangulo2EnPolaca()
+{
+    int i;
+    char* valor;
+    char* coordenada;
+
+    //formato: x4,y4,x5,y5,x6,y6
+    //en polaca: val|y6|->|val|x6|->|val|y5|->|val|x5|->|val|y4|->|val|x4|->|
+    coordenada = sacarDePila(&pilaTriangulo);
+    insertarPolaca(&polaca,coordenada);
+    insertarPolaca(&polaca,"y6");
+    insertarPolaca(&polaca,"->");
+
+    coordenada = sacarDePila(&pilaTriangulo);
+    insertarPolaca(&polaca,coordenada);
+    insertarPolaca(&polaca,"x6");
+    insertarPolaca(&polaca,"->");
+
+    coordenada = sacarDePila(&pilaTriangulo);
+    insertarPolaca(&polaca,coordenada);
+    insertarPolaca(&polaca,"y5");
+    insertarPolaca(&polaca,"->");
+
+    coordenada = sacarDePila(&pilaTriangulo);
+    insertarPolaca(&polaca,coordenada);
+    insertarPolaca(&polaca,"x5");
+    insertarPolaca(&polaca,"->");
+
+    coordenada = sacarDePila(&pilaTriangulo);
+    insertarPolaca(&polaca,coordenada);
+    insertarPolaca(&polaca,"y4");
+    insertarPolaca(&polaca,"->");
+
+    coordenada = sacarDePila(&pilaTriangulo);
+    insertarPolaca(&polaca,coordenada);
+    insertarPolaca(&polaca,"x4");
+    insertarPolaca(&polaca,"->");
+
+    return VERDADERO;
+}
+
+booleano triangleAreaMaximum()
+{
+
+    
+
+    return VERDADERO;
+
+
+
 }
