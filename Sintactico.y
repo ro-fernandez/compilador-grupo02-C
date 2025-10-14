@@ -30,6 +30,7 @@ booleano insertarEnPilaCeldaActual();
 booleano resolverOperadorOR();
 booleano insertarCeldaEnValorDePila();
 booleano completarBranchOR();
+booleano completarBranchWhile();
 
 %}
 
@@ -128,8 +129,8 @@ leer:
     ;
 
 escribir:
-    WRITE PAR_A CTE_STRING PAR_C        {printf("    WRITE PAR_OP CTE_STRING PAR_CL es Escribir\n");}
-    | WRITE PAR_A expresion PAR_C       {printf("    WRITE PAR_OP Expresion PAR_CL es Escribir\n");}
+    WRITE PAR_A CTE_STRING PAR_C        {printf("    WRITE PAR_OP CTE_STRING PAR_CL es Escribir\n");insertarPolaca(&polaca, $3); insertarPolaca(&polaca,"ESCRIBIR");}
+    | WRITE PAR_A expresion PAR_C       {printf("    WRITE PAR_OP Expresion PAR_CL es Escribir\n");insertarPolaca(&polaca,"ESCRIBIR");}
     ;
 
 sentencia:  	   
@@ -152,7 +153,7 @@ asignacion:
 	;
 
 while:
-    WHILE PAR_A condicion PAR_C LLA_A bloque LLA_C {printf("    WHILE PAR_A Condicion PAR_C LLA_A Bloque LLA_C es While\n");}
+    WHILE { insertarEnPilaCeldaActual();insertarPolaca(&polaca,"ET");} PAR_A condicion PAR_C {/*La condición ya inserta el valor el polaca*/} LLA_A bloque {completarBranchWhile();} LLA_C {printf("    WHILE PAR_A Condicion PAR_C LLA_A Bloque LLA_C es While\n");}
     ;
 
 if:
@@ -347,6 +348,27 @@ booleano completarBranchOR()
         insertarEnPosicion(&polaca,celda,celdaActualStr);
         insertarEnPila(&pilaCeldas,tope);
     }
+
+    return VERDADERO;
+}
+
+booleano completarBranchWhile()
+{
+    
+    char* tope = sacarDePila(&pilaCeldas);//desapilar Z (tope de pila)
+    int celda = atoi(tope);
+    char celdaSig[TAM_MAX];
+
+    insertarPolaca(&polaca,"BI"); // Escribir BI
+    itoa(polaca.celdaActual + 1,celdaSig,10);
+    insertarEnPosicion(&polaca,celda,celdaSig); // escribir en Z  el nº celda actual + 1
+
+    printf("%d........%s.................",celda,celdaSig);
+    
+    tope = sacarDePila(&pilaCeldas); //desapilar Z (tope de pila)
+    celda = atoi(tope);
+
+    insertarPolaca(&polaca, tope); // escribir Z en la celda actual 
 
     return VERDADERO;
 }
