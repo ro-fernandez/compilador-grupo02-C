@@ -26,3 +26,5 @@ else
 {
 	_a -> 2
 }
+
+triangleAreaMaximum( [0,_x; 4.0,12; 2.5,3] ; [_x,0; 6,0; _z,2] )
