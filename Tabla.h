@@ -51,4 +51,8 @@ void guardarYVaciarLista(lista* lista, char* nombre_archivo);
 
 void copiarLexema(t_lexema* destino, t_lexema origen);
 
+char* obtenerTipoDatoID(lista* lista, char* lex);
+
+booleano actualizarTipoDatoID(lista* lista, char* lex, char* tipo);
+
 #endif /* TABLA_H */

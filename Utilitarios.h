@@ -10,6 +10,11 @@ typedef enum
     FALSO, VERDADERO
 } booleano;
 
+typedef enum
+{
+    ASIG_EXPRESION, ASIG_TRIANGLE, ASIG_CONVDATE, ASIG_STRING
+} TipoAsignacion;
+
 #define TAM_MAX 200
 
 #endif /* UTILITARIOS_H */
