@@ -470,8 +470,133 @@ booleano insertarTriangulo2EnPolaca()
 
 booleano triangleAreaMaximum()
 {
+    char branchValue[TAM_MAX];
+    insertarCalculoArea1();
+    insertarCalculoArea2();
+    //validacion triangularidad: por ahora, lo que hace si alguno de los dos parametros NO ES TRIANGULO, va al final del codigo y no hace nada.
 
+    //if(a1 == 0 || a2 == 0) ---> ir al final del codigo
+    insertarPolaca(&polaca,"a1");
+    insertarPolaca(&polaca,"0");
+    insertarPolaca(&polaca,"CMP");
+    insertarPolaca(&polaca,"BNE");
+    itoa(polaca.celdaActual+3,branchValue,10);
+    insertarPolaca(&polaca,branchValue);
+
+    insertarPolaca(&polaca,"BI");
+    itoa(polaca.celdaActual+21,branchValue,10);
+    insertarPolaca(&polaca,branchValue);
+
+    insertarPolaca(&polaca,"a2");
+    insertarPolaca(&polaca,"0");
+    insertarPolaca(&polaca,"CMP");
+    insertarPolaca(&polaca,"BNE");
+    itoa(polaca.celdaActual+3,branchValue,10);
+    insertarPolaca(&polaca,branchValue);
+
+    insertarPolaca(&polaca,"BI");
+    itoa(polaca.celdaActual+14,branchValue,10);
+    insertarPolaca(&polaca,branchValue);
+    //fin validacion triangularidad
+
+
+    //if(a1 > a2)
+    insertarPolaca(&polaca,"a1");
+    insertarPolaca(&polaca,"a2");
+    insertarPolaca(&polaca,"CMP");
+    insertarPolaca(&polaca,"BLE");
+    itoa(polaca.celdaActual+6,branchValue,10);
+    insertarPolaca(&polaca,branchValue);
+
+    //mayor = a1
+    insertarPolaca(&polaca,"a1");
+    insertarPolaca(&polaca,"mayor");
+    insertarPolaca(&polaca,"->");
+    insertarPolaca(&polaca,"BI");
+    itoa(polaca.celdaActual+4,branchValue,10);
+    insertarPolaca(&polaca,branchValue);
+
+    //mayor = a2
+    insertarPolaca(&polaca,"a2");
+    insertarPolaca(&polaca,"mayor");
+    insertarPolaca(&polaca,"->");
     
+
+    return VERDADERO;
+}
+
+booleano insertarCalculoArea1()
+{
+    //areaTri1 = 0.5 * (x1*(y2-y3) + x2*(y3-y1) + x3*(y1-y2)) 
+
+    insertarPolaca(&polaca,"y2");
+    insertarPolaca(&polaca,"y3");
+    insertarPolaca(&polaca,"-");
+
+    insertarPolaca(&polaca,"x1");
+    insertarPolaca(&polaca,"*");
+
+    insertarPolaca(&polaca,"y3");
+    insertarPolaca(&polaca,"y1");
+    insertarPolaca(&polaca,"-");
+
+    insertarPolaca(&polaca,"x2");
+    insertarPolaca(&polaca,"*");
+
+    insertarPolaca(&polaca,"+");
+
+    insertarPolaca(&polaca,"y1");
+    insertarPolaca(&polaca,"y2");
+    insertarPolaca(&polaca,"-");
+
+    insertarPolaca(&polaca,"x3");
+    insertarPolaca(&polaca,"*");
+
+    insertarPolaca(&polaca,"+");
+
+    insertarPolaca(&polaca,"0.5");
+    insertarPolaca(&polaca,"*");
+
+    insertarPolaca(&polaca,"a1");
+    insertarPolaca(&polaca,"->");
+
+    return VERDADERO;
+}
+
+booleano insertarCalculoArea2()
+{
+    //areaTri2 = 0.5 * (x4*(y5-y6) + x5*(y6-y4) + x6*(y4-y5)) 
+
+    insertarPolaca(&polaca,"y5");
+    insertarPolaca(&polaca,"y6");
+    insertarPolaca(&polaca,"-");
+
+    insertarPolaca(&polaca,"x4");
+    insertarPolaca(&polaca,"*");
+
+    insertarPolaca(&polaca,"y6");
+    insertarPolaca(&polaca,"y4");
+    insertarPolaca(&polaca,"-");
+
+    insertarPolaca(&polaca,"x5");
+    insertarPolaca(&polaca,"*");
+
+    insertarPolaca(&polaca,"+");
+
+    insertarPolaca(&polaca,"y4");
+    insertarPolaca(&polaca,"y5");
+    insertarPolaca(&polaca,"-");
+
+    insertarPolaca(&polaca,"x6");
+    insertarPolaca(&polaca,"*");
+
+    insertarPolaca(&polaca,"+");
+
+    insertarPolaca(&polaca,"0.5");
+    insertarPolaca(&polaca,"*");
+    
+    insertarPolaca(&polaca,"a2");
+    insertarPolaca(&polaca,"->");
 
     return VERDADERO;
 }
