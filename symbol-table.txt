@@ -1,5 +1,24 @@
 
 NOMBRE                                   TIPO            VALOR                                    LONGITUD  
 ------------------------------------------------------------------------------------------------------------
-__date1                                  DATE_CONV                                                          
-_06.03.2002                              CONST_FECHA     06.03.2002                                         
+__a1                                     FLOAT                                                              
+__b1                                     FLOAT                                                              
+__c1                                     FLOAT                                                              
+__d1                                     FLOAT                                                              
+__e1                                     FLOAT                                                              
+__a                                      FLOAT                                                              
+__var1                                   INT                                                                
+__var2                                   INT                                                                
+__x                                      INT                                                                
+__z                                      INT                                                                
+__a2                                     INT                                                                
+__p1                                     STRING                                                             
+__p2                                     STRING                                                             
+__p3                                     STRING                                                             
+__d2                                     STRING                                                             
+__g3                                     STRING                                                             
+__f1                                     DATE_CONV                                                          
+__f2                                     DATE_CONV                                                          
+__fecha                                  DATE_CONV                                                          
+_21.1                                    CONST_REAL      21.1                                               
+_1000.5                                  CONST_REAL      1000.5                                             

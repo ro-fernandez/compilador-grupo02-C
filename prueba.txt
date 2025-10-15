@@ -1,5 +1,12 @@
 init {
-    _date1 : DateConverted
+    _a1, _b1, _c1, _d1, _e1, _a : Float
+    _var1, _var2, _x, _z, _a2 : Int
+    _p1, _p2, _p3, _d2, _g3 : String
+    _f1, _f2, _fecha : DateConverted
 }
 
-_date1 -> convDate(06.03.2002)
+#+ mientras +#
+while (_a1 > _b1 OR _c1 > _b1)
+{
+    _c1->_d1*(_e1-21.1)/1000.5
+}

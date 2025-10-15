@@ -192,15 +192,15 @@ asignacion:
 	;
 
 while:
-    WHILE { insertarEnPilaCeldaActual();insertarPolaca(&polaca,"ET");} PAR_A condicion PAR_C {/*La condición ya inserta el valor el polaca*/} LLA_A bloque {completarBranchWhile();} LLA_C {printf("    WHILE PAR_A Condicion PAR_C LLA_A Bloque LLA_C es While\n");}
+    WHILE { insertarEnPilaCeldaActual();insertarPolaca(&polaca,"ET");} PAR_A condicion PAR_C {completarBranchOR();} LLA_A bloque {completarBranchWhile();} LLA_C {printf("    WHILE PAR_A Condicion PAR_C LLA_A Bloque LLA_C es While\n");}
     ;
 
 sentencia_if:
-    IF PAR_A condicion PAR_C LLA_A {completarBranchOR();} bloque LLA_C {insertarCeldaEnValorDePila(); printf("    IF PAR_A Condicion PAR_C LLA_A Bloque LLA_C es If\n");}
+    IF PAR_A condicion PAR_C LLA_A {completarBranchOR();} bloque LLA_C {insertarCeldaEnValorDePila(); strcpy(operadorLogicoActual, ""); printf("    IF PAR_A Condicion PAR_C LLA_A Bloque LLA_C es If\n");}
     ;
 
 sentencia_else:
-    sentencia_if ELSE LLA_A {insertarCeldaEnValorDePila();} bloque LLA_C {printf("    IF PAR_A Condicion PAR_C LLA_A Bloque LLA_C ELSE LLA_A Bloque LLA_C es If\n");}
+    sentencia_if {insertarPolaca(&polaca, "BI");} ELSE LLA_A {insertarCeldaEnValorDePila(); strcpy(operadorLogicoActual, ""); insertarEnPilaCeldaActual(); avanzar(&polaca);} bloque LLA_C {printf("    IF PAR_A Condicion PAR_C LLA_A Bloque LLA_C ELSE LLA_A Bloque LLA_C es If\n"); insertarCeldaEnValorDePila();}
     ;
 
 expresion:
@@ -764,7 +764,7 @@ void validarTiposDatoComparacion()
 
 void validarTipoDatoCoordenada(char* id)
 {
-    char* tipoDatoAsignado;
+    char* tipoDatoID;
 
     tipoDatoID = obtenerTipoDatoIDExistente(generarNombreIDTS(id));
 
