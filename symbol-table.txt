@@ -1,29 +1,5 @@
 
 NOMBRE                                   TIPO            VALOR                                    LONGITUD  
 ------------------------------------------------------------------------------------------------------------
-__a1                                                                                                        
-__b1                                                                                                        
-__var1                                                                                                      
-__a                                                                                                         
-__p1                                                                                                        
-__p2                                                                                                        
-__p3                                                                                                        
-__f1                                                                                                        
-__f2                                                                                                        
-__singleId                                                                                                  
-__x                                                                                                         
-__y                                                                                                         
-__z                                                                                                         
-__name                                                                                                      
-__email                                                                                                     
-__date1                                                                                                     
-__b                                                                                                         
-__c                                                                                                         
-_1                                       CONST_INT       1                                                  
-_2                                       CONST_INT       2                                                  
-_0                                       CONST_INT       0                                                  
-_4.0                                     CONST_REAL      4.0                                                
-_12                                      CONST_INT       12                                                 
-_2.5                                     CONST_REAL      2.5                                                
-_3                                       CONST_INT       3                                                  
-_6                                       CONST_INT       6                                                  
+__date1                                  DATE_CONV                                                          
+_06.03.2002                              CONST_FECHA     06.03.2002                                         

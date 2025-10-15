@@ -45,6 +45,8 @@ booleano triangleAreaMaximum();
 booleano insertarCalculoArea1();
 booleano insertarCalculoArea2();
 
+booleano convertDate(char* dia, char* mes, char* anio);
+
 Pila pila_IDs;
 char tipoDatoVariables[10];
 booleano actualizarTipoDatoVariables();
@@ -54,6 +56,7 @@ Pila pila_tipos_dato_expresion;
 void validarTipoDatoAsignacion(const char* id_asignado, TipoAsignacion tipo_asignacion);
 void validarTiposDatoExpresion();
 void validarTiposDatoComparacion();
+void validarTipoDatoCoordenada(char* id);
 
 char* generarNombreIDTS(const char* id);
 char* obtenerTipoDatoIDExistente(char* lex);
@@ -62,7 +65,14 @@ char* obtenerTipoDatoIDExistente(char* lex);
 
 %union
 {
-	char str_val[400];
+	struct
+    {
+        char d[3];
+        char m[3];
+        char a[5];
+    } fecha;
+    
+    char str_val[400];
 }
 
 /* Tokens */
@@ -70,7 +80,7 @@ char* obtenerTipoDatoIDExistente(char* lex);
 %token <str_val> CTE_INT 
 %token <str_val> CTE_REAL
 %token <str_val> CTE_STRING
-%token <str_val> CTE_FECHA
+%token <fecha> CTE_FECHA
 %token PAR_A
 %token PAR_C
 %token COR_A
@@ -251,11 +261,11 @@ coordenada:
 valor:
     CTE_INT     {insertarEnPila(&pilaTriangulo,$1); printf("    CTE_INT es Valor\n");}
     | CTE_REAL  {insertarEnPila(&pilaTriangulo,$1); printf("    CTE_REAL es Valor\n");}
-    | ID        {insertarEnPila(&pilaTriangulo,$1); printf("    ID es Valor\n");}
+    | ID        {validarTipoDatoCoordenada($1); insertarEnPila(&pilaTriangulo,$1); printf("    ID es Valor\n");}
     ;
 
 convDate:
-    CONV_D PAR_A CTE_FECHA PAR_C {printf("    CONV_D PAR_A CTE_FECHA PAR_C es ConvDate\n");}
+    CONV_D PAR_A CTE_FECHA PAR_C {printf("    CONV_D PAR_A CTE_FECHA PAR_C es ConvDate\n"); convertDate($3.d, $3.m, $3.a);}
     ;
 
 %%
@@ -389,6 +399,25 @@ booleano completarBranchOR()
     return VERDADERO;
 }
 
+booleano completarBranchWhile()
+{
+    
+    char* tope = sacarDePila(&pila_celdas);//desapilar Z (tope de pila)
+    int celda = atoi(tope);
+    char celdaSig[TAM_MAX];
+
+    insertarPolaca(&polaca,"BI"); // Escribir BI
+    itoa(polaca.celdaActual + 1,celdaSig,10);
+    insertarEnPosicion(&polaca,celda,celdaSig); // escribir en Z  el nº celda actual + 1
+    
+    tope = sacarDePila(&pila_celdas); //desapilar Z (tope de pila)
+    celda = atoi(tope);
+
+    insertarPolaca(&polaca, tope); // escribir Z en la celda actual 
+
+    return VERDADERO;
+}
+
 //decidi dejar las variables de las coordenadas sin "_" para que se diferencien de las del usuario
 booleano insertarTriangulo1EnPolaca()
 {
@@ -472,43 +501,6 @@ booleano insertarTriangulo2EnPolaca()
     return VERDADERO;
 }
 
-
-
-
-//TRIANGLE AREA MAXIMUM: BASADO EN ESTE CODIGO
-/*
-float triangleAreaMaximum(float x1,float y1,float x2,float y2,float x3,float y3,float x4,float y4,float x5,float y5,float x6,float y6) 
-{
-    float mayor;
-    
-    float areaTri1 = 1/2 * (x1*(y2-y3) + x2*(y3-y1) + x3*(y1-y2));
-    if(areaTri1 == 0)
-    {
-        printf("Error, las coordenadas correspondientes al primer triángulo no cumplen la condición de triangularidad");
-        return -1;
-    }
-    float areaTri2 = 1/2 * (x4*(y5-y6) + x5*(y6-y4) + x6*(y4-y5));
-    if(areaTri2 == 0)
-    {
-        printf("Error, las coordenadas correspondientes al segundo triángulo no cumplen la condición de triangularidad");
-        return -1;
-    }
-    
-    if(areaTri1 > areaTri2)
-    {
-        mayor = areaTri1;    
-    }    
-    else
-    {
-        mayor = areaTri2;
-    }
-    
-    return mayor;
-}
-*/
-
-
-
 booleano triangleAreaMaximum()
 {
     char branchValue[TAM_MAX];
@@ -540,7 +532,6 @@ booleano triangleAreaMaximum()
     insertarPolaca(&polaca,branchValue);
     //fin validacion triangularidad
 
-
     //if(a1 > a2)
     insertarPolaca(&polaca,"a1");
     insertarPolaca(&polaca,"a2");
@@ -561,7 +552,6 @@ booleano triangleAreaMaximum()
     insertarPolaca(&polaca,"a2");
     insertarPolaca(&polaca,"mayor");
     insertarPolaca(&polaca,"->");
-    
 
     return VERDADERO;
 }
@@ -638,6 +628,31 @@ booleano insertarCalculoArea2()
     
     insertarPolaca(&polaca,"a2");
     insertarPolaca(&polaca,"->");
+
+    return VERDADERO;
+}
+
+booleano convertDate(char* dia, char* mes, char* anio)
+{
+    insertarPolaca(&polaca, anio);
+    insertarPolaca(&polaca, "10000");
+
+    insertarPolaca(&polaca, "*");
+
+    insertarPolaca(&polaca, mes);
+    insertarPolaca(&polaca, "100");
+
+    insertarPolaca(&polaca, "*");
+
+    insertarPolaca(&polaca, "+");
+
+    insertarPolaca(&polaca, dia);
+
+    insertarPolaca(&polaca, "+");
+
+    insertarPolaca(&polaca, "fecha_conv");
+
+    insertarPolaca(&polaca, "->");
 
     return VERDADERO;
 }
@@ -747,6 +762,19 @@ void validarTiposDatoComparacion()
     }
 }
 
+void validarTipoDatoCoordenada(char* id)
+{
+    char* tipoDatoAsignado;
+
+    tipoDatoID = obtenerTipoDatoIDExistente(generarNombreIDTS(id));
+
+    if(strcmp(tipoDatoID, TIPO_FLOAT) != 0 && strcmp(tipoDatoID, TIPO_INT) != 0)
+    {
+        printf("\nERROR: Se intento utilizar una variable %s como valor de coordenada\n", tipoDatoID);
+        exit(1);
+    }
+}
+
 char* generarNombreIDTS(const char* id)
 {
     size_t tam_nombre = strlen(id) + 2;
@@ -772,24 +800,4 @@ char* obtenerTipoDatoIDExistente(char* lex)
     }
 
     return tipo_dato;
-}
-booleano completarBranchWhile()
-{
-    
-    char* tope = sacarDePila(&pilaCeldas);//desapilar Z (tope de pila)
-    int celda = atoi(tope);
-    char celdaSig[TAM_MAX];
-
-    insertarPolaca(&polaca,"BI"); // Escribir BI
-    itoa(polaca.celdaActual + 1,celdaSig,10);
-    insertarEnPosicion(&polaca,celda,celdaSig); // escribir en Z  el nº celda actual + 1
-
-    printf("%d........%s.................",celda,celdaSig);
-    
-    tope = sacarDePila(&pilaCeldas); //desapilar Z (tope de pila)
-    celda = atoi(tope);
-
-    insertarPolaca(&polaca, tope); // escribir Z en la celda actual 
-
-    return VERDADERO;
 }

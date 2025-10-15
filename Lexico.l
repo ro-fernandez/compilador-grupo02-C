@@ -26,6 +26,7 @@ void removeChar(char *s, char c);
 
 void handleError(char* str);
 void getLexema(char* str);
+void getLexemaDate(char* str);
 
 extern lista tabla_simbolos;
 
@@ -108,7 +109,7 @@ INIT                "init"
 {CTE_INT}           { validateIntRange(yytext); getLexema(yytext); insertInSymbolTable(yytext, SIMBOLO_INT); printf("\nConstante Entera: %s\n", yytext); return CTE_INT; }
 {CTE_REAL}          { validateFloatRange(yytext); getLexema(yytext); insertInSymbolTable(yytext, SIMBOLO_REAL); printf("\nConstante Flotante: %s\n", yytext); return CTE_REAL; }
 {CTE_STRING}        { validateStringLength(yytext); getLexema(yytext); insertInSymbolTable(yytext, SIMBOLO_STRING); printf("\nConstante String: %s\n", yytext); return CTE_STRING; }
-{CTE_FECHA}         { validateDate(yytext); getLexema(yytext); insertInSymbolTable(yytext,SIMBOLO_FECHA); printf("\nConstante Fecha: %s\n", yytext); return CTE_FECHA; }
+{CTE_FECHA}         { validateDate(yytext); getLexemaDate(yytext); insertInSymbolTable(yytext,SIMBOLO_FECHA); printf("\nConstante Fecha: %s\n", yytext); return CTE_FECHA; }
 
 
 {PAR_A}             { return PAR_A; }
@@ -237,6 +238,29 @@ void handleError(char* str)
 void getLexema(char* str)
 {
     strcpy(yylval.str_val, str);
+}
+
+void getLexemaDate(char* str)
+{
+    char dia[3];
+    char mes[3];
+    char anio[5];
+
+    int d, m, a;
+
+    if(sscanf(str, "%d.%d.%d", &d, &m, &a) != 3)
+    {
+        printf("\nERROR: Fecha %s no es divisible por el formato DD.MM.YYYY\n", yytext);
+        exit(1);
+    }
+
+    itoa(d, dia, 10);
+    itoa(m, mes, 10);
+    itoa(a, anio, 10);
+
+    strcpy(yylval.fecha.d, dia);
+    strcpy(yylval.fecha.m, mes);
+    strcpy(yylval.fecha.a, anio);
 }
 
 void insertInSymbolTable(char* lex, TipoSimbolo tipo)

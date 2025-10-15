@@ -1,1 +1,1 @@
-|45|_b1|_var1|_a|_p1|_p2|_p3|_f1|_f2|_singleId|_x|_y|_z|_name|_email|_date1|_a1|LEER|_var1|LEER|_p1|LEER|_f1|LEER|_singleId|LEER|_x|LEER|_name|LEER|_a|_b|CMP|BLE|37|BI|42|_c|_b|CMP|BLE|45|1|_a|->|2|_a|->|3|y3|->|2.5|x3|->|12|y2|->|4.0|x2|->|_x|y1|->|0|x1|->|2|y6|->|_z|x6|->|0|y5|->|6|x5|->|0|y4|->|_x|x4|->|y2|y3|-|x1|*|y3|y1|-|x2|*|+|y1|y2|-|x3|*|+|0.5|*|a1|->|y5|y6|-|x4|*|y6|y4|-|x5|*|+|y4|y5|-|x6|*|+|0.5|*|a2|->|a1|0|CMP|BNE|133|BI|153|a2|0|CMP|BNE|140|BI|153|a1|a2|CMP|BLE|150|a1|mayor|->|BI|153|a2|mayor|->|
+|2002|10000|*|3|100|*|+|6|+|fecha_conv|->|_date1|->|
