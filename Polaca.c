@@ -94,7 +94,7 @@ void guardarYVaciarListaPolaca(t_polaca* polaca, char* nombre_archivo)
         return;
     }
 
-    fprintf(archivo,"|%s|",actual->valor);
+    fprintf(archivo,"%s\n",actual->valor);
     eliminado = actual;
     actual = actual->siguiente;
     free(eliminado);
@@ -102,7 +102,7 @@ void guardarYVaciarListaPolaca(t_polaca* polaca, char* nombre_archivo)
 
     while(actual)
     {
-        fprintf(archivo,"%s|",actual->valor);
+        fprintf(archivo,"%s\n",actual->valor);
         eliminado = actual;
         actual = actual->siguiente;
         free(eliminado);
