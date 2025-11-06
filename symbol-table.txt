@@ -20,6 +20,24 @@ __g3                                     STRING
 __f1                                     DATE_CONV                                                          
 __f2                                     DATE_CONV                                                          
 __fecha                                  DATE_CONV                                                          
+_prueba \string\ en variable             CONST_STR       prueba \string\ en variable              27        
+_12345                                   CONST_INT       12345                                              
+_3.1415                                  CONST_REAL      3.1415                                             
+_Hola mundo                              CONST_STR       Hola mundo                               10        
+_1                                       CONST_INT       1                                                  
+_a                                       CONST_STR       a                                        1         
 _15.2                                    CONST_REAL      15.2                                               
 _20.0                                    CONST_REAL      20.0                                               
 _3.2                                     CONST_REAL      3.2                                                
+_21.1                                    CONST_REAL      21.1                                               
+_1000.10                                 CONST_REAL      1000.10                                            
+_test                                    CONST_STR       test                                     4         
+_0                                       CONST_INT       0                                                  
+_4.0                                     CONST_REAL      4.0                                                
+_12                                      CONST_INT       12                                                 
+_2.5                                     CONST_REAL      2.5                                                
+_3                                       CONST_INT       3                                                  
+_6                                       CONST_INT       6                                                  
+_2                                       CONST_INT       2                                                  
+_03.07.2025                              CONST_FECHA     03.07.2025                                         
+_10.09.2025                              CONST_FECHA     10.09.2025                                         
