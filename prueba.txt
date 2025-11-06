@@ -10,9 +10,9 @@ init {
 }
 
 #+ condicional anidado +#
-if (_a1 > _b1 AND _c1 > _b1)
+if (_a1 > _b1 AND _c1 < _b1)
 {
-    if(_b1 < 15.2)
+    if(_b1 <= 15.2)
     {
         _a1 -> 20.0
     }

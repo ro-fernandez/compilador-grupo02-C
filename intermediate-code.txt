@@ -6,12 +6,12 @@ BLE
 _c1
 _b1
 CMP
-BLE
-19
+BGE
+22
 _b1
 15.2
 CMP
-BGE
+BGT
 19
 20.0
 _a1
