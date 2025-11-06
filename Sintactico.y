@@ -38,6 +38,7 @@ booleano resolverOperadorOR();
 booleano insertarCeldaEnValorDePila();
 booleano completarBranchOR();
 booleano completarBranchWhile();
+booleano completarBranchElse();
 
 booleano insertarTriangulo1EnPolaca();
 booleano insertarTriangulo2EnPolaca();
@@ -180,7 +181,7 @@ sentencia:
     | convDate  {printf("    ConvDate es Sentencia\n");}
     | leer  {printf("    Leer es Sentencia\n");}
     | escribir  {printf("    Escribir es Sentencia\n");}
-    | sentencia_if {printf("    If es Sentencia\n");}
+    | sentencia_if {insertarCeldaEnValorDePila(); strcpy(operadorLogicoActual, ""); printf("    If es Sentencia\n");}
     | sentencia_else {printf("    Else es Sentencia\n");}
     ;
 
@@ -196,11 +197,13 @@ while:
     ;
 
 sentencia_if:
-    IF PAR_A condicion PAR_C LLA_A {completarBranchOR();} bloque LLA_C {insertarCeldaEnValorDePila(); strcpy(operadorLogicoActual, ""); printf("    IF PAR_A Condicion PAR_C LLA_A Bloque LLA_C es If\n");}
+    //IF PAR_A condicion PAR_C LLA_A {completarBranchOR();} bloque LLA_C {insertarCeldaEnValorDePila(); strcpy(operadorLogicoActual, ""); printf("    IF PAR_A Condicion PAR_C LLA_A Bloque LLA_C es If\n");}
+    IF PAR_A condicion PAR_C LLA_A {completarBranchOR();} bloque LLA_C {printf("    IF PAR_A Condicion PAR_C LLA_A Bloque LLA_C es If\n");}
     ;
 
 sentencia_else:
-    sentencia_if {insertarPolaca(&polaca, "BI");} ELSE LLA_A {insertarCeldaEnValorDePila(); strcpy(operadorLogicoActual, ""); insertarEnPilaCeldaActual(); avanzar(&polaca);} bloque LLA_C {printf("    IF PAR_A Condicion PAR_C LLA_A Bloque LLA_C ELSE LLA_A Bloque LLA_C es If\n"); insertarCeldaEnValorDePila();}
+    //sentencia_if {insertarPolaca(&polaca, "BI");} ELSE LLA_A {insertarCeldaEnValorDePila(); strcpy(operadorLogicoActual, ""); insertarEnPilaCeldaActual(); avanzar(&polaca);} bloque LLA_C {printf("    IF PAR_A Condicion PAR_C LLA_A Bloque LLA_C ELSE LLA_A Bloque LLA_C es If\n"); insertarCeldaEnValorDePila();}
+    sentencia_if ELSE LLA_A {insertarPolaca(&polaca,"BI"); insertarEnPilaCeldaActual(); avanzar(&polaca); char* aux = sacarDePila(&pila_celdas); insertarCeldaEnValorDePila(); strcpy(operadorLogicoActual, ""); insertarEnPila(&pila_celdas,aux);} bloque LLA_C {completarBranchElse();}
     ;
 
 expresion:
@@ -317,7 +320,7 @@ booleano insertarCeldaEnValorDePila()
 {
     int posicion;
     char celdaActualStr[TAM_MAX];
-    itoa(polaca.celdaActual,celdaActualStr,10);
+    itoa(polaca.celdaActual+1,celdaActualStr,10);
     posicion = atoi(sacarDePila(&pila_celdas));
     insertarEnPosicion(&polaca,posicion,celdaActualStr);
     if(strcmp(operadorLogicoActual, "AND") == 0)
@@ -374,13 +377,24 @@ booleano resolverOperadorOR()
         char* celdaStr = sacarDePila(&pila_celdas);
         int celda = atoi(celdaStr);
         insertarPolaca(&polaca, "BI");
-        itoa(polaca.celdaActual + 1, celdaAInsertar, 10);
+        itoa(polaca.celdaActual + 2, celdaAInsertar, 10);
         insertarEnPosicion(&polaca, celda, celdaAInsertar);
         insertarEnPilaCeldaActual();
         avanzar(&polaca);
     }
 
     return VERDADERO;
+}
+
+
+//NUEVO
+booleano completarBranchElse()
+{
+    char* celdaStr = sacarDePila(&pila_celdas);
+    int celda = atoi(celdaStr);
+    char celdaActualStr[TAM_MAX];
+    itoa(polaca.celdaActual + 1,celdaActualStr,10);
+    insertarEnPosicion(&polaca,celda,celdaActualStr);
 }
 
 booleano completarBranchOR()
@@ -391,7 +405,7 @@ booleano completarBranchOR()
         char* celdaStr = sacarDePila(&pila_celdas);
         int celda = atoi(celdaStr);
         char celdaActualStr[TAM_MAX];
-        itoa(polaca.celdaActual,celdaActualStr,10);
+        itoa(polaca.celdaActual+1,celdaActualStr,10);
         insertarEnPosicion(&polaca,celda,celdaActualStr);
         insertarEnPila(&pila_celdas,tope);
     }
