@@ -44,6 +44,21 @@ char* sacarDePila(Pila* pp)
     return elem;
 }
 
+void eliminarDePila(Pila* pp)
+{
+    if(!*pp)
+        return;
+
+    Nodo* nae = *pp;
+
+    char* elem = nae->elem;
+
+    *pp = nae->sig;
+
+    free(nae->elem);
+    free(nae);
+}
+
 char* verTopeDePila(const Pila* pp)
 {
     if(!*pp)

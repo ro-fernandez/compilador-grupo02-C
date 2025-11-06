@@ -39,6 +39,7 @@ extern lista tabla_simbolos;
 DIGITO              [0-9]
 DIGITO_NO_CERO      [1-9]
 LETRA               [a-zA-Z]
+CONT_COMENTARIO     [a-zA-Z0-9 ]
 
 /* Caracteres */
 PAR_A               "("
@@ -77,8 +78,8 @@ CMP_GE              ">="
 /* Comentarios Tipo #+ ... +# */
 COM_A               "#+"
 COM_C               "+#"
-COMENTARIO          {COM_A}.*{COM_C}
-COMENTARIO_ANID     {COM_A}.*{COMENTARIO}.*{COM_C}
+COMENTARIO          {COM_A}{CONT_COMENTARIO}*{COM_C}
+COMENTARIO_ANID     {COM_A}{CONT_COMENTARIO}*{COMENTARIO}{CONT_COMENTARIO}*{COM_C}
 
 
 /* Literales y Otros */

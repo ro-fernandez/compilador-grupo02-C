@@ -1,5 +1,4 @@
-#+ comentario +#
-#+_c->_d*(_e-21)/451561#+561+#561561566+#
+#+ Esto es un comentario +#
 
 #+ inicializacion de prueba +#
 init {
@@ -10,15 +9,10 @@ init {
 }
 
 #+ asignaciones +#
-_d2 -> "prueba \"string\" en variable"  #+ "test"+#
+_d2 -> "prueba \"string\" en variable"
 _a2 -> 12345
 _d1 -> 3.1415
 _g3 -> "Hola mundo"
-
-#+ errores fuera de rango +#
-#+_h -> "Este string es demasiado largo para el limite de cincuenta caracteres, debería fallar"+#
-#+_f -> 2147483648546456.+#
-#+_c -> 32768+#
 
 #+ condicional con else +#
 if (_a1 > _b1 OR _c1 > _b1)
@@ -31,16 +25,13 @@ else
 }
 
 #+ condicional anidado +#
-if (_a1 > _b1 OR _c1 > _b1)
+if (_a1 > _b1 AND _c1 < _b1)
 {
-    if(NOT _a2 == 2)
-	{
-		_a2 -> 1
-	}
-}
-else
-{
-	_d2 -> "a"
+    if(_b1 <= 15.2)
+    {
+        _a1 -> 20.0
+    }
+    _a1 -> 3.2
 }
  
 #+ mientras +#
@@ -53,8 +44,8 @@ while (_a1 > _b1 OR _c1 > _b1)
 #+ lectura y escritura +#
 read(_a) #+ variable +#
 write("test")  #+ cte string +#
-write(_var1)  #+ variable numérica +#
-write(1 + _var1)  #+ Expresión +#
+write(_var1)  #+ variable numerica +#
+write(1 + _var1)  #+ Expresion +#
 
 #+ temas especiales +#
 
