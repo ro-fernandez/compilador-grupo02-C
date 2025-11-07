@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "Polaca.C": "cpp",
-        "utilitarios.h": "c"
+        "utilitarios.h": "c",
+        "*.y": "c"
     }
 }

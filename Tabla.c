@@ -89,6 +89,23 @@ booleano buscarSimbolo(lista* lista, char* lexBuscado)
     return VERDADERO;
 }
 
+int buscarSimboloPorValor(lista* lista, char* lexValor, t_lexema* lexDestino)
+{
+    while(*lista && strcmp((*lista)->lex.valor, lexValor) != 0)
+    {
+        lista = &(*lista)->siguiente;
+    }
+
+    if(!(*lista))
+    {
+        return FALSO;
+    }
+
+    copiarLexema(lexDestino, (*lista)->lex);
+    
+    return VERDADERO;
+}
+
 t_nodo* obtenerSimbolo(lista* lista, char* lexBuscado)
 {
     while(*lista && strcmp((*lista)->lex.nombre, lexBuscado) != 0)
@@ -193,4 +210,13 @@ booleano actualizarTipoDatoID(lista* lista, char* lex, char* tipo)
     strcpy((lexema->lex).tipo, tipo);
 
     return VERDADERO;
+}
+
+void copiarTabla(lista* orig, lista* dest)
+{
+    t_nodo* actual = *orig;
+    while (actual) {
+        insertarSimboloSinDuplicados(dest, actual->lex);
+        actual = actual->siguiente;
+    }
 }

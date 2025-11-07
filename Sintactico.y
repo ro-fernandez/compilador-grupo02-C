@@ -64,6 +64,21 @@ void validarTipoDatoCoordenada(char* id);
 char* generarNombreIDTS(const char* id);
 char* obtenerTipoDatoIDExistente(char* lex);
 
+/* FUNCIONES DE ASSEMBLER */
+void generarAssembler();
+void preprocesarPolaca(t_polaca* polaca, lista* listaTS);
+int esCTEnumerica(const char* celda);
+int esCTEString(const char* celda);
+void eliminarCaracteres(char* str, char c);
+int esSalto(const char* celda);
+
+/* ESTRUCTURAS DE ASSEMBLER */
+Pila pilaAuxAsm;
+Pila pilaOperandos;
+
+lista tablaSimbolosDup;
+t_polaca polacaDup;
+
 %}
 
 %union
@@ -128,7 +143,7 @@ char* obtenerTipoDatoIDExistente(char* lex);
 %%
 
 inicio_programa:
-    programa {printf("    Programa es Inicio_Programa\n");}
+    programa {printf("    Programa es Inicio_Programa\n");  generarAssembler();}
     ;
 
 programa:
@@ -818,4 +833,175 @@ char* obtenerTipoDatoIDExistente(char* lex)
     }
 
     return tipo_dato;
+}
+
+
+/* Funciones de Assembler */
+
+void generarAssembler()
+{
+
+    FILE* fAssembler = fopen("final.asm", "wt+");
+    if(!fAssembler) {
+        printf("\nError al abrir el archivo final.asm\n");
+        exit(1);
+    }
+
+    FILE* fBodyAsm = fopen("final.temp", "wt+");
+    if(!fBodyAsm) {
+        printf("\nError al abrir el archivo final.temp\n");
+        exit(1);
+    }
+
+    /* Acá guardo los operandos */
+
+    crearPila(&pilaOperandos);
+
+    /* Acá guardo los resultados parciales de los operandos: 2 + 1 */
+
+    crearPila(&pilaAuxAsm);
+
+   /* Duplico la tabla de símbolos para no modificar la original */
+    
+    crearLista(&tablaSimbolosDup);
+
+    copiarTabla(&tabla_simbolos, &tablaSimbolosDup);
+
+    /* Duplico la polaca ya que debo iterar la misma y realizar un preprocesamiento para que
+     tanto la Tabla de Simbolos como la polaca "hablen el mismo idioma" con los mismos nombres 
+     de variables. Además de modificar los nombres de los saltos y hacia donde van */
+
+    copiarPolaca(&polaca,&polacaDup);
+
+    /* transforma la polaca intermedia del compilador en una versión limpia con etiquetas (ET_x) y 
+    nombres de símbolos válidos para poder traducirla directamente a código assembler.  */
+
+    preprocesarPolaca(&polacaDup, &tablaSimbolosDup);
+
+    /* TODO ESTO ES LO QUE FALTA IMPLEMENTAR, LAS ACCIONES SON EN ESE ORDEN */
+    //escribo el body del assembler:
+    /*generarCuerpoAssembler(fBodyAsm);
+
+    //escribo la cabecera del assembler:
+    generarCabeceraAssembler(fAssembler, &simbolosDup);
+
+    mergeArchivosAssembler(fAssembler, fBodyAsm);
+
+    //escribo el fin del assembler:
+    generarFinAssembler(fAssembler);
+
+    printf("\n\nAssembler generado exitosamente\n\n");
+    fclose(fAssembler);*/
+}
+
+void preprocesarPolaca(t_polaca* polaca, lista* listaTS){
+    int celdaActual = 0, celdaSaltoInt;
+    char buffer[100], celda[100], celdaSalto[100], celdaAnt[100];
+
+    t_lexema actual;
+    while(celdaActual != polaca->celdaActual) { //iteramos para cambiar las celdas con valores (que no sean saltos) a sus respectivos nombres de la tabla de símbolos
+        strcpy(celda, obtenerValorEnPolaca(polaca, celdaActual));
+
+        if (esCTEnumerica(celda)) {
+            buscarSimboloPorValor(listaTS, celda, &actual);
+            
+            if(celdaActual == 0 || !esSalto(celdaAnt)){
+                insertarEnPosicion(polaca, celdaActual, actual.nombre); //OJO ACÁ, NO VALIDAMOS LOS EXTREMOS, PUEDE FALLAR!! revisar en caso de error
+            }
+        } else if(esCTEString(celda)) {
+            strcpy(buffer, celda);
+            eliminarCaracteres(buffer, '"');
+            buscarSimboloPorValor(listaTS, buffer, &actual);
+            insertarEnPosicion(polaca, celdaActual, actual.nombre);
+        }
+
+        strcpy(celdaAnt, celda);
+        celdaActual++;
+    }
+    
+    /* FALTA IMPLEMENTAR LO QUE ESTÁ ABAJO! */
+
+    //celdaActual = 0;
+
+    /*while(celdaActual != polaca->celdaActual) { //iteramos para modificar las celdas de saltos por sus respectivas etiquetas
+        //si la celda actual de la polaca es un salto, actualiza la celda del salto con un @ET_numCelda
+        strcpy(celda, obtenerDePolaca(polaca, celdaActual));
+
+        if(esSalto(celda)) {
+            //actualiza act+1 con ET_[contenidoActual]
+            strcpy(celdaSalto, obtenerDePolaca(polaca, celdaActual+1));
+            celdaSaltoInt = atoi(celdaSalto);
+
+            sprintf(buf, "ET_%d", celdaSaltoInt);
+            buscarYActualizarPolaca(polaca, celdaActual+1, buf);
+
+            //actualiza celda del salto con @ET_[celdaActual]: [contenidoActual]
+            if(celdaSaltoInt < polaca->celdaActual){
+                strcpy(celda, obtenerDePolaca(polaca, celdaSaltoInt));
+
+                if(strstr(celda, "@ET_") == NULL){
+                    sprintf(buf, "@ET_%d:%s", celdaSaltoInt, celda);
+                    buscarYActualizarPolaca(polaca, celdaSaltoInt, buf);
+                }
+            } else {
+                sprintf(buf, "@ET_%d:_FINAL_TAG", celdaSaltoInt);
+                insertarEnPolaca(polaca, buf);
+            }
+        }
+
+        celdaActual++;
+    }*/
+}
+
+int esCTEnumerica(const char* celda) {
+    int tamCelda = strlen(celda);
+    if((celda[0] >= '0' && celda[0] <= '9') || (celda[0] == '-' && tamCelda > 1))
+    {
+        return 1;
+    }
+
+    return 0;
+}
+
+int esCTEString(const char* celda){
+    int tam = strlen(celda);
+    return celda[0] == '"' && celda[tam-1] == '"';
+}
+
+void eliminarCaracteres(char* str, char c) {
+    int i, j = 0;
+    int len = strlen(str);
+
+    for (i = 0; i < len; i++) {
+        if (str[i] != c) {
+            str[j++] = str[i];
+        }
+    }
+    str[j] = '\0';
+}
+
+int esSalto(const char* celda) {
+
+    if(celda[0] == '"') //esta validación se hace para evitar que casos con constantes strings como "a:BI" sean consideradas saltos
+        return 0;
+    
+
+    char* celdaAux = strstr(celda, ":"); //esto se hace para aquellos casos donde le celda donde cae un salto tenga a su vez otro salto
+    if(celdaAux){
+        celdaAux++;
+    } else {
+        celdaAux = (char*)celda;
+    }
+
+    if (!strcmp(celdaAux, "BLE") ||
+        !strcmp(celdaAux, "BEQ") ||
+        !strcmp(celdaAux, "BNE") ||
+        !strcmp(celdaAux, "BGT") ||
+        !strcmp(celdaAux, "BLT") ||
+        !strcmp(celdaAux, "BGE") ||
+        !strcmp(celdaAux, "BI")) {
+        return 1;
+    }
+
+    return 0;
 }
