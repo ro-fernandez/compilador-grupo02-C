@@ -57,6 +57,6 @@ booleano actualizarTipoDatoID(lista* lista, char* lex, char* tipo);
 
 void copiarTabla(lista* orig, lista* dest);
 
-int buscarSimboloPorValor(lista* lista, char* lexValor, t_lexema* lexDestino);
+booleano buscarSimboloPorValor(lista* lista, char* lexValor, t_lexema* lexDestino);
 
 #endif /* TABLA_H */

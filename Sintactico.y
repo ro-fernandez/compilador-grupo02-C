@@ -67,14 +67,27 @@ char* obtenerTipoDatoIDExistente(char* lex);
 /* FUNCIONES DE ASSEMBLER */
 void generarAssembler();
 void preprocesarPolaca(t_polaca* polaca, lista* listaTS);
-int esCTEnumerica(const char* celda);
-int esCTEString(const char* celda);
+int esCTEnumerica(char* celda);
+int esCTEString(char* celda);
 void eliminarCaracteres(char* str, char c);
-int esSalto(const char* celda);
+int esSalto(char* celda);
+void generarCuerpoAssembler(FILE* archASM);
+void procesarCeldaPolaca(FILE* fAssembler, char* celda) ;
+char* ObtenerOperador(char* celda);
+int esOperando(char* celda);
+void ResOperacionMatAsm(FILE* fAssembler, char* operador);
+char* crearAuxiliar();
+void RescCmpASM(FILE* fAssembler);
+void ResAsignacionAsm(FILE* fAssembler);
+char* ProcesarSalto(char* celda);
+void ResBIAsm(FILE* fAssembler);
+void ResEscrituraAsm(FILE* fAssembler);
+void ResLecturaAsm(FILE* fAssembler);
 
 /* ESTRUCTURAS DE ASSEMBLER */
 Pila pilaAuxAsm;
 Pila pilaOperandos;
+int auxActual = 0;
 
 lista tablaSimbolosDup;
 t_polaca polacaDup;
@@ -872,16 +885,21 @@ void generarAssembler()
      de variables. Además de modificar los nombres de los saltos y hacia donde van */
 
     copiarPolaca(&polaca,&polacaDup);
-
+   
     /* transforma la polaca intermedia del compilador en una versión limpia con etiquetas (ET_x) y 
     nombres de símbolos válidos para poder traducirla directamente a código assembler.  */
 
     preprocesarPolaca(&polacaDup, &tablaSimbolosDup);
+   
+ guardarYVaciarListaPolaca(&polacaDup, "PolacaDup.txt" );
 
-    /* TODO ESTO ES LO QUE FALTA IMPLEMENTAR, LAS ACCIONES SON EN ESE ORDEN */
-    //escribo el body del assembler:
-    /*generarCuerpoAssembler(fBodyAsm);
+    /* escribo el cuerpo del assembler, la parte CODE: */
+    //generarCuerpoAssembler(fBodyAsm);
 
+    //guardarYVaciarListaPolaca(&polacaDup, "PolacaDup.txt" );
+
+     printf("\nYO TE KIERO LA AKD\n");
+/*
     //escribo la cabecera del assembler:
     generarCabeceraAssembler(fAssembler, &simbolosDup);
 
@@ -919,41 +937,42 @@ void preprocesarPolaca(t_polaca* polaca, lista* listaTS){
         celdaActual++;
     }
     
-    /* FALTA IMPLEMENTAR LO QUE ESTÁ ABAJO! */
 
-    //celdaActual = 0;
+    celdaActual = 0;
 
-    /*while(celdaActual != polaca->celdaActual) { //iteramos para modificar las celdas de saltos por sus respectivas etiquetas
+    while(celdaActual != polaca->celdaActual) 
+    { //iteramos para modificar las celdas de saltos por sus respectivas etiquetas
         //si la celda actual de la polaca es un salto, actualiza la celda del salto con un @ET_numCelda
-        strcpy(celda, obtenerDePolaca(polaca, celdaActual));
+        strcpy(celda, obtenerValorEnPolaca(polaca, celdaActual));
 
         if(esSalto(celda)) {
             //actualiza act+1 con ET_[contenidoActual]
-            strcpy(celdaSalto, obtenerDePolaca(polaca, celdaActual+1));
+            strcpy(celdaSalto, obtenerValorEnPolaca(polaca, celdaActual+1));
             celdaSaltoInt = atoi(celdaSalto);
 
-            sprintf(buf, "ET_%d", celdaSaltoInt);
-            buscarYActualizarPolaca(polaca, celdaActual+1, buf);
+            sprintf(buffer, "ET_%d", celdaSaltoInt);
+            insertarEnPosicion(polaca, celdaActual+1, buffer);
 
             //actualiza celda del salto con @ET_[celdaActual]: [contenidoActual]
             if(celdaSaltoInt < polaca->celdaActual){
-                strcpy(celda, obtenerDePolaca(polaca, celdaSaltoInt));
+                strcpy(celda, obtenerValorEnPolaca(polaca, celdaSaltoInt));
 
                 if(strstr(celda, "@ET_") == NULL){
-                    sprintf(buf, "@ET_%d:%s", celdaSaltoInt, celda);
-                    buscarYActualizarPolaca(polaca, celdaSaltoInt, buf);
+                    sprintf(buffer, "@ET_%d:%s", celdaSaltoInt, celda);
+                    insertarEnPosicion(polaca, celdaSaltoInt, buffer);
                 }
             } else {
-                sprintf(buf, "@ET_%d:_FINAL_TAG", celdaSaltoInt);
-                insertarEnPolaca(polaca, buf);
+                sprintf(buffer, "@ET_%d:_FINAL_TAG", celdaSaltoInt);
+                insertarPolaca(polaca, buffer);
             }
         }
-
+    
         celdaActual++;
-    }*/
+    }
 }
 
-int esCTEnumerica(const char* celda) {
+int esCTEnumerica(char* celda) 
+{
     int tamCelda = strlen(celda);
     if((celda[0] >= '0' && celda[0] <= '9') || (celda[0] == '-' && tamCelda > 1))
     {
@@ -963,12 +982,14 @@ int esCTEnumerica(const char* celda) {
     return 0;
 }
 
-int esCTEString(const char* celda){
+int esCTEString( char* celda)
+{
     int tam = strlen(celda);
     return celda[0] == '"' && celda[tam-1] == '"';
 }
 
-void eliminarCaracteres(char* str, char c) {
+void eliminarCaracteres(char* str, char c) 
+{
     int i, j = 0;
     int len = strlen(str);
 
@@ -980,7 +1001,8 @@ void eliminarCaracteres(char* str, char c) {
     str[j] = '\0';
 }
 
-int esSalto(const char* celda) {
+int esSalto(char* celda) 
+{
 
     if(celda[0] == '"') //esta validación se hace para evitar que casos con constantes strings como "a:BI" sean consideradas saltos
         return 0;
@@ -1004,4 +1026,240 @@ int esSalto(const char* celda) {
     }
 
     return 0;
+}
+
+void generarCuerpoAssembler(FILE* archASM)
+{
+    char celdaPolaca[100];
+    while(sacarDePolaca(&polacaDup, celdaPolaca)) 
+    {
+        procesarCeldaPolaca(archASM, celdaPolaca);
+    }
+}
+
+
+void procesarCeldaPolaca(FILE* fAssembler, char* celda) 
+{
+    
+    /* tengo que validar si la celda actual corresponde a una etiqueta que tengo que completar
+    por un lado, puede ser la celda desde la que salto (ET_num)  --> se extrae cuando detecta un salto (BIAssembler o comparacionAssembler)
+    por otro, la celda donde cae el salto (@ET_num:) */
+    t_lexema lexemaActual;
+
+    if(strncmp(celda, "@ET_", 4) == 0)
+    {
+        char* posPunto = strstr(celda, ":");
+
+        char nombreTag[36];
+
+        int cantACopiar = posPunto - celda;
+        strncpy(nombreTag, celda+1, cantACopiar); 
+        nombreTag[cantACopiar] = '\0';
+
+        celda = posPunto+1;
+
+        fprintf(fAssembler, "%s\n", nombreTag);
+    }
+
+    if (esOperando(celda)) 
+    { 
+        insertarEnPila(&pilaOperandos, celda); 
+        return;
+    }
+
+    char* operador = ObtenerOperador(celda);
+    if (strcmp(operador, "") != 0)
+    {
+        ResOperacionMatAsm(fAssembler, operador); 
+        return;
+    }
+
+    if(strcmp(celda, ":=") == 0)
+    {
+        ResAsignacionAsm(fAssembler); 
+        return;
+    }
+
+    if(strcmp(celda, "CMP") == 0)
+    {
+        RescCmpASM(fAssembler); 
+        return;
+    }
+    
+    if(strncmp(celda, "ET_", 3) == 0)
+    {
+        return;
+    }
+
+    if(strcmp(celda, "BI") == 0)
+    {
+        ResBIAsm(fAssembler); //resuelve saltos incondicionales
+    }
+
+    if(strcmp(celda, "ESCRIBIR") == 0)
+    {
+        ResEscrituraAsm(fAssembler);
+        return;
+    }
+
+    if(strcmp(celda, "LEER") == 0)
+    {
+        ResLecturaAsm(fAssembler);
+        return;
+    }
+}
+
+int esOperando(char* celda)
+{
+    return buscarSimbolo(&tabla_simbolos, celda);
+}
+
+char* ObtenerOperador(char* celda){
+    char operador[2];
+    if ( strcmp(celda, "+")==0 ){
+       return "FADD";
+    }
+    if ( strcmp(celda, "-")==0 ){
+        return "FSUB";
+    }
+    if ( strcmp(celda, "*")==0 ){
+        return "FMUL";
+    }
+    if ( strcmp(celda, "/")==0 ){
+        return "FDIV";
+    }
+
+    return "";
+}
+
+void ResOperacionMatAsm(FILE* fAssembler, char* operador){
+    char* op1 = sacarDePila(&pilaOperandos);
+    char* op2 = sacarDePila(&pilaOperandos);
+    
+    char* result = crearAuxiliar();
+
+    char buff[100];
+
+    sprintf(buff, "FLD %s\n\tFLD %s", op2, op1);
+
+    fprintf(fAssembler, "\t%s\n\t%s\n\tFSTP %s\n", buff, operador, result);
+    insertarEnPila(&pilaOperandos, result);
+}
+
+char* crearAuxiliar(){
+    static char aux[15];
+    sprintf(aux, "@auxASM%d", auxActual++);
+    insertarEnPila(&pilaAuxAsm, aux);
+    return aux;
+}
+
+void ResAsignacionAsm(FILE* fAssembler) {
+
+    t_nodo* nodoLex;
+
+    char buffer[100];
+    char* variable = sacarDePila(&pilaOperandos);
+    char* valor = sacarDePila(&pilaOperandos);
+
+    nodoLex = obtenerSimbolo(&tabla_simbolos, valor);
+
+    if( strcmp((nodoLex->lex).tipo, "CONST_STR")==0 || strcmp((nodoLex->lex).tipo, TIPO_STRING)==0 )
+		sprintf(buffer, "\tMOV SI, OFFSET %s\n\tMOV DI, OFFSET %s\n\tCALL COPIAR\n", valor, variable);
+    else
+        sprintf(buffer, "\tFLD %s\n\tFSTP %s\n", valor, variable);
+    
+    fprintf(fAssembler, "%s", buffer);
+}
+
+void RescCmpASM(FILE* fAssembler)
+{
+    char celda[100];
+    char et[100];
+    char* operador2 = sacarDePila(&pilaOperandos);
+    char* operador1 = sacarDePila(&pilaOperandos);
+
+    sacarDePolaca(&polacaDup, celda); 
+
+    char* salto = ProcesarSalto(celda);
+
+    sacarDePolaca(&polacaDup, et); 
+
+    fprintf(fAssembler, "\tFLD %s\n\tFCOMP %s\n\tFSTSW ax\n\tSAHF\n\t%s %s\n", operador1, operador2, salto, et);
+}
+
+char* ProcesarSalto(char* celda)
+{
+    switch (celda[0]) 
+    {
+        case 'B':
+            switch (celda[1]) 
+            {
+                case 'N':
+                    if (celda[2] == 'E' && celda[3] == '\0') return "JNE";
+                    break;
+                case 'E':
+                    if (celda[2] == 'Q' && celda[3] == '\0') return "JE";
+                    break;
+                case 'L':
+                    if (celda[2] == 'E' && celda[3] == '\0') return "JBE";
+                    if (celda[2] == 'T' && celda[3] == '\0') return "JB";
+                    break;
+                case 'G':
+                    if (celda[2] == 'T' && celda[3] == '\0') return "JA";
+                    if (celda[2] == 'E' && celda[3] == '\0') return "JAE";
+                    break;
+            }
+    }
+
+    return NULL;  // Retorna NULL si no coincide con ningún caso
+}
+
+void ResBIAsm(FILE* fAssembler)
+{
+    char et[100];
+    sacarDePolaca(&polacaDup, et);
+    fprintf(fAssembler, "\tJMP %s\n", et);
+}
+
+void ResEscrituraAsm(FILE* fAssembler){
+    char buffer[100];
+    t_nodo* nodoLex;
+    char* variable = sacarDePila(&pilaOperandos);
+
+    nodoLex = obtenerSimbolo(&tabla_simbolos, variable);
+
+    if( strcmp((nodoLex->lex).tipo, "CONST_STR")==0 || strcmp((nodoLex->lex).tipo, TIPO_STRING)==0 ){
+        fprintf(fAssembler, "\tDisplayString %s\n\tnewLine\n", variable);
+        return;
+    }
+
+    if( strcmp((nodoLex->lex).tipo, TIPO_INT)==0 || strcmp((nodoLex->lex).tipo, "CONST_INT") == 0){
+        fprintf(fAssembler, "\tDisplayFloat %s, 0\n\tnewLine\n", variable);
+        return;
+    }
+
+    if( strcmp((nodoLex->lex).tipo, TIPO_FLOAT)==0 || strcmp((nodoLex->lex).tipo, "CONST_REAL") == 0){
+        fprintf(fAssembler, "\tDisplayFloat %s, 2\n\tnewLine\n", variable);
+        return;
+    }
+
+    //este caso sería cuando lo que se va a escribir no está en la TS sino que es un resultado de una operación
+    fprintf(fAssembler, "\tDisplayFloat %s, 2\n\tnewLine\n", variable);
+}
+
+void ResLecturaAsm(FILE* fAssembler){
+     t_nodo* nodoLex;
+    char* variable = sacarDePila(&pilaOperandos);
+
+    nodoLex = obtenerSimbolo(&tabla_simbolos, variable);
+
+    if( strcmp((nodoLex->lex).tipo, TIPO_STRING)==0 ){
+        fprintf(fAssembler, "\tgetString %s\n\tnewLine\n", variable);
+        return;
+    }
+
+    if( strcmp((nodoLex->lex).tipo, TIPO_INT)==0 || strcmp((nodoLex->lex).tipo, TIPO_FLOAT)==0 ){
+        fprintf(fAssembler, "\tGetFloat %s\n\tnewLine\n", variable);
+        return;
+    }
 }

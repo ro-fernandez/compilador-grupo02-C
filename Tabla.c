@@ -89,13 +89,12 @@ booleano buscarSimbolo(lista* lista, char* lexBuscado)
     return VERDADERO;
 }
 
-int buscarSimboloPorValor(lista* lista, char* lexValor, t_lexema* lexDestino)
+booleano buscarSimboloPorValor(lista* lista, char* lexValor, t_lexema* lexDestino)
 {
     while(*lista && strcmp((*lista)->lex.valor, lexValor) != 0)
     {
         lista = &(*lista)->siguiente;
     }
-
     if(!(*lista))
     {
         return FALSO;

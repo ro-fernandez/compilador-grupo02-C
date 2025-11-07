@@ -146,6 +146,7 @@ void copiarPolaca(t_polaca *polacaOriginal, t_polaca *polacaDuplicada) {
 }
 
 char* obtenerValorEnPolaca(t_polaca *polaca, int numCelda) {
+    
     if (numCelda < 0 || numCelda >= polaca->celdaActual) {
         return NULL; 
     }
@@ -165,4 +166,17 @@ char* obtenerValorEnPolaca(t_polaca *polaca, int numCelda) {
     }
     
     return NULL; 
+}
+
+booleano sacarDePolaca ( t_polaca *polaca, char *cadena){
+    if (polaca->lista == NULL)
+    { 
+        return FALSO;
+    } // La lista está vacía
+    t_nodoPolaca *aux = polaca->lista;
+    strcpy(cadena, aux->valor);
+    polaca->lista = aux->siguiente;
+    free(aux);
+    polaca->celdaActual--;
+    return VERDADERO;
 }
