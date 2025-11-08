@@ -59,4 +59,6 @@ void copiarTabla(lista* orig, lista* dest);
 
 booleano buscarSimboloPorValor(lista* lista, char* lexValor, t_lexema* lexDestino);
 
+void insertarValorEnTS(lista* lista, char* lex, TipoSimbolo tipo);
+
 #endif /* TABLA_H */

@@ -310,6 +310,7 @@ void insertInSymbolTable(char* lex, TipoSimbolo tipo)
             strcpy(newLexema.tipo, "CONST_FECHA");
             strcpy(newLexema.valor, lexValue);
             strcpy(newLexema.longitud, "");
+            break;
         default:
             break;
     }
@@ -318,21 +319,4 @@ void insertInSymbolTable(char* lex, TipoSimbolo tipo)
     strcat(newLexema.nombre, lexValue);
 
     insertarSimboloSinDuplicados(&tabla_simbolos, newLexema);
-}
-
-void removeChar(char *s, char c)
-{
-    int i = 0, j = 0;
-
-    while (s[j])
-    {
-        if (s[j]!=c) 
-        {   
-            s[i++] = s[j];
-        }
-
-        j++;       
-    }
-
-    s[i]=0;
 }

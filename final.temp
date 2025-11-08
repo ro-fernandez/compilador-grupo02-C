@@ -1,0 +1,108 @@
+	MOV SI, OFFSET _prueba \string\ en variable
+	MOV DI, OFFSET __d2
+	CALL COPIAR
+	FLD _12345
+	FSTP __a2
+	FLD _3.1415
+	FSTP __d1
+	MOV SI, OFFSET _Hola mundo
+	MOV DI, OFFSET __g3
+	CALL COPIAR
+	FLD __a1
+	FCOMP __b1
+	FSTSW ax
+	SAHF
+	JBE ET_20
+	JMP ET_25
+ET_20:
+	FLD __c1
+	FCOMP __b1
+	FSTSW ax
+	SAHF
+	JBE ET_30
+ET_25:
+	FLD _1
+	FSTP __a2
+	JMP ET_33
+ET_30:
+	MOV SI, OFFSET _a
+	MOV DI, OFFSET __d2
+	CALL COPIAR
+ET_33:
+	FLD __a1
+	FCOMP __b1
+	FSTSW ax
+	SAHF
+	JBE ET_54
+	FLD __c1
+	FCOMP __b1
+	FSTSW ax
+	SAHF
+	JAE ET_54
+	FLD __b1
+	FCOMP _15.2
+	FSTSW ax
+	SAHF
+	JA ET_51
+	FLD _20.0
+	FSTP __a1
+ET_51:
+	FLD _3.2
+	FSTP __a1
+ET_53:
+ET_54:
+	FLD __a1
+	FCOMP __b1
+	FSTSW ax
+	SAHF
+	JBE ET_61
+	JMP ET_66
+ET_61:
+	FLD __c1
+	FCOMP __b1
+	FSTSW ax
+	SAHF
+	JBE ET_70
+ET_66:
+	FLD __d1
+	FSTP __c1
+	JMP ET_53
+ET_70:
+	GetFloat __a
+	newLine
+	DisplayString _test
+	newLine
+	FLD _2025
+	FLD _2025
+	FMUL
+	FSTP @auxASM0
+	FLD _7
+	FLD _7
+	FMUL
+	FSTP @auxASM1
+	FLD @auxASM0
+	FLD @auxASM1
+	FADD
+	FSTP @auxASM2
+	FLD @auxASM2
+	FLD _3
+	FADD
+	FSTP @auxASM3
+	FLD _2025
+	FLD _2025
+	FMUL
+	FSTP @auxASM4
+	FLD _9
+	FLD _9
+	FMUL
+	FSTP @auxASM5
+	FLD @auxASM4
+	FLD @auxASM5
+	FADD
+	FSTP @auxASM6
+	FLD @auxASM6
+	FLD _10
+	FADD
+	FSTP @auxASM7
+	FLD @auxASM7
+	FSTP __fecha

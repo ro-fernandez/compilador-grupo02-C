@@ -201,8 +201,8 @@ leer:
     ;
 
 escribir:
-    WRITE PAR_A CTE_STRING PAR_C        {printf("    WRITE PAR_OP CTE_STRING PAR_CL es Escribir\n");insertarPolaca(&polaca, $3); insertarPolaca(&polaca,"ESCRIBIR");}
-    | WRITE PAR_A expresion PAR_C       {printf("    WRITE PAR_OP Expresion PAR_CL es Escribir\n");insertarPolaca(&polaca,"ESCRIBIR");}
+    WRITE PAR_A CTE_STRING PAR_C        {printf("    WRITE PAR_OP CTE_STRING PAR_CL es Escribir\n"); insertarPolaca(&polaca, $3); insertarPolaca(&polaca,"ESCRIBIR");}
+    | WRITE PAR_A expresion PAR_C       {printf("    WRITE PAR_OP Expresion PAR_CL es Escribir\n"); insertarPolaca(&polaca,"ESCRIBIR");}
     ;
 
 sentencia:  	   
@@ -504,6 +504,13 @@ booleano insertarTriangulo1EnPolaca()
     insertarPolaca(&polaca,"x1");
     insertarPolaca(&polaca,"->");
 
+    insertarValorEnTS(&tabla_simbolos, "y3", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "y2", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "y1", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "x3", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "x2", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "x1", SIMBOLO_ID);
+
     return VERDADERO;
 }
 
@@ -544,6 +551,13 @@ booleano insertarTriangulo2EnPolaca()
     insertarPolaca(&polaca,coordenada);
     insertarPolaca(&polaca,"x4");
     insertarPolaca(&polaca,"->");
+
+    insertarValorEnTS(&tabla_simbolos, "y6", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "y5", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "y4", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "x6", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "x5", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "x4", SIMBOLO_ID);
 
     return VERDADERO;
 }
@@ -599,6 +613,10 @@ booleano triangleAreaMaximum()
     insertarPolaca(&polaca,"a2");
     insertarPolaca(&polaca,"mayor");
     insertarPolaca(&polaca,"->");
+    
+    insertarValorEnTS(&tabla_simbolos, "a1", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "a2", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "0.0", SIMBOLO_REAL);
 
     return VERDADERO;
 }
@@ -638,6 +656,15 @@ booleano insertarCalculoArea1()
     insertarPolaca(&polaca,"a1");
     insertarPolaca(&polaca,"->");
 
+    insertarValorEnTS(&tabla_simbolos, "y3", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "y2", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "y1", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "x3", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "x2", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "x1", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "a1", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "0.5", SIMBOLO_REAL);
+
     return VERDADERO;
 }
 
@@ -676,6 +703,15 @@ booleano insertarCalculoArea2()
     insertarPolaca(&polaca,"a2");
     insertarPolaca(&polaca,"->");
 
+    insertarValorEnTS(&tabla_simbolos, "y6", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "y5", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "y4", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "x6", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "x5", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "x4", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "a2", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "0.5", SIMBOLO_REAL);
+
     return VERDADERO;
 }
 
@@ -697,9 +733,17 @@ booleano convertDate(char* dia, char* mes, char* anio)
 
     insertarPolaca(&polaca, "+");
 
+    /*
+    ESTO SE COMENTA PARA QUE ANDE
     insertarPolaca(&polaca, "fecha_conv");
-
     insertarPolaca(&polaca, "->");
+    */
+    
+    insertarValorEnTS(&tabla_simbolos, anio, SIMBOLO_INT);
+    insertarValorEnTS(&tabla_simbolos, mes, SIMBOLO_INT);
+    insertarValorEnTS(&tabla_simbolos, dia, SIMBOLO_INT);
+    insertarValorEnTS(&tabla_simbolos, "10000.0", SIMBOLO_REAL);
+    insertarValorEnTS(&tabla_simbolos, "100.0", SIMBOLO_REAL);
 
     return VERDADERO;
 }
@@ -894,7 +938,7 @@ void generarAssembler()
 
     preprocesarPolaca(&polacaDup, &tablaSimbolosDup);
 
-    //guardarYVaciarListaPolaca(&polacaDup, "PolacaDup.txt");
+    // guardarYVaciarListaPolaca(&polacaDup, "PolacaDup.txt");
 
     /* escribo el cuerpo del assembler, la parte CODE: */
     generarCuerpoAssembler(fBodyAsm);
@@ -1186,16 +1230,13 @@ char* crearAuxiliar()
 
 void ResAsignacionAsm(FILE* fAssembler)
 {
-
-    t_nodo* nodoLex;
-
     char buffer[100];
     char* variable = sacarDePila(&pilaOperandos);
     char* valor = sacarDePila(&pilaOperandos);
 
-    nodoLex = obtenerSimbolo(&tabla_simbolos, valor);
+    char* tipoDatoVar = obtenerTipoDatoID(&tabla_simbolos, variable);
 
-    if( strcmp((nodoLex->lex).tipo, "CONST_STR")==0 || strcmp((nodoLex->lex).tipo, TIPO_STRING)==0 )
+    if( strcmp(tipoDatoVar, "CONST_STR")==0 || strcmp(tipoDatoVar, TIPO_STRING)==0 )
 		sprintf(buffer, "\tMOV SI, OFFSET %s\n\tMOV DI, OFFSET %s\n\tCALL COPIAR\n", valor, variable);
     else
         sprintf(buffer, "\tFLD %s\n\tFSTP %s\n", valor, variable);
@@ -1256,24 +1297,23 @@ void ResBIAsm(FILE* fAssembler)
 void ResEscrituraAsm(FILE* fAssembler)
 {
     char buffer[100];
-    t_nodo* nodoLex;
     char* variable = sacarDePila(&pilaOperandos);
 
-    nodoLex = obtenerSimbolo(&tabla_simbolos, variable);
+    char* tipoDatoVar = obtenerTipoDatoID(&tabla_simbolos, variable);
 
-    if( strcmp((nodoLex->lex).tipo, "CONST_STR")==0 || strcmp((nodoLex->lex).tipo, TIPO_STRING)==0 )
+    if( strcmp(tipoDatoVar, "CONST_STR")==0 || strcmp(tipoDatoVar, TIPO_STRING)==0 )
     {
         fprintf(fAssembler, "\tDisplayString %s\n\tnewLine\n", variable);
         return;
     }
 
-    if( strcmp((nodoLex->lex).tipo, TIPO_INT)==0 || strcmp((nodoLex->lex).tipo, "CONST_INT") == 0)
+    if( strcmp(tipoDatoVar, TIPO_INT)==0 || strcmp(tipoDatoVar, "CONST_INT") == 0)
     {
         fprintf(fAssembler, "\tDisplayFloat %s, 0\n\tnewLine\n", variable);
         return;
     }
 
-    if( strcmp((nodoLex->lex).tipo, TIPO_FLOAT)==0 || strcmp((nodoLex->lex).tipo, "CONST_REAL") == 0)
+    if( strcmp(tipoDatoVar, TIPO_FLOAT)==0 || strcmp(tipoDatoVar, "CONST_REAL") == 0)
     {
         fprintf(fAssembler, "\tDisplayFloat %s, 2\n\tnewLine\n", variable);
         return;
@@ -1285,18 +1325,17 @@ void ResEscrituraAsm(FILE* fAssembler)
 
 void ResLecturaAsm(FILE* fAssembler)
 {
-     t_nodo* nodoLex;
     char* variable = sacarDePila(&pilaOperandos);
 
-    nodoLex = obtenerSimbolo(&tabla_simbolos, variable);
+    char* tipoDatoVar = obtenerTipoDatoID(&tabla_simbolos, variable);
 
-    if( strcmp((nodoLex->lex).tipo, TIPO_STRING)==0 )
+    if( strcmp(tipoDatoVar, TIPO_STRING)==0 )
     {
         fprintf(fAssembler, "\tgetString %s\n\tnewLine\n", variable);
         return;
     }
 
-    if( strcmp((nodoLex->lex).tipo, TIPO_INT)==0 || strcmp((nodoLex->lex).tipo, TIPO_FLOAT)==0 )
+    if( strcmp(tipoDatoVar, TIPO_INT)==0 || strcmp(tipoDatoVar, TIPO_FLOAT)==0 )
     {
         fprintf(fAssembler, "\tGetFloat %s\n\tnewLine\n", variable);
         return;

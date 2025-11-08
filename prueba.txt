@@ -43,14 +43,8 @@ while (_a1 > _b1 OR _c1 > _b1)
 #+ lectura y escritura +#
 read(_a) #+ variable +#
 write("test")  #+ cte string +#
-write(_var1)  #+ variable numerica +#
-write(1 + _var1)  #+ Expresion +#
 
 #+ temas especiales +#
-
-#+ triangulo +#
-triangleAreaMaximum( [0,_x; 4.0,12; 2.5,3] ; [_x,0; 6,0; _z,2] )
-_a -> triangleAreaMaximum( [0,_x; 4.0,12; 2.5,3] ; [_x,0; 6,0; _z,2] )
 
 #+ fecha +#
 convDate(03.07.2025)

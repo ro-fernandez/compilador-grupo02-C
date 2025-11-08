@@ -17,4 +17,6 @@ typedef enum
 
 #define TAM_MAX 200
 
+void removeChar(char *s, char c);
+
 #endif /* UTILITARIOS_H */

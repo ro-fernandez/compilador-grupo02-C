@@ -29,3 +29,13 @@ _a                                       CONST_STR       a                      
 _15.2                                    CONST_REAL      15.2                                               
 _20.0                                    CONST_REAL      20.0                                               
 _3.2                                     CONST_REAL      3.2                                                
+_test                                    CONST_STR       test                                     4         
+_03.07.2025                              CONST_FECHA     03.07.2025                                         
+_2025                                    CONST_INT       2025                                               
+_7                                       CONST_INT       7                                                  
+_3                                       CONST_INT       3                                                  
+_10000.0                                 CONST_REAL      10000.0                                            
+_100.0                                   CONST_REAL      100.0                                              
+_10.09.2025                              CONST_FECHA     10.09.2025                                         
+_9                                       CONST_INT       9                                                  
+_10                                      CONST_INT       10                                                 
