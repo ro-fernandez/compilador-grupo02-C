@@ -69,6 +69,7 @@ void generarAssembler();
 void preprocesarPolaca(t_polaca* polaca, lista* listaTS);
 int esCTEnumerica(char* celda);
 int esCTEString(char* celda);
+int esID( char* celda);
 void eliminarCaracteres(char* str, char c);
 int esSalto(char* celda);
 void generarCuerpoAssembler(FILE* archASM);
@@ -223,7 +224,7 @@ asignacion:
 	;
 
 while:
-    WHILE { insertarEnPilaCeldaActual();insertarPolaca(&polaca,"ET");} PAR_A condicion PAR_C {completarBranchOR();} LLA_A bloque {completarBranchWhile();} LLA_C {printf("    WHILE PAR_A Condicion PAR_C LLA_A Bloque LLA_C es While\n");}
+    WHILE { insertarEnPilaCeldaActual();/*insertarPolaca(&polaca,"ET");*/} PAR_A condicion PAR_C {completarBranchOR();} LLA_A bloque {completarBranchWhile();} LLA_C {printf("    WHILE PAR_A Condicion PAR_C LLA_A Bloque LLA_C es While\n");}
     ;
 
 sentencia_if:
@@ -855,13 +856,15 @@ void generarAssembler()
 {
 
     FILE* fAssembler = fopen("final.asm", "wt+");
-    if(!fAssembler) {
+    if(!fAssembler)
+    {
         printf("\nError al abrir el archivo final.asm\n");
         exit(1);
     }
 
     FILE* fBodyAsm = fopen("final.temp", "wt+");
-    if(!fBodyAsm) {
+    if(!fBodyAsm)
+    {
         printf("\nError al abrir el archivo final.temp\n");
         exit(1);
     }
@@ -890,15 +893,13 @@ void generarAssembler()
     nombres de símbolos válidos para poder traducirla directamente a código assembler.  */
 
     preprocesarPolaca(&polacaDup, &tablaSimbolosDup);
-   
- guardarYVaciarListaPolaca(&polacaDup, "PolacaDup.txt" );
+
+    //guardarYVaciarListaPolaca(&polacaDup, "PolacaDup.txt");
 
     /* escribo el cuerpo del assembler, la parte CODE: */
-    //generarCuerpoAssembler(fBodyAsm);
+    generarCuerpoAssembler(fBodyAsm);
 
-    //guardarYVaciarListaPolaca(&polacaDup, "PolacaDup.txt" );
-
-     printf("\nYO TE KIERO LA AKD\n");
+    printf("\nYO TE KIERO LA AKD\n");
 /*
     //escribo la cabecera del assembler:
     generarCabeceraAssembler(fAssembler, &simbolosDup);
@@ -912,25 +913,35 @@ void generarAssembler()
     fclose(fAssembler);*/
 }
 
-void preprocesarPolaca(t_polaca* polaca, lista* listaTS){
+void preprocesarPolaca(t_polaca* polaca, lista* listaTS)
+{
     int celdaActual = 0, celdaSaltoInt;
     char buffer[100], celda[100], celdaSalto[100], celdaAnt[100];
 
     t_lexema actual;
-    while(celdaActual != polaca->celdaActual) { //iteramos para cambiar las celdas con valores (que no sean saltos) a sus respectivos nombres de la tabla de símbolos
+    while(celdaActual != polaca->celdaActual) //iteramos para cambiar las celdas con valores (que no sean saltos) a sus respectivos nombres de la tabla de símbolos
+    {
         strcpy(celda, obtenerValorEnPolaca(polaca, celdaActual));
 
-        if (esCTEnumerica(celda)) {
+        if (esCTEnumerica(celda))
+        {
             buscarSimboloPorValor(listaTS, celda, &actual);
             
-            if(celdaActual == 0 || !esSalto(celdaAnt)){
+            if(celdaActual == 0 || !esSalto(celdaAnt))
+            {
                 insertarEnPosicion(polaca, celdaActual, actual.nombre); //OJO ACÁ, NO VALIDAMOS LOS EXTREMOS, PUEDE FALLAR!! revisar en caso de error
             }
-        } else if(esCTEString(celda)) {
+        }
+        else if(esCTEString(celda))
+        {
             strcpy(buffer, celda);
             eliminarCaracteres(buffer, '"');
             buscarSimboloPorValor(listaTS, buffer, &actual);
             insertarEnPosicion(polaca, celdaActual, actual.nombre);
+        }
+        else if(esID(celda))
+        {
+            insertarEnPosicion(polaca, celdaActual, generarNombreIDTS(celda));
         }
 
         strcpy(celdaAnt, celda);
@@ -945,7 +956,8 @@ void preprocesarPolaca(t_polaca* polaca, lista* listaTS){
         //si la celda actual de la polaca es un salto, actualiza la celda del salto con un @ET_numCelda
         strcpy(celda, obtenerValorEnPolaca(polaca, celdaActual));
 
-        if(esSalto(celda)) {
+        if(esSalto(celda))
+        {
             //actualiza act+1 con ET_[contenidoActual]
             strcpy(celdaSalto, obtenerValorEnPolaca(polaca, celdaActual+1));
             celdaSaltoInt = atoi(celdaSalto);
@@ -954,16 +966,25 @@ void preprocesarPolaca(t_polaca* polaca, lista* listaTS){
             insertarEnPosicion(polaca, celdaActual+1, buffer);
 
             //actualiza celda del salto con @ET_[celdaActual]: [contenidoActual]
-            if(celdaSaltoInt < polaca->celdaActual){
+            if(celdaSaltoInt < polaca->celdaActual)
+            {
                 strcpy(celda, obtenerValorEnPolaca(polaca, celdaSaltoInt));
 
-                if(strstr(celda, "@ET_") == NULL){
+                if(strstr(celda, "@ET_") == NULL)
+                {
                     sprintf(buffer, "@ET_%d:%s", celdaSaltoInt, celda);
                     insertarEnPosicion(polaca, celdaSaltoInt, buffer);
                 }
-            } else {
-                sprintf(buffer, "@ET_%d:_FINAL_TAG", celdaSaltoInt);
-                insertarPolaca(polaca, buffer);
+            }
+            else
+            {
+                strcpy(celda, obtenerValorEnPolaca(polaca, (polaca->celdaActual)-1));
+
+                if(strstr(celda, "@ET_") == NULL)
+                {
+                    sprintf(buffer, "@ET_%d:_FINAL_TAG", celdaSaltoInt);
+                    insertarPolaca(polaca, buffer);
+                }
             }
         }
     
@@ -974,7 +995,7 @@ void preprocesarPolaca(t_polaca* polaca, lista* listaTS){
 int esCTEnumerica(char* celda) 
 {
     int tamCelda = strlen(celda);
-    if((celda[0] >= '0' && celda[0] <= '9') || (celda[0] == '-' && tamCelda > 1))
+    if((celda[0] >= '0' && celda[0] <= '9') || ((celda[0] == '-' && tamCelda > 1) && celda[1] != '>'))
     {
         return 1;
     }
@@ -988,13 +1009,20 @@ int esCTEString( char* celda)
     return celda[0] == '"' && celda[tam-1] == '"';
 }
 
+int esID( char* celda)
+{
+    return celda[0] == '_';
+}
+
 void eliminarCaracteres(char* str, char c) 
 {
     int i, j = 0;
     int len = strlen(str);
 
-    for (i = 0; i < len; i++) {
-        if (str[i] != c) {
+    for (i = 0; i < len; i++)
+    {
+        if (str[i] != c)
+        {
             str[j++] = str[i];
         }
     }
@@ -1009,19 +1037,15 @@ int esSalto(char* celda)
     
 
     char* celdaAux = strstr(celda, ":"); //esto se hace para aquellos casos donde le celda donde cae un salto tenga a su vez otro salto
-    if(celdaAux){
+    if(celdaAux)
+    {
         celdaAux++;
     } else {
         celdaAux = (char*)celda;
     }
 
-    if (!strcmp(celdaAux, "BLE") ||
-        !strcmp(celdaAux, "BEQ") ||
-        !strcmp(celdaAux, "BNE") ||
-        !strcmp(celdaAux, "BGT") ||
-        !strcmp(celdaAux, "BLT") ||
-        !strcmp(celdaAux, "BGE") ||
-        !strcmp(celdaAux, "BI")) {
+    if (!strcmp(celdaAux, "BLE") || !strcmp(celdaAux, "BEQ") || !strcmp(celdaAux, "BNE") || !strcmp(celdaAux, "BGT") || !strcmp(celdaAux, "BLT") || !strcmp(celdaAux, "BGE") || !strcmp(celdaAux, "BI"))
+    {
         return 1;
     }
 
@@ -1063,7 +1087,7 @@ void procesarCeldaPolaca(FILE* fAssembler, char* celda)
 
     if (esOperando(celda)) 
     { 
-        insertarEnPila(&pilaOperandos, celda); 
+        insertarEnPila(&pilaOperandos, celda);
         return;
     }
 
@@ -1074,7 +1098,7 @@ void procesarCeldaPolaca(FILE* fAssembler, char* celda)
         return;
     }
 
-    if(strcmp(celda, ":=") == 0)
+    if(strcmp(celda, "->") == 0)
     {
         ResAsignacionAsm(fAssembler); 
         return;
@@ -1111,28 +1135,34 @@ void procesarCeldaPolaca(FILE* fAssembler, char* celda)
 
 int esOperando(char* celda)
 {
-    return buscarSimbolo(&tabla_simbolos, celda);
+    return buscarSimbolo(&tabla_simbolos, celda) != FALSO;
 }
 
-char* ObtenerOperador(char* celda){
+char* ObtenerOperador(char* celda)
+{
     char operador[2];
-    if ( strcmp(celda, "+")==0 ){
+    if ( strcmp(celda, "+")==0 )
+    {
        return "FADD";
     }
-    if ( strcmp(celda, "-")==0 ){
+    if ( strcmp(celda, "-")==0 )
+    {
         return "FSUB";
     }
-    if ( strcmp(celda, "*")==0 ){
+    if ( strcmp(celda, "*")==0 )
+    {
         return "FMUL";
     }
-    if ( strcmp(celda, "/")==0 ){
+    if ( strcmp(celda, "/")==0 )
+    {
         return "FDIV";
     }
 
     return "";
 }
 
-void ResOperacionMatAsm(FILE* fAssembler, char* operador){
+void ResOperacionMatAsm(FILE* fAssembler, char* operador)
+{
     char* op1 = sacarDePila(&pilaOperandos);
     char* op2 = sacarDePila(&pilaOperandos);
     
@@ -1146,14 +1176,16 @@ void ResOperacionMatAsm(FILE* fAssembler, char* operador){
     insertarEnPila(&pilaOperandos, result);
 }
 
-char* crearAuxiliar(){
+char* crearAuxiliar()
+{
     static char aux[15];
     sprintf(aux, "@auxASM%d", auxActual++);
     insertarEnPila(&pilaAuxAsm, aux);
     return aux;
 }
 
-void ResAsignacionAsm(FILE* fAssembler) {
+void ResAsignacionAsm(FILE* fAssembler)
+{
 
     t_nodo* nodoLex;
 
@@ -1221,24 +1253,28 @@ void ResBIAsm(FILE* fAssembler)
     fprintf(fAssembler, "\tJMP %s\n", et);
 }
 
-void ResEscrituraAsm(FILE* fAssembler){
+void ResEscrituraAsm(FILE* fAssembler)
+{
     char buffer[100];
     t_nodo* nodoLex;
     char* variable = sacarDePila(&pilaOperandos);
 
     nodoLex = obtenerSimbolo(&tabla_simbolos, variable);
 
-    if( strcmp((nodoLex->lex).tipo, "CONST_STR")==0 || strcmp((nodoLex->lex).tipo, TIPO_STRING)==0 ){
+    if( strcmp((nodoLex->lex).tipo, "CONST_STR")==0 || strcmp((nodoLex->lex).tipo, TIPO_STRING)==0 )
+    {
         fprintf(fAssembler, "\tDisplayString %s\n\tnewLine\n", variable);
         return;
     }
 
-    if( strcmp((nodoLex->lex).tipo, TIPO_INT)==0 || strcmp((nodoLex->lex).tipo, "CONST_INT") == 0){
+    if( strcmp((nodoLex->lex).tipo, TIPO_INT)==0 || strcmp((nodoLex->lex).tipo, "CONST_INT") == 0)
+    {
         fprintf(fAssembler, "\tDisplayFloat %s, 0\n\tnewLine\n", variable);
         return;
     }
 
-    if( strcmp((nodoLex->lex).tipo, TIPO_FLOAT)==0 || strcmp((nodoLex->lex).tipo, "CONST_REAL") == 0){
+    if( strcmp((nodoLex->lex).tipo, TIPO_FLOAT)==0 || strcmp((nodoLex->lex).tipo, "CONST_REAL") == 0)
+    {
         fprintf(fAssembler, "\tDisplayFloat %s, 2\n\tnewLine\n", variable);
         return;
     }
@@ -1247,18 +1283,21 @@ void ResEscrituraAsm(FILE* fAssembler){
     fprintf(fAssembler, "\tDisplayFloat %s, 2\n\tnewLine\n", variable);
 }
 
-void ResLecturaAsm(FILE* fAssembler){
+void ResLecturaAsm(FILE* fAssembler)
+{
      t_nodo* nodoLex;
     char* variable = sacarDePila(&pilaOperandos);
 
     nodoLex = obtenerSimbolo(&tabla_simbolos, variable);
 
-    if( strcmp((nodoLex->lex).tipo, TIPO_STRING)==0 ){
+    if( strcmp((nodoLex->lex).tipo, TIPO_STRING)==0 )
+    {
         fprintf(fAssembler, "\tgetString %s\n\tnewLine\n", variable);
         return;
     }
 
-    if( strcmp((nodoLex->lex).tipo, TIPO_INT)==0 || strcmp((nodoLex->lex).tipo, TIPO_FLOAT)==0 ){
+    if( strcmp((nodoLex->lex).tipo, TIPO_INT)==0 || strcmp((nodoLex->lex).tipo, TIPO_FLOAT)==0 )
+    {
         fprintf(fAssembler, "\tGetFloat %s\n\tnewLine\n", variable);
         return;
     }

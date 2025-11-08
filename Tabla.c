@@ -81,7 +81,7 @@ booleano buscarSimbolo(lista* lista, char* lexBuscado)
         lista = &(*lista)->siguiente;
     }
 
-    if(!lista)
+    if(!(*lista))
     {
         return FALSO;
     }
@@ -112,7 +112,7 @@ t_nodo* obtenerSimbolo(lista* lista, char* lexBuscado)
         lista = &(*lista)->siguiente;
     }
 
-    if(!lista)
+    if(!(*lista))
     {
         return NULL;
     }

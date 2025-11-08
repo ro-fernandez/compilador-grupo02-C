@@ -1,5 +1,31 @@
 
 NOMBRE                                   TIPO            VALOR                                    LONGITUD  
 ------------------------------------------------------------------------------------------------------------
-__a                                      INT                                                                
+__a1                                     FLOAT                                                              
+__b1                                     FLOAT                                                              
+__c1                                     FLOAT                                                              
+__d1                                     FLOAT                                                              
+__e1                                     FLOAT                                                              
+__a                                      FLOAT                                                              
+__var1                                   INT                                                                
+__var2                                   INT                                                                
+__x                                      INT                                                                
+__z                                      INT                                                                
+__a2                                     INT                                                                
+__p1                                     STRING                                                             
+__p2                                     STRING                                                             
+__p3                                     STRING                                                             
+__d2                                     STRING                                                             
+__g3                                     STRING                                                             
+__f1                                     DATE_CONV                                                          
+__f2                                     DATE_CONV                                                          
+__fecha                                  DATE_CONV                                                          
+_prueba \string\ en variable             CONST_STR       prueba \string\ en variable              27        
+_12345                                   CONST_INT       12345                                              
+_3.1415                                  CONST_REAL      3.1415                                             
+_Hola mundo                              CONST_STR       Hola mundo                               10        
 _1                                       CONST_INT       1                                                  
+_a                                       CONST_STR       a                                        1         
+_15.2                                    CONST_REAL      15.2                                               
+_20.0                                    CONST_REAL      20.0                                               
+_3.2                                     CONST_REAL      3.2                                                
