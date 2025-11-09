@@ -272,6 +272,8 @@ void insertarValorEnTS(lista* lista, char* lex, TipoSimbolo tipo)
 
     strcpy(newLexema.nombre, "_");
     strcat(newLexema.nombre, lexValue);
+    replaceChar(newLexema.nombre, ' ', '_');
+    replaceChar(newLexema.nombre, '.', '_');
 
     insertarSimboloSinDuplicados(lista, newLexema);
 }

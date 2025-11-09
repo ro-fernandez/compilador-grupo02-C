@@ -1,33 +1,64 @@
 
 NOMBRE                                   TIPO            VALOR                                    LONGITUD  
 ------------------------------------------------------------------------------------------------------------
-__x                                      FLOAT                                                              
-__z                                      FLOAT                                                              
+__a1                                     FLOAT                                                              
+__b1                                     FLOAT                                                              
 __c1                                     FLOAT                                                              
 __d1                                     FLOAT                                                              
 __e1                                     FLOAT                                                              
 __a                                      FLOAT                                                              
+__var1                                   INT                                                                
+__var2                                   INT                                                                
+__x                                      INT                                                                
+__z                                      INT                                                                
+__a2                                     INT                                                                
+__p1                                     STRING                                                             
+__p2                                     STRING                                                             
+__p3                                     STRING                                                             
+__d2                                     STRING                                                             
+__g3                                     STRING                                                             
+__prueba                                 STRING                                                             
+__f1                                     DATE_CONV                                                          
+__f2                                     DATE_CONV                                                          
+__fecha                                  DATE_CONV                                                          
+_12345                                   CONST_INT       12345                                              
+_3_1415                                  CONST_REAL      3.1415                                             
+_Hola_mundo                              CONST_STR       Hola mundo                               10        
+_1                                       CONST_INT       1                                                  
+_a                                       CONST_STR       a                                        1         
+_15_2                                    CONST_REAL      15.2                                               
+_20_0                                    CONST_REAL      20.0                                               
+_3_2                                     CONST_REAL      3.2                                                
+_21_1                                    CONST_REAL      21.1                                               
+_1000_10                                 CONST_REAL      1000.10                                            
+_test                                    CONST_STR       test                                     4         
 _0                                       CONST_INT       0                                                  
-_4.0                                     CONST_REAL      4.0                                                
+_4_0                                     CONST_REAL      4.0                                                
 _12                                      CONST_INT       12                                                 
-_2.5                                     CONST_REAL      2.5                                                
+_2_5                                     CONST_REAL      2.5                                                
 _3                                       CONST_INT       3                                                  
-_y3                                      FLOAT                                                              
-_y2                                      FLOAT                                                              
-_y1                                      FLOAT                                                              
-_x3                                      FLOAT                                                              
-_x2                                      FLOAT                                                              
-_x1                                      FLOAT                                                              
+__y3                                     FLOAT                                                              
+__y2                                     FLOAT                                                              
+__y1                                     FLOAT                                                              
+__x3                                     FLOAT                                                              
+__x2                                     FLOAT                                                              
+__x1                                     FLOAT                                                              
 _6                                       CONST_INT       6                                                  
 _2                                       CONST_INT       2                                                  
-_y6                                      FLOAT                                                              
-_y5                                      FLOAT                                                              
-_y4                                      FLOAT                                                              
-_x6                                      FLOAT                                                              
-_x5                                      FLOAT                                                              
-_x4                                      FLOAT                                                              
-_a1                                      FLOAT                                                              
-_0.5                                     CONST_REAL      0.5                                                
-_a2                                      FLOAT                                                              
-_mayor                                   FLOAT                                                              
-_0.0                                     CONST_REAL      0.0                                                
+__y6                                     FLOAT                                                              
+__y5                                     FLOAT                                                              
+__y4                                     FLOAT                                                              
+__x6                                     FLOAT                                                              
+__x5                                     FLOAT                                                              
+__x4                                     FLOAT                                                              
+_0_5                                     CONST_REAL      0.5                                                
+__mayor                                  FLOAT                                                              
+_0_0                                     CONST_REAL      0.0                                                
+_03_07_2025                              CONST_FECHA     03.07.2025                                         
+_2025                                    CONST_INT       2025                                               
+_7                                       CONST_INT       7                                                  
+_10000                                   CONST_INT       10000                                              
+_100                                     CONST_INT       100                                                
+_10_09_2025                              CONST_FECHA     10.09.2025                                         
+_9                                       CONST_INT       9                                                  
+_10                                      CONST_INT       10                                                 

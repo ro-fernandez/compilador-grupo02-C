@@ -220,7 +220,7 @@ sentencia:
 
 asignacion: 
     ID OP_AS expresion {printf("    ID -> Expresion es Asignacion\n"); validarTipoDatoAsignacion($1, ASIG_EXPRESION); insertarPolaca(&polaca,$1); insertarPolaca(&polaca,"->");}
-    | ID OP_AS triangleAreaMax {printf("    ID -> TriangleAreaMax es Asignacion\n"); validarTipoDatoAsignacion($1, ASIG_TRIANGLE); insertarPolaca(&polaca,$1); insertarPolaca(&polaca,"->");}
+    | ID OP_AS triangleAreaMax {printf("    ID -> TriangleAreaMax es Asignacion\n"); validarTipoDatoAsignacion($1, ASIG_TRIANGLE); insertarPolaca(&polaca, "_mayor"); insertarPolaca(&polaca,$1); insertarPolaca(&polaca,"->");}
     | ID OP_AS convDate {printf("    ID -> ConvDate es Asignacion\n"); validarTipoDatoAsignacion($1, ASIG_CONVDATE); insertarPolaca(&polaca,$1); insertarPolaca(&polaca,"->");}
     | ID OP_AS CTE_STRING {printf("    ID -> CTE_STRING es Asignacion\n"); validarTipoDatoAsignacion($1, ASIG_STRING); insertarPolaca(&polaca,$3); insertarPolaca(&polaca,$1); insertarPolaca(&polaca,"->");}
 	;
@@ -478,40 +478,40 @@ booleano insertarTriangulo1EnPolaca()
     //en polaca: val|y3|->|val|x3|->|val|y2|->|val|x2|->|val|y1|->|val|x1|->|
     coordenada = sacarDePila(&pilaTriangulo);
     insertarPolaca(&polaca,coordenada);
-    insertarPolaca(&polaca,"y3");
+    insertarPolaca(&polaca,"_y3");
     insertarPolaca(&polaca,"->");
 
     coordenada = sacarDePila(&pilaTriangulo);
     insertarPolaca(&polaca,coordenada);
-    insertarPolaca(&polaca,"x3");
+    insertarPolaca(&polaca,"_x3");
     insertarPolaca(&polaca,"->");
 
     coordenada = sacarDePila(&pilaTriangulo);
     insertarPolaca(&polaca,coordenada);
-    insertarPolaca(&polaca,"y2");
+    insertarPolaca(&polaca,"_y2");
     insertarPolaca(&polaca,"->");
 
     coordenada = sacarDePila(&pilaTriangulo);
     insertarPolaca(&polaca,coordenada);
-    insertarPolaca(&polaca,"x2");
+    insertarPolaca(&polaca,"_x2");
     insertarPolaca(&polaca,"->");
 
     coordenada = sacarDePila(&pilaTriangulo);
     insertarPolaca(&polaca,coordenada);
-    insertarPolaca(&polaca,"y1");
+    insertarPolaca(&polaca,"_y1");
     insertarPolaca(&polaca,"->");
 
     coordenada = sacarDePila(&pilaTriangulo);
     insertarPolaca(&polaca,coordenada);
-    insertarPolaca(&polaca,"x1");
+    insertarPolaca(&polaca,"_x1");
     insertarPolaca(&polaca,"->");
 
-    insertarValorEnTS(&tabla_simbolos, "y3", SIMBOLO_ID);
-    insertarValorEnTS(&tabla_simbolos, "y2", SIMBOLO_ID);
-    insertarValorEnTS(&tabla_simbolos, "y1", SIMBOLO_ID);
-    insertarValorEnTS(&tabla_simbolos, "x3", SIMBOLO_ID);
-    insertarValorEnTS(&tabla_simbolos, "x2", SIMBOLO_ID);
-    insertarValorEnTS(&tabla_simbolos, "x1", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_y3", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_y2", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_y1", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_x3", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_x2", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_x1", SIMBOLO_ID);
 
     return VERDADERO;
 }
@@ -526,40 +526,40 @@ booleano insertarTriangulo2EnPolaca()
     //en polaca: val|y6|->|val|x6|->|val|y5|->|val|x5|->|val|y4|->|val|x4|->|
     coordenada = sacarDePila(&pilaTriangulo);
     insertarPolaca(&polaca,coordenada);
-    insertarPolaca(&polaca,"y6");
+    insertarPolaca(&polaca,"_y6");
     insertarPolaca(&polaca,"->");
 
     coordenada = sacarDePila(&pilaTriangulo);
     insertarPolaca(&polaca,coordenada);
-    insertarPolaca(&polaca,"x6");
+    insertarPolaca(&polaca,"_x6");
     insertarPolaca(&polaca,"->");
 
     coordenada = sacarDePila(&pilaTriangulo);
     insertarPolaca(&polaca,coordenada);
-    insertarPolaca(&polaca,"y5");
+    insertarPolaca(&polaca,"_y5");
     insertarPolaca(&polaca,"->");
 
     coordenada = sacarDePila(&pilaTriangulo);
     insertarPolaca(&polaca,coordenada);
-    insertarPolaca(&polaca,"x5");
+    insertarPolaca(&polaca,"_x5");
     insertarPolaca(&polaca,"->");
 
     coordenada = sacarDePila(&pilaTriangulo);
     insertarPolaca(&polaca,coordenada);
-    insertarPolaca(&polaca,"y4");
+    insertarPolaca(&polaca,"_y4");
     insertarPolaca(&polaca,"->");
 
     coordenada = sacarDePila(&pilaTriangulo);
     insertarPolaca(&polaca,coordenada);
-    insertarPolaca(&polaca,"x4");
+    insertarPolaca(&polaca,"_x4");
     insertarPolaca(&polaca,"->");
 
-    insertarValorEnTS(&tabla_simbolos, "y6", SIMBOLO_ID);
-    insertarValorEnTS(&tabla_simbolos, "y5", SIMBOLO_ID);
-    insertarValorEnTS(&tabla_simbolos, "y4", SIMBOLO_ID);
-    insertarValorEnTS(&tabla_simbolos, "x6", SIMBOLO_ID);
-    insertarValorEnTS(&tabla_simbolos, "x5", SIMBOLO_ID);
-    insertarValorEnTS(&tabla_simbolos, "x4", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_y6", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_y5", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_y4", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_x6", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_x5", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_x4", SIMBOLO_ID);
 
     return VERDADERO;
 }
@@ -572,7 +572,7 @@ booleano triangleAreaMaximum()
     //validacion triangularidad: por ahora, lo que hace si alguno de los dos parametros NO ES TRIANGULO, va al final del codigo y no hace nada.
 
     //if(a1 == 0 || a2 == 0) ---> ir al final del codigo
-    insertarPolaca(&polaca,"a1");
+    insertarPolaca(&polaca,"_a1");
     insertarPolaca(&polaca,"0");
     insertarPolaca(&polaca,"CMP");
     insertarPolaca(&polaca,"BNE");
@@ -583,7 +583,7 @@ booleano triangleAreaMaximum()
     itoa(polaca.celdaActual+24,branchValue,10);
     insertarPolaca(&polaca,branchValue);
 
-    insertarPolaca(&polaca,"a2");
+    insertarPolaca(&polaca,"_a2");
     insertarPolaca(&polaca,"0");
     insertarPolaca(&polaca,"CMP");
     insertarPolaca(&polaca,"BNE");
@@ -596,29 +596,29 @@ booleano triangleAreaMaximum()
     //fin validacion triangularidad
 
     //if(a1 > a2)
-    insertarPolaca(&polaca,"a1");
-    insertarPolaca(&polaca,"a2");
+    insertarPolaca(&polaca,"_a1");
+    insertarPolaca(&polaca,"_a2");
     insertarPolaca(&polaca,"CMP");
     insertarPolaca(&polaca,"BLE");
     itoa(polaca.celdaActual+7,branchValue,10);
     insertarPolaca(&polaca,branchValue);
 
     //mayor = a1
-    insertarPolaca(&polaca,"a1");
-    insertarPolaca(&polaca,"mayor");
+    insertarPolaca(&polaca,"_a1");
+    insertarPolaca(&polaca,"_mayor");
     insertarPolaca(&polaca,"->");
     insertarPolaca(&polaca,"BI");
     itoa(polaca.celdaActual+5,branchValue,10);
     insertarPolaca(&polaca,branchValue);
 
     //mayor = a2
-    insertarPolaca(&polaca,"a2");
-    insertarPolaca(&polaca,"mayor");
+    insertarPolaca(&polaca,"_a2");
+    insertarPolaca(&polaca,"_mayor");
     insertarPolaca(&polaca,"->");
     
-    insertarValorEnTS(&tabla_simbolos, "a1", SIMBOLO_ID);
-    insertarValorEnTS(&tabla_simbolos, "a2", SIMBOLO_ID);
-    insertarValorEnTS(&tabla_simbolos, "mayor", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_a1", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_a2", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_mayor", SIMBOLO_ID);
     insertarValorEnTS(&tabla_simbolos, "0.0", SIMBOLO_REAL);
 
     return VERDADERO;
@@ -628,27 +628,27 @@ booleano insertarCalculoArea1()
 {
     //areaTri1 = 0.5 * (x1*(y2-y3) + x2*(y3-y1) + x3*(y1-y2)) 
 
-    insertarPolaca(&polaca,"y2");
-    insertarPolaca(&polaca,"y3");
+    insertarPolaca(&polaca,"_y2");
+    insertarPolaca(&polaca,"_y3");
     insertarPolaca(&polaca,"-");
 
-    insertarPolaca(&polaca,"x1");
+    insertarPolaca(&polaca,"_x1");
     insertarPolaca(&polaca,"*");
 
-    insertarPolaca(&polaca,"y3");
-    insertarPolaca(&polaca,"y1");
+    insertarPolaca(&polaca,"_y3");
+    insertarPolaca(&polaca,"_y1");
     insertarPolaca(&polaca,"-");
 
-    insertarPolaca(&polaca,"x2");
+    insertarPolaca(&polaca,"_x2");
     insertarPolaca(&polaca,"*");
 
     insertarPolaca(&polaca,"+");
 
-    insertarPolaca(&polaca,"y1");
-    insertarPolaca(&polaca,"y2");
+    insertarPolaca(&polaca,"_y1");
+    insertarPolaca(&polaca,"_y2");
     insertarPolaca(&polaca,"-");
 
-    insertarPolaca(&polaca,"x3");
+    insertarPolaca(&polaca,"_x3");
     insertarPolaca(&polaca,"*");
 
     insertarPolaca(&polaca,"+");
@@ -656,16 +656,16 @@ booleano insertarCalculoArea1()
     insertarPolaca(&polaca,"0.5");
     insertarPolaca(&polaca,"*");
     
-    insertarPolaca(&polaca,"a1");
+    insertarPolaca(&polaca,"_a1");
     insertarPolaca(&polaca,"->");
 
-    insertarValorEnTS(&tabla_simbolos, "y3", SIMBOLO_ID);
-    insertarValorEnTS(&tabla_simbolos, "y2", SIMBOLO_ID);
-    insertarValorEnTS(&tabla_simbolos, "y1", SIMBOLO_ID);
-    insertarValorEnTS(&tabla_simbolos, "x3", SIMBOLO_ID);
-    insertarValorEnTS(&tabla_simbolos, "x2", SIMBOLO_ID);
-    insertarValorEnTS(&tabla_simbolos, "x1", SIMBOLO_ID);
-    insertarValorEnTS(&tabla_simbolos, "a1", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_y3", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_y2", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_y1", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_x3", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_x2", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_x1", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_a1", SIMBOLO_ID);
     insertarValorEnTS(&tabla_simbolos, "0.5", SIMBOLO_REAL);
 
     return VERDADERO;
@@ -675,27 +675,27 @@ booleano insertarCalculoArea2()
 {
     //areaTri2 = 0.5 * (x4*(y5-y6) + x5*(y6-y4) + x6*(y4-y5)) 
 
-    insertarPolaca(&polaca,"y5");
-    insertarPolaca(&polaca,"y6");
+    insertarPolaca(&polaca,"_y5");
+    insertarPolaca(&polaca,"_y6");
     insertarPolaca(&polaca,"-");
 
-    insertarPolaca(&polaca,"x4");
+    insertarPolaca(&polaca,"_x4");
     insertarPolaca(&polaca,"*");
 
-    insertarPolaca(&polaca,"y6");
-    insertarPolaca(&polaca,"y4");
+    insertarPolaca(&polaca,"_y6");
+    insertarPolaca(&polaca,"_y4");
     insertarPolaca(&polaca,"-");
 
-    insertarPolaca(&polaca,"x5");
+    insertarPolaca(&polaca,"_x5");
     insertarPolaca(&polaca,"*");
 
     insertarPolaca(&polaca,"+");
 
-    insertarPolaca(&polaca,"y4");
-    insertarPolaca(&polaca,"y5");
+    insertarPolaca(&polaca,"_y4");
+    insertarPolaca(&polaca,"_y5");
     insertarPolaca(&polaca,"-");
 
-    insertarPolaca(&polaca,"x6");
+    insertarPolaca(&polaca,"_x6");
     insertarPolaca(&polaca,"*");
 
     insertarPolaca(&polaca,"+");
@@ -703,16 +703,16 @@ booleano insertarCalculoArea2()
     insertarPolaca(&polaca,"0.5");
     insertarPolaca(&polaca,"*");
     
-    insertarPolaca(&polaca,"a2");
+    insertarPolaca(&polaca,"_a2");
     insertarPolaca(&polaca,"->");
 
-    insertarValorEnTS(&tabla_simbolos, "y6", SIMBOLO_ID);
-    insertarValorEnTS(&tabla_simbolos, "y5", SIMBOLO_ID);
-    insertarValorEnTS(&tabla_simbolos, "y4", SIMBOLO_ID);
-    insertarValorEnTS(&tabla_simbolos, "x6", SIMBOLO_ID);
-    insertarValorEnTS(&tabla_simbolos, "x5", SIMBOLO_ID);
-    insertarValorEnTS(&tabla_simbolos, "x4", SIMBOLO_ID);
-    insertarValorEnTS(&tabla_simbolos, "a2", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_y6", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_y5", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_y4", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_x6", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_x5", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_x4", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "_a2", SIMBOLO_ID);
     insertarValorEnTS(&tabla_simbolos, "0.5", SIMBOLO_REAL);
 
     return VERDADERO;
@@ -945,7 +945,6 @@ void generarAssembler()
 
     /* escribo el cuerpo del assembler, la parte CODE: */
     generarCodeAssembler(fBodyAsm);
-    //guardarYVaciarListaPolaca(&polacaDup, "PolacaDup.txt");
 
     /* escribo la cabecera del assembler: la parte DATA: */
     generarDataAssembler(fAssembler, &tablaSimbolosDup);
@@ -959,6 +958,7 @@ void generarAssembler()
 	fprintf(fAssembler, "\nEND START\n");
 
     printf("\n\nAssembler generado exitosamente\n\n");
+
     fclose(fAssembler);
 }
 
@@ -1138,7 +1138,7 @@ void procesarCeldaPolaca(FILE* fAssembler, char* celda)
     }
 
     if (esOperando(celda)) 
-    { 
+    {
         insertarEnPila(&pilaOperandos, celda);
         return;
     }
@@ -1244,7 +1244,7 @@ void ResAsignacionAsm(FILE* fAssembler)
 
     char* tipoDatoVar = obtenerTipoDatoID(&tabla_simbolos, variable);
 
-    if( strcmp(tipoDatoVar, "CONST_STR")==0 || strcmp(tipoDatoVar, TIPO_STRING)==0 )
+    if( strcmp(tipoDatoVar, "CONST_STR")==0 || strcmp(tipoDatoVar, TIPO_STRING)==0 ||  strcmp(tipoDatoVar, "CONST_FECHA")==0 || strcmp(tipoDatoVar, TIPO_DATE_CONV)==0 )
 		sprintf(buffer, "\tMOV SI, OFFSET %s\n\tMOV DI, OFFSET %s\n\tCALL COPIAR\n", valor, variable);
     else
         sprintf(buffer, "\tFLD %s\n\tFSTP %s\n", valor, variable);
@@ -1316,7 +1316,7 @@ void ResEscrituraAsm(FILE* fAssembler)
         return;
     }
 
-    if( strcmp(tipoDatoVar, "CONST_STR")==0 || strcmp(tipoDatoVar, TIPO_STRING)==0 )
+    if( strcmp(tipoDatoVar, "CONST_STR")==0 || strcmp(tipoDatoVar, TIPO_STRING)==0  ||  strcmp(tipoDatoVar, "CONST_FECHA")==0 || strcmp(tipoDatoVar, TIPO_DATE_CONV)==0 )
     {
         fprintf(fAssembler, "\tDisplayString %s\n\tnewLine\n", variable);
         return;
@@ -1356,6 +1356,7 @@ void ResLecturaAsm(FILE* fAssembler)
 }
 
 void generarDataAssembler(FILE* fAssembler, lista* listaTS){
+
     fprintf(fAssembler, "include macros2.asm\ninclude number.asm\n.MODEL LARGE\n.386\n.STACK 200h\n\nMAXTEXTSIZE equ 40\n\n.DATA\n");
 
     t_lexema lexActual;
@@ -1366,15 +1367,15 @@ void generarDataAssembler(FILE* fAssembler, lista* listaTS){
     int tieneValor, esString, tam;
 
     while(sacarDeLista(listaTS, &lexActual)) {
-        esString = (strcmp(lexActual.tipo, "CTE_STRING") == 0 || strcmp(lexActual.tipo, "string") == 0);
+        esString = (strcmp(lexActual.tipo, "CONST_STR") == 0 || strcmp(lexActual.tipo, TIPO_STRING) == 0 || strcmp(lexActual.tipo, "CONST_FECHA") == 0 || strcmp(lexActual.tipo, TIPO_DATE_CONV) == 0 );
         tieneValor = strlen(lexActual.valor);
-        tam = atoi(lexActual.longitud);
+        tam = (strcmp(lexActual.tipo, "CONST_FECHA") == 0 || strcmp(lexActual.tipo, TIPO_DATE_CONV) == 0) ? 10 : atoi(lexActual.longitud);
 
         if(esString){
             if(!tam){ 
                 sprintf(valor, "MAXTEXTSIZE dup (?),'$'");
             } else {
-                sprintf(valor, "\"%s\",'$', %s dup (?)", lexActual.valor, lexActual.longitud);
+                sprintf(valor, "\"%s\",'$', %d dup (?)", lexActual.valor, tam);
             }
 
             fprintf(fAssembler, "%s db %s\n", lexActual.nombre, valor);

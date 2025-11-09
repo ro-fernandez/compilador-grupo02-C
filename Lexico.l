@@ -317,6 +317,8 @@ void insertInSymbolTable(char* lex, TipoSimbolo tipo)
 
     strcpy(newLexema.nombre, "_");
     strcat(newLexema.nombre, lexValue);
+    replaceChar(newLexema.nombre, ' ', '_');
+    replaceChar(newLexema.nombre, '.', '_');
 
     insertarSimboloSinDuplicados(&tabla_simbolos, newLexema);
 }

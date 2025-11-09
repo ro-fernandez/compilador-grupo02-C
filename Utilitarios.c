@@ -16,3 +16,18 @@ void removeChar(char *s, char c)
 
     s[i]=0;
 }
+
+void replaceChar(char *s, char c, char r)
+{
+    int i = 0, j = 0;
+
+    while (s[j])
+    {
+        if (s[j]==c) 
+        {   
+            s[j] = r;
+        }
+
+        j++;       
+    }
+}
