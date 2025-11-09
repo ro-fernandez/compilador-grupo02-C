@@ -49,9 +49,7 @@ write(_d1)  #+ variable numerica +#
 #+ temas especiales +#
 
 #+ triangulo +#
-triangleAreaMaximum( [0,_x; 4.0,12; 2.5,3] ; [_x,0; 6,0; _z,2] )
 _a -> triangleAreaMaximum( [0,_x; 4.0,12; 2.5,3] ; [_x,0; 6,0; _z,2] )
 
 #+ fecha +#
-convDate(03.07.2025)
 _fecha -> convDate(10.09.2025)
