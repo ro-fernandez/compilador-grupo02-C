@@ -72,7 +72,7 @@ int esCTEString(char* celda);
 int esID( char* celda);
 void eliminarCaracteres(char* str, char c);
 int esSalto(char* celda);
-void generarCuerpoAssembler(FILE* archASM);
+void generarCodeAssembler(FILE* archASM);
 void procesarCeldaPolaca(FILE* fAssembler, char* celda) ;
 char* ObtenerOperador(char* celda);
 int esOperando(char* celda);
@@ -84,6 +84,8 @@ char* ProcesarSalto(char* celda);
 void ResBIAsm(FILE* fAssembler);
 void ResEscrituraAsm(FILE* fAssembler);
 void ResLecturaAsm(FILE* fAssembler);
+void generarDataAssembler(FILE* fAssembler, lista* listaTS);
+void mergeArchivos(FILE* fAssembler, FILE* fCodeAsm);
 
 /* ESTRUCTURAS DE ASSEMBLER */
 Pila pilaAuxAsm;
@@ -616,6 +618,7 @@ booleano triangleAreaMaximum()
     
     insertarValorEnTS(&tabla_simbolos, "a1", SIMBOLO_ID);
     insertarValorEnTS(&tabla_simbolos, "a2", SIMBOLO_ID);
+    insertarValorEnTS(&tabla_simbolos, "mayor", SIMBOLO_ID);
     insertarValorEnTS(&tabla_simbolos, "0.0", SIMBOLO_REAL);
 
     return VERDADERO;
@@ -742,9 +745,11 @@ booleano convertDate(char* dia, char* mes, char* anio)
     insertarValorEnTS(&tabla_simbolos, anio, SIMBOLO_INT);
     insertarValorEnTS(&tabla_simbolos, mes, SIMBOLO_INT);
     insertarValorEnTS(&tabla_simbolos, dia, SIMBOLO_INT);
-    insertarValorEnTS(&tabla_simbolos, "10000.0", SIMBOLO_REAL);
-    insertarValorEnTS(&tabla_simbolos, "100.0", SIMBOLO_REAL);
+    //insertarValorEnTS(&tabla_simbolos, "10000.0", SIMBOLO_REAL);
+    //insertarValorEnTS(&tabla_simbolos, "100.0", SIMBOLO_REAL);
 
+    insertarValorEnTS(&tabla_simbolos, "10000", SIMBOLO_INT);
+    insertarValorEnTS(&tabla_simbolos, "100", SIMBOLO_INT);
     return VERDADERO;
 }
     
@@ -938,23 +943,23 @@ void generarAssembler()
 
     preprocesarPolaca(&polacaDup, &tablaSimbolosDup);
 
-    // guardarYVaciarListaPolaca(&polacaDup, "PolacaDup.txt");
-
     /* escribo el cuerpo del assembler, la parte CODE: */
-    generarCuerpoAssembler(fBodyAsm);
+    generarCodeAssembler(fBodyAsm);
+    //guardarYVaciarListaPolaca(&polacaDup, "PolacaDup.txt");
 
-    printf("\nYO TE KIERO LA AKD\n");
-/*
-    //escribo la cabecera del assembler:
-    generarCabeceraAssembler(fAssembler, &simbolosDup);
+    /* escribo la cabecera del assembler: la parte DATA: */
+    generarDataAssembler(fAssembler, &tablaSimbolosDup);
 
-    mergeArchivosAssembler(fAssembler, fBodyAsm);
+    mergeArchivos(fAssembler, fBodyAsm);
 
     //escribo el fin del assembler:
-    generarFinAssembler(fAssembler);
+    fprintf(fAssembler, "\tMOV AX, 4C00h\n\tINT 21h\n");
+    fprintf(fAssembler, "\n\nSTRLEN PROC NEAR\n\tmov bx, 0\nSTRL01:\n\tcmp BYTE PTR [SI+BX],'$'\n\tje STREND\n\tinc BX\n\tjmp STRL01\nSTREND:\n\tret\nSTRLEN ENDP\n");
+	fprintf(fAssembler, "\nCOPIAR PROC NEAR\n\tcall STRLEN\n\tcmp bx,MAXTEXTSIZE\n\tjle COPIARSIZEOK\n\tmov bx,MAXTEXTSIZE\nCOPIARSIZEOK:\n\tmov cx,bx\n\tcld\n\trep movsb\n\tmov al,'$'\n\tmov BYTE PTR [DI],al\n\tret\nCOPIAR ENDP\n");
+	fprintf(fAssembler, "\nEND START\n");
 
     printf("\n\nAssembler generado exitosamente\n\n");
-    fclose(fAssembler);*/
+    fclose(fAssembler);
 }
 
 void preprocesarPolaca(t_polaca* polaca, lista* listaTS)
@@ -969,7 +974,9 @@ void preprocesarPolaca(t_polaca* polaca, lista* listaTS)
 
         if (esCTEnumerica(celda))
         {
+            //printf("\nSimbolo en polaca: %s", celda);
             buscarSimboloPorValor(listaTS, celda, &actual);
+            //printf("\nSimbolo en tabla: %s", actual.nombre);
             
             if(celdaActual == 0 || !esSalto(celdaAnt))
             {
@@ -1076,11 +1083,11 @@ void eliminarCaracteres(char* str, char c)
 int esSalto(char* celda) 
 {
 
-    if(celda[0] == '"') //esta validación se hace para evitar que casos con constantes strings como "a:BI" sean consideradas saltos
+    if(celda[0] == '"') //evita que casos con constantes strings como "a:BI" sean consideradas saltos
         return 0;
     
 
-    char* celdaAux = strstr(celda, ":"); //esto se hace para aquellos casos donde le celda donde cae un salto tenga a su vez otro salto
+    char* celdaAux = strstr(celda, ":"); //si le celda donde cae un salto tenga a su vez otro salto
     if(celdaAux)
     {
         celdaAux++;
@@ -1096,7 +1103,7 @@ int esSalto(char* celda)
     return 0;
 }
 
-void generarCuerpoAssembler(FILE* archASM)
+void generarCodeAssembler(FILE* archASM)
 {
     char celdaPolaca[100];
     while(sacarDePolaca(&polacaDup, celdaPolaca)) 
@@ -1108,10 +1115,11 @@ void generarCuerpoAssembler(FILE* archASM)
 
 void procesarCeldaPolaca(FILE* fAssembler, char* celda) 
 {
-    
-    /* tengo que validar si la celda actual corresponde a una etiqueta que tengo que completar
-    por un lado, puede ser la celda desde la que salto (ET_num)  --> se extrae cuando detecta un salto (BIAssembler o comparacionAssembler)
-    por otro, la celda donde cae el salto (@ET_num:) */
+    /* debo verificar si la celda actual corresponde a una etiqueta pendiente de resolución.
+   por un lado, puede tratarse del punto de origen del salto (ET_num), que se obtiene al procesar un salto
+   incondicional o condicional (BIAssembler o comparacionAssembler);
+   y por otro, puede ser el destino del salto (@ET_num:), es decir, la posición donde continúa la ejecución. */
+
     t_lexema lexemaActual;
 
     if(strncmp(celda, "@ET_", 4) == 0)
@@ -1161,7 +1169,7 @@ void procesarCeldaPolaca(FILE* fAssembler, char* celda)
 
     if(strcmp(celda, "BI") == 0)
     {
-        ResBIAsm(fAssembler); //resuelve saltos incondicionales
+        ResBIAsm(fAssembler);
     }
 
     if(strcmp(celda, "ESCRIBIR") == 0)
@@ -1301,11 +1309,19 @@ void ResEscrituraAsm(FILE* fAssembler)
 
     char* tipoDatoVar = obtenerTipoDatoID(&tabla_simbolos, variable);
 
+    if(!tipoDatoVar)
+    {
+        //este caso sería cuando lo que se va a escribir no está en la TS sino que es un resultado de una operación intermedia
+        fprintf(fAssembler, "\tDisplayFloat %s, 2\n\tnewLine\n", variable);
+        return;
+    }
+
     if( strcmp(tipoDatoVar, "CONST_STR")==0 || strcmp(tipoDatoVar, TIPO_STRING)==0 )
     {
         fprintf(fAssembler, "\tDisplayString %s\n\tnewLine\n", variable);
         return;
     }
+
 
     if( strcmp(tipoDatoVar, TIPO_INT)==0 || strcmp(tipoDatoVar, "CONST_INT") == 0)
     {
@@ -1318,9 +1334,6 @@ void ResEscrituraAsm(FILE* fAssembler)
         fprintf(fAssembler, "\tDisplayFloat %s, 2\n\tnewLine\n", variable);
         return;
     }
-
-    //este caso sería cuando lo que se va a escribir no está en la TS sino que es un resultado de una operación
-    fprintf(fAssembler, "\tDisplayFloat %s, 2\n\tnewLine\n", variable);
 }
 
 void ResLecturaAsm(FILE* fAssembler)
@@ -1340,4 +1353,57 @@ void ResLecturaAsm(FILE* fAssembler)
         fprintf(fAssembler, "\tGetFloat %s\n\tnewLine\n", variable);
         return;
     }
+}
+
+void generarDataAssembler(FILE* fAssembler, lista* listaTS){
+    fprintf(fAssembler, "include macros2.asm\ninclude number.asm\n.MODEL LARGE\n.386\n.STACK 200h\n\nMAXTEXTSIZE equ 40\n\n.DATA\n");
+
+    t_lexema lexActual;
+    char tipo[3];
+    char valor[256];
+    char aux[100];
+    char* punto;
+    int tieneValor, esString, tam;
+
+    while(sacarDeLista(listaTS, &lexActual)) {
+        esString = (strcmp(lexActual.tipo, "CTE_STRING") == 0 || strcmp(lexActual.tipo, "string") == 0);
+        tieneValor = strlen(lexActual.valor);
+        tam = atoi(lexActual.longitud);
+
+        if(esString){
+            if(!tam){ 
+                sprintf(valor, "MAXTEXTSIZE dup (?),'$'");
+            } else {
+                sprintf(valor, "\"%s\",'$', %s dup (?)", lexActual.valor, lexActual.longitud);
+            }
+
+            fprintf(fAssembler, "%s db %s\n", lexActual.nombre, valor);
+
+            continue; //ya completé este lexema, paso al siguiente
+        }
+
+        //si no es cte string ni variable string:
+        fprintf(fAssembler, "%s dd %s\n", lexActual.nombre, tieneValor ? lexActual.valor : "?");
+    }
+
+    while(!pilaVacia(&pilaAuxAsm)){
+        strcpy(aux, sacarDePila(&pilaAuxAsm));
+        fprintf(fAssembler, "%s dd ?\n", aux);
+    }
+
+    fprintf(fAssembler, "\n.CODE\n.startup\n\nSTART:\n\tMOV AX, @DATA\n\tMOV DS, AX\n\tMOV es,ax\n\n");
+}
+
+void mergeArchivos(FILE* fAssembler, FILE* fCodeAsm){
+    
+    fseek(fCodeAsm, 0, SEEK_SET);
+    char* buffer = NULL;
+    size_t tam = 0;
+    while(!feof(fCodeAsm)){
+        getline(&buffer, &tam, fCodeAsm);
+        fprintf(fAssembler, "%s", buffer);
+    }
+
+    fclose(fCodeAsm);
+    remove("final.temp"); 
 }

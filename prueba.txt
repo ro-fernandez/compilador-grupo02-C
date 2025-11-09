@@ -44,7 +44,7 @@ while (_a1 > _b1 OR _c1 > _b1)
 read(_a) #+ variable +#
 write("test")  #+ cte string +#
 
-#+ temas especiales +#
+
 
 #+ fecha +#
 convDate(03.07.2025)

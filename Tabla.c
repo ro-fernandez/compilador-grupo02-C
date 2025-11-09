@@ -275,3 +275,21 @@ void insertarValorEnTS(lista* lista, char* lex, TipoSimbolo tipo)
 
     insertarSimboloSinDuplicados(lista, newLexema);
 }
+
+int sacarDeLista(lista *l, t_lexema *lex)
+{
+    t_nodo *aux = *l;
+
+    if(!aux)
+    {
+        return 0;
+    }
+
+    *l = aux->siguiente;
+
+    copiarLexema(lex, aux->lex);
+    
+    free(aux);
+
+    return 1;
+}

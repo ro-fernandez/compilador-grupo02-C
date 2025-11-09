@@ -61,4 +61,6 @@ booleano buscarSimboloPorValor(lista* lista, char* lexValor, t_lexema* lexDestin
 
 void insertarValorEnTS(lista* lista, char* lex, TipoSimbolo tipo);
 
+int sacarDeLista(lista *l, t_lexema *lex);
+
 #endif /* TABLA_H */
