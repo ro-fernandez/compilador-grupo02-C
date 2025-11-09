@@ -55,4 +55,12 @@ char* obtenerTipoDatoID(lista* lista, char* lex);
 
 booleano actualizarTipoDatoID(lista* lista, char* lex, char* tipo);
 
+void copiarTabla(lista* orig, lista* dest);
+
+booleano buscarSimboloPorValor(lista* lista, char* lexValor, t_lexema* lexDestino);
+
+void insertarValorEnTS(lista* lista, char* lex, TipoSimbolo tipo);
+
+int sacarDeLista(lista *l, t_lexema *lex);
+
 #endif /* TABLA_H */

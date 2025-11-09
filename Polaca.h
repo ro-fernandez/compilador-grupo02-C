@@ -30,4 +30,10 @@ void vaciarListaPolaca(t_polaca* polaca);
 
 void guardarYVaciarListaPolaca(t_polaca* polaca, char* nombre_archivo);
 
+void copiarPolaca(t_polaca *polacaOriginal, t_polaca *polacaDuplicada);
+
+char* obtenerValorEnPolaca(t_polaca *polaca, int numCelda);
+
+booleano sacarDePolaca ( t_polaca *polaca, char *cadena);
+
 #endif /* POLACA_H */

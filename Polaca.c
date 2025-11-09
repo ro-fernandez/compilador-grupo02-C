@@ -63,7 +63,7 @@ booleano insertarEnPosicion(t_polaca* polaca,int posicion,char* valor)
     }
 
     strcpy((*pp)->valor,valor);
-    
+  
 
     return VERDADERO;
 
@@ -112,4 +112,71 @@ void guardarYVaciarListaPolaca(t_polaca* polaca, char* nombre_archivo)
     polaca->lista = NULL;
     fclose(archivo);
 
+}
+
+void copiarPolaca(t_polaca *polacaOriginal, t_polaca *polacaDuplicada) {
+
+    t_nodoPolaca *actualOriginal = polacaOriginal->lista;
+    t_nodoPolaca *nuevoNodo, *ultimoNodoDuplicado = NULL;
+
+    while (actualOriginal) {
+        // Crear un nuevo nodo
+        nuevoNodo = (t_nodoPolaca*)malloc(sizeof(t_nodoPolaca));
+        if (!nuevoNodo) return; // Error de memoria
+
+        strcpy(nuevoNodo->valor, actualOriginal->valor);
+        nuevoNodo->siguiente = NULL;
+
+        // Enlazar el nuevo nodo a la lista duplicada
+        if (!polacaDuplicada->lista) {
+            polacaDuplicada->lista = nuevoNodo;
+        } else {
+            ultimoNodoDuplicado->siguiente = nuevoNodo;
+        }
+        
+        // Actualizar el último nodo en la lista duplicada
+        ultimoNodoDuplicado = nuevoNodo;
+
+        // Pasar al siguiente nodo en la lista original
+        actualOriginal = actualOriginal->siguiente;
+        polacaDuplicada->celdaActual++;
+    }
+    
+    return;
+}
+
+char* obtenerValorEnPolaca(t_polaca *polaca, int numCelda) {
+    
+    if (numCelda < 0 || numCelda >= polaca->celdaActual) {
+        return NULL; 
+    }
+
+    t_nodoPolaca *actual = polaca->lista;
+    int i;
+
+    
+    for (i = 0; actual && i < numCelda; i++) 
+    {
+        actual = actual->siguiente;
+    }
+
+    if(actual)
+    {
+        return actual->valor;
+    }
+    
+    return NULL; 
+}
+
+booleano sacarDePolaca ( t_polaca *polaca, char *cadena){
+    if (polaca->lista == NULL)
+    { 
+        return FALSO;
+    } // La lista está vacía
+    t_nodoPolaca *aux = polaca->lista;
+    strcpy(cadena, aux->valor);
+    polaca->lista = aux->siguiente;
+    free(aux);
+    polaca->celdaActual--;
+    return VERDADERO;
 }
