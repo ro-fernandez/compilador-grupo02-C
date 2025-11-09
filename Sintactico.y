@@ -576,22 +576,22 @@ booleano triangleAreaMaximum()
     insertarPolaca(&polaca,"0");
     insertarPolaca(&polaca,"CMP");
     insertarPolaca(&polaca,"BNE");
-    itoa(polaca.celdaActual+3,branchValue,10);
+    itoa(polaca.celdaActual+4,branchValue,10);
     insertarPolaca(&polaca,branchValue);
 
     insertarPolaca(&polaca,"BI");
-    itoa(polaca.celdaActual+21,branchValue,10);
+    itoa(polaca.celdaActual+24,branchValue,10);
     insertarPolaca(&polaca,branchValue);
 
     insertarPolaca(&polaca,"a2");
     insertarPolaca(&polaca,"0");
     insertarPolaca(&polaca,"CMP");
     insertarPolaca(&polaca,"BNE");
-    itoa(polaca.celdaActual+3,branchValue,10);
+    itoa(polaca.celdaActual+4,branchValue,10);
     insertarPolaca(&polaca,branchValue);
 
     insertarPolaca(&polaca,"BI");
-    itoa(polaca.celdaActual+14,branchValue,10);
+    itoa(polaca.celdaActual+17,branchValue,10);
     insertarPolaca(&polaca,branchValue);
     //fin validacion triangularidad
 
@@ -600,7 +600,7 @@ booleano triangleAreaMaximum()
     insertarPolaca(&polaca,"a2");
     insertarPolaca(&polaca,"CMP");
     insertarPolaca(&polaca,"BLE");
-    itoa(polaca.celdaActual+6,branchValue,10);
+    itoa(polaca.celdaActual+7,branchValue,10);
     insertarPolaca(&polaca,branchValue);
 
     //mayor = a1
@@ -608,7 +608,7 @@ booleano triangleAreaMaximum()
     insertarPolaca(&polaca,"mayor");
     insertarPolaca(&polaca,"->");
     insertarPolaca(&polaca,"BI");
-    itoa(polaca.celdaActual+4,branchValue,10);
+    itoa(polaca.celdaActual+5,branchValue,10);
     insertarPolaca(&polaca,branchValue);
 
     //mayor = a2

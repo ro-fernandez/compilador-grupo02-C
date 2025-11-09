@@ -17,11 +17,11 @@ _g3 -> "Hola mundo"
 #+ condicional con else +#
 if (_a1 > _b1 OR _c1 > _b1)
 {
-    _a2 -> 1
+	_a2 -> 1
 }
 else
 {
-    _d2 -> "a"
+	_d2 -> "a"
 }
 
 #+ condicional anidado +#
@@ -37,14 +37,21 @@ if (_a1 > _b1 AND _c1 < _b1)
 #+ mientras +#
 while (_a1 > _b1 OR _c1 > _b1)
 {
-    _c1->_d1
+    _c1->_d1*(_e1-21.1)/1000.10
 }
+
 
 #+ lectura y escritura +#
 read(_a) #+ variable +#
 write("test")  #+ cte string +#
+write(_var1)  #+ variable numerica +#
+write(1 + _var1)  #+ Expresion +#
 
+#+ temas especiales +#
 
+#+ triangulo +#
+triangleAreaMaximum( [0,_x; 4.0,12; 2.5,3] ; [_x,0; 6,0; _z,2] )
+_a -> triangleAreaMaximum( [0,_x; 4.0,12; 2.5,3] ; [_x,0; 6,0; _z,2] )
 
 #+ fecha +#
 convDate(03.07.2025)
