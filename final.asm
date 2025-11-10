@@ -29,15 +29,27 @@ __f2 db "",'$', 10 dup (?)
 __fecha db "",'$', 10 dup (?)
 _12345 dd 12345
 _3_1415 dd 3.1415
-_Hola_mundo db "Hola mundo",'$', 10 dup (?)
+_cte_str1 db "Hola mundo",'$', 10 dup (?)
 _1 dd 1
-_a db "a",'$', 1 dup (?)
+_30_0 dd 30.0
+_cte_str2 db "Ingrese el valor de A",'$', 21 dup (?)
+_cte_str3 db "Ingrese el valor de B",'$', 21 dup (?)
+_cte_str4 db "Ingrese el valor de C",'$', 21 dup (?)
+_cte_str5 db "A es mayor a B o C es mayor a B",'$', 31 dup (?)
+_cte_str6 db "B es mayor o igual que A y C",'$', 28 dup (?)
 _15_2 dd 15.2
 _20_0 dd 20.0
 _3_2 dd 3.2
-_21_1 dd 21.1
-_1000_10 dd 1000.10
-_test db "test",'$', 4 dup (?)
+_cte_str7 db "Los tres valores A B y C son iguales",'$', 36 dup (?)
+_cte_str8 db "Los valores A B y C son distintos",'$', 33 dup (?)
+_cte_str9 db "Este mensaje se muestra si NO A igual B",'$', 39 dup (?)
+_cte_str10 db "Ingrese el valor para saludarlo N veces ",'$', 40 dup (?)
+_0_0 dd 0.0
+_cte_str11 db "HOLA!!!",'$', 7 dup (?)
+_1_0 dd 1.0
+_cte_str12 db "Aritmetica combinada",'$', 20 dup (?)
+_1_2 dd 1.2
+_10_10 dd 10.10
 _0 dd 0
 _4_0 dd 4.0
 _12 dd 12
@@ -59,13 +71,13 @@ __x5 dd ?
 __x4 dd ?
 _0_5 dd 0.5
 __mayor dd ?
-_0_0 dd 0.0
 _10_09_2025 db "10.09.2025",'$', 10 dup (?)
 _2025 dd 2025
 _9 dd 9
 _10 dd 10
 _10000 dd 10000
 _100 dd 100
+@auxASM25 dd ?
 @auxASM24 dd ?
 @auxASM23 dd ?
 @auxASM22 dd ?
@@ -104,88 +116,126 @@ START:
 	FSTP __a2
 	FLD _3_1415
 	FSTP __d1
-	MOV SI, OFFSET _Hola_mundo
+	MOV SI, OFFSET _cte_str1
 	MOV DI, OFFSET __g3
 	CALL COPIAR
 	FLD _1
 	FSTP __var1
+	FLD _30_0
+	FSTP __e1
+	DisplayString _cte_str2
+	newLine
+	GetFloat __a1
+	newLine
+	DisplayString _cte_str3
+	newLine
+	GetFloat __b1
+	newLine
+	DisplayString _cte_str4
+	newLine
+	GetFloat __c1
+	newLine
 	FLD __a1
 	FCOMP __b1
 	FSTSW ax
 	SAHF
-	JBE ET_20
-	JMP ET_25
-ET_20:
+	JBE ET_35
+	JMP ET_40
+ET_35:
 	FLD __c1
 	FCOMP __b1
 	FSTSW ax
 	SAHF
-	JBE ET_30
-ET_25:
-	FLD _1
-	FSTP __a2
-	JMP ET_33
-ET_30:
-	MOV SI, OFFSET _a
-	MOV DI, OFFSET __d2
-	CALL COPIAR
-ET_33:
+	JBE ET_44
+ET_40:
+	DisplayString _cte_str5
+	newLine
+	JMP ET_46
+ET_44:
+	DisplayString _cte_str6
+	newLine
+ET_46:
 	FLD __a1
 	FCOMP __b1
 	FSTSW ax
 	SAHF
-	JBE ET_54
+	JBE ET_67
 	FLD __c1
 	FCOMP __b1
 	FSTSW ax
 	SAHF
-	JAE ET_54
+	JAE ET_67
 	FLD __b1
 	FCOMP _15_2
 	FSTSW ax
 	SAHF
-	JA ET_51
+	JA ET_64
 	FLD _20_0
 	FSTP __a1
-ET_51:
+ET_64:
 	FLD _3_2
 	FSTP __a1
-ET_53:
-ET_54:
+ET_67:
 	FLD __a1
 	FCOMP __b1
 	FSTSW ax
 	SAHF
-	JBE ET_61
-	JMP ET_66
-ET_61:
-	FLD __c1
+	JNE ET_81
+	FLD __b1
+	FCOMP __c1
+	FSTSW ax
+	SAHF
+	JNE ET_81
+	DisplayString _cte_str7
+	newLine
+	JMP ET_83
+ET_81:
+	DisplayString _cte_str8
+	newLine
+ET_83:
+	FLD __a1
 	FCOMP __b1
 	FSTSW ax
 	SAHF
-	JBE ET_76
-ET_66:
-	FLD __e1
-	FLD _21_1
+	JE ET_90
+	DisplayString _cte_str9
+	newLine
+ET_90:
+	DisplayString _cte_str10
+	newLine
+	GetFloat __a1
+	newLine
+ET_93:
+	FLD __a1
+	FCOMP _0_0
+	FSTSW ax
+	SAHF
+	JBE ET_107
+	DisplayString _cte_str11
+	newLine
+	FLD __a1
+	FLD _1_0
 	FSUB
 	FSTP @auxASM0
-	FLD __d1
 	FLD @auxASM0
-	FMUL
+	FSTP __a1
+	JMP ET_93
+ET_107:
+	DisplayString _cte_str12
+	newLine
+	FLD __e1
+	FLD _1_2
+	FSUB
 	FSTP @auxASM1
+	FLD __d1
 	FLD @auxASM1
-	FLD _1000_10
-	FDIV
+	FMUL
 	FSTP @auxASM2
 	FLD @auxASM2
-	FSTP __c1
-	JMP ET_53
-ET_76:
-	getString __prueba
-	newLine
-	DisplayString _test
-	newLine
-	DisplayFloat __d1, 2
+	FLD _10_10
+	FDIV
+	FSTP @auxASM3
+	DisplayFloat @auxASM3, 2
 	newLine
 	FLD _3
 	FSTP __y3
@@ -214,125 +264,125 @@ ET_76:
 	FLD __y2
 	FLD __y3
 	FSUB
-	FSTP @auxASM3
-	FLD @auxASM3
+	FSTP @auxASM4
+	FLD @auxASM4
 	FLD __x1
 	FMUL
-	FSTP @auxASM4
+	FSTP @auxASM5
 	FLD __y3
 	FLD __y1
 	FSUB
-	FSTP @auxASM5
-	FLD @auxASM5
+	FSTP @auxASM6
+	FLD @auxASM6
 	FLD __x2
 	FMUL
-	FSTP @auxASM6
-	FLD @auxASM4
-	FLD @auxASM6
-	FADD
 	FSTP @auxASM7
+	FLD @auxASM5
+	FLD @auxASM7
+	FADD
+	FSTP @auxASM8
 	FLD __y1
 	FLD __y2
 	FSUB
-	FSTP @auxASM8
-	FLD @auxASM8
+	FSTP @auxASM9
+	FLD @auxASM9
 	FLD __x3
 	FMUL
-	FSTP @auxASM9
-	FLD @auxASM7
-	FLD @auxASM9
-	FADD
 	FSTP @auxASM10
+	FLD @auxASM8
 	FLD @auxASM10
-	FLD _0_5
-	FMUL
+	FADD
 	FSTP @auxASM11
 	FLD @auxASM11
+	FLD _0_5
+	FMUL
+	FSTP @auxASM12
+	FLD @auxASM12
 	FSTP __a1
 	FLD __y5
 	FLD __y6
 	FSUB
-	FSTP @auxASM12
-	FLD @auxASM12
+	FSTP @auxASM13
+	FLD @auxASM13
 	FLD __x4
 	FMUL
-	FSTP @auxASM13
+	FSTP @auxASM14
 	FLD __y6
 	FLD __y4
 	FSUB
-	FSTP @auxASM14
-	FLD @auxASM14
+	FSTP @auxASM15
+	FLD @auxASM15
 	FLD __x5
 	FMUL
-	FSTP @auxASM15
-	FLD @auxASM13
-	FLD @auxASM15
-	FADD
 	FSTP @auxASM16
+	FLD @auxASM14
+	FLD @auxASM16
+	FADD
+	FSTP @auxASM17
 	FLD __y4
 	FLD __y5
 	FSUB
-	FSTP @auxASM17
-	FLD @auxASM17
+	FSTP @auxASM18
+	FLD @auxASM18
 	FLD __x6
 	FMUL
-	FSTP @auxASM18
-	FLD @auxASM16
-	FLD @auxASM18
-	FADD
 	FSTP @auxASM19
+	FLD @auxASM17
 	FLD @auxASM19
-	FLD _0_5
-	FMUL
+	FADD
 	FSTP @auxASM20
 	FLD @auxASM20
+	FLD _0_5
+	FMUL
+	FSTP @auxASM21
+	FLD @auxASM21
 	FSTP __a2
 	FLD __a1
 	FCOMP _0
 	FSTSW ax
 	SAHF
-	JNE ET_168
-	JMP ET_190
-ET_168:
+	JNE ET_203
+	JMP ET_225
+ET_203:
 	FLD __a2
 	FCOMP _0
 	FSTSW ax
 	SAHF
-	JNE ET_175
-	JMP ET_190
-ET_175:
+	JNE ET_210
+	JMP ET_225
+ET_210:
 	FLD __a1
 	FCOMP __a2
 	FSTSW ax
 	SAHF
-	JBE ET_185
+	JBE ET_220
 	FLD __a1
 	FSTP __mayor
-	JMP ET_188
-ET_185:
+	JMP ET_223
+ET_220:
 	FLD __a2
 	FSTP __mayor
-ET_188:
+ET_223:
 	FLD __mayor
 	FSTP __a
-ET_190:
+ET_225:
 	FLD _2025
 	FLD _10000
 	FMUL
-	FSTP @auxASM21
+	FSTP @auxASM22
 	FLD _9
 	FLD _100
 	FMUL
-	FSTP @auxASM22
-	FLD @auxASM21
-	FLD @auxASM22
-	FADD
 	FSTP @auxASM23
+	FLD @auxASM22
 	FLD @auxASM23
-	FLD _10
 	FADD
 	FSTP @auxASM24
-	MOV SI, OFFSET @auxASM24
+	FLD @auxASM24
+	FLD _10
+	FADD
+	FSTP @auxASM25
+	MOV SI, OFFSET @auxASM25
 	MOV DI, OFFSET __fecha
 	CALL COPIAR
 	MOV AX, 4C00h

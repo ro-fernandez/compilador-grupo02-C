@@ -21,6 +21,9 @@ void getLexemaDate(char* str);
 
 extern lista tabla_simbolos;
 
+char nombre_cte_string[] = "cte_str";
+int contador_cte_string = 0;
+
 %}
 
 %option noyywrap
@@ -259,6 +262,7 @@ void insertInSymbolTable(char* lex, TipoSimbolo tipo)
 {
     char lexValue[TAM_MAX];
     t_lexema newLexema;
+    char cont[100];
 
     strcpy(lexValue, lex);
 
@@ -296,6 +300,7 @@ void insertInSymbolTable(char* lex, TipoSimbolo tipo)
             removeChar(lexValue, '"');
             strcpy(newLexema.valor,  lexValue);
             itoa(strlen(newLexema.valor), newLexema.longitud, 10);
+            contador_cte_string++;
             break;
         case SIMBOLO_FECHA:
             strcpy(newLexema.tipo, "CONST_FECHA");
@@ -307,7 +312,17 @@ void insertInSymbolTable(char* lex, TipoSimbolo tipo)
     }
 
     strcpy(newLexema.nombre, "_");
-    strcat(newLexema.nombre, lexValue);
+
+    if(tipo == SIMBOLO_STRING)
+    {
+        strcat(newLexema.nombre, nombre_cte_string);
+        itoa(contador_cte_string, cont, 10);
+        strcat(newLexema.nombre, cont);  
+    }else
+    {
+            strcat(newLexema.nombre, lexValue);
+    }
+
     replaceChar(newLexema.nombre, ' ', '_');
     replaceChar(newLexema.nombre, '.', '_');
 

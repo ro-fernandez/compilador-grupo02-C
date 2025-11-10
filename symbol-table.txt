@@ -23,15 +23,27 @@ __f2                                     DATE_CONV
 __fecha                                  DATE_CONV                                                          
 _12345                                   CONST_INT       12345                                              
 _3_1415                                  CONST_REAL      3.1415                                             
-_Hola_mundo                              CONST_STR       Hola mundo                               10        
+_cte_str1                                CONST_STR       Hola mundo                               10        
 _1                                       CONST_INT       1                                                  
-_a                                       CONST_STR       a                                        1         
+_30_0                                    CONST_REAL      30.0                                               
+_cte_str2                                CONST_STR       Ingrese el valor de A                    21        
+_cte_str3                                CONST_STR       Ingrese el valor de B                    21        
+_cte_str4                                CONST_STR       Ingrese el valor de C                    21        
+_cte_str5                                CONST_STR       A es mayor a B o C es mayor a B          31        
+_cte_str6                                CONST_STR       B es mayor o igual que A y C             28        
 _15_2                                    CONST_REAL      15.2                                               
 _20_0                                    CONST_REAL      20.0                                               
 _3_2                                     CONST_REAL      3.2                                                
-_21_1                                    CONST_REAL      21.1                                               
-_1000_10                                 CONST_REAL      1000.10                                            
-_test                                    CONST_STR       test                                     4         
+_cte_str7                                CONST_STR       Los tres valores A B y C son iguales     36        
+_cte_str8                                CONST_STR       Los valores A B y C son distintos        33        
+_cte_str9                                CONST_STR       Este mensaje se muestra si NO A igual B  39        
+_cte_str10                               CONST_STR       Ingrese el valor para saludarlo N veces  40        
+_0_0                                     CONST_REAL      0.0                                                
+_cte_str11                               CONST_STR       HOLA!!!                                  7         
+_1_0                                     CONST_REAL      1.0                                                
+_cte_str12                               CONST_STR       Aritmetica combinada                     20        
+_1_2                                     CONST_REAL      1.2                                                
+_10_10                                   CONST_REAL      10.10                                              
 _0                                       CONST_INT       0                                                  
 _4_0                                     CONST_REAL      4.0                                                
 _12                                      CONST_INT       12                                                 
@@ -53,7 +65,6 @@ __x5                                     FLOAT
 __x4                                     FLOAT                                                              
 _0_5                                     CONST_REAL      0.5                                                
 __mayor                                  FLOAT                                                              
-_0_0                                     CONST_REAL      0.0                                                
 _10_09_2025                              CONST_FECHA     10.09.2025                                         
 _2025                                    CONST_INT       2025                                               
 _9                                       CONST_INT       9                                                  

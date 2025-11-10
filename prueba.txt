@@ -8,43 +8,71 @@ init {
     _f1, _f2, _fecha : DateConverted
 }
 
-#+ asignaciones +#
+#+ Asignaciones iniciales +#
 _a2 -> 12345
 _d1 -> 3.1415
 _g3 -> "Hola mundo"
 _var1 -> 1
+_e1 -> 30.0
 
-#+ condicional con else +#
+write("Ingrese el valor de A")
+read(_a1)
+write("Ingrese el valor de B")
+read(_b1)
+write("Ingrese el valor de C")
+read(_c1)
+
+#+ Condicional con OR y else +#
 if (_a1 > _b1 OR _c1 > _b1)
 {
-	_a2 -> 1
+	write("A es mayor a B o C es mayor a B")
 }
 else
 {
-	_d2 -> "a"
+	write("B es mayor o igual que A y C")
 }
 
-#+ condicional anidado +#
+#+ Condicional anidado +#
 if (_a1 > _b1 AND _c1 < _b1)
 {
-    if(_b1 <= 15.2)
+    if (_b1 <= 15.2)
     {
         _a1 -> 20.0
     }
     _a1 -> 3.2
 }
- 
-#+ mientras +#
-while (_a1 > _b1 OR _c1 > _b1)
+
+#+ Prueba de igualdad +#
+if (_a1 == _b1 AND _b1 == _c1)
 {
-    _c1->_d1*(_e1-21.1)/1000.10
+    write("Los tres valores A B y C son iguales")
+}
+else
+{
+    write("Los valores A B y C son distintos")
 }
 
+#+ Prueba de NOT +#
+if (NOT _a1 == _b1)
+{
+    write("Este mensaje se muestra si NO A igual B")
+}
 
-#+ lectura y escritura +#
-read(_prueba) #+ variable +#
-write("test")  #+ cte string +#
-write(_d1)  #+ variable numerica +#
+#+ Lectura para el while de saludo +#
+write("Ingrese el valor para saludarlo N veces ")
+read(_a1)
+
+#+ Bucle de saludo +#
+while (_a1 > 0.0)
+{
+    write("HOLA!!!")
+    _a1 -> _a1 - 1.0
+}
+
+#+ Aritmetica  +#
+
+write("Aritmetica combinada")
+write(_d1*(_e1-1.2)/10.10)
 
 #+ temas especiales +#
 
