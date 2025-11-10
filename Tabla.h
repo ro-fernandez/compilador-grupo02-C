@@ -3,15 +3,6 @@
 
 #include "Utilitarios.h"
 
-typedef enum
-{
-    SIMBOLO_ID,
-    SIMBOLO_INT,
-    SIMBOLO_REAL,
-    SIMBOLO_STRING,
-    SIMBOLO_FECHA
-} TipoSimbolo;
-
 typedef struct
 {
     char nombre[TAM_MAX];
@@ -32,8 +23,6 @@ typedef t_nodo* lista;
 void crearLista(lista* lista);
 
 t_nodo* crearNodo();
-
-/* Se inserta al final */
 
 booleano insertarSimbolo(lista* lista, t_lexema lex);
 

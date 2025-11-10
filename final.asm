@@ -60,36 +60,12 @@ __x4 dd ?
 _0_5 dd 0.5
 __mayor dd ?
 _0_0 dd 0.0
-_03_07_2025 db "03.07.2025",'$', 10 dup (?)
-_2025 dd 2025
-_7 dd 7
-_10000 dd 10000
-_100 dd 100
 _10_09_2025 db "10.09.2025",'$', 10 dup (?)
+_2025 dd 2025
 _9 dd 9
 _10 dd 10
-@auxASM46 dd ?
-@auxASM45 dd ?
-@auxASM44 dd ?
-@auxASM43 dd ?
-@auxASM42 dd ?
-@auxASM41 dd ?
-@auxASM40 dd ?
-@auxASM39 dd ?
-@auxASM38 dd ?
-@auxASM37 dd ?
-@auxASM36 dd ?
-@auxASM35 dd ?
-@auxASM34 dd ?
-@auxASM33 dd ?
-@auxASM32 dd ?
-@auxASM31 dd ?
-@auxASM30 dd ?
-@auxASM29 dd ?
-@auxASM28 dd ?
-@auxASM27 dd ?
-@auxASM26 dd ?
-@auxASM25 dd ?
+_10000 dd 10000
+_100 dd 100
 @auxASM24 dd ?
 @auxASM23 dd ?
 @auxASM22 dd ?
@@ -337,169 +313,26 @@ ET_185:
 	FLD __a2
 	FSTP __mayor
 ET_188:
-	FLD _3
-	FSTP __y3
-ET_190:
-	FLD _2_5
-	FSTP __x3
-	FLD _12
-	FSTP __y2
-	FLD _4_0
-	FSTP __x2
-	FLD __x
-	FSTP __y1
-	FLD _0
-	FSTP __x1
-	FLD _2
-	FSTP __y6
-	FLD __z
-	FSTP __x6
-	FLD _0
-	FSTP __y5
-	FLD _6
-	FSTP __x5
-	FLD _0
-	FSTP __y4
-	FLD __x
-	FSTP __x4
-	FLD __y2
-	FLD __y3
-	FSUB
-	FSTP @auxASM21
-	FLD @auxASM21
-	FLD __x1
-	FMUL
-	FSTP @auxASM22
-	FLD __y3
-	FLD __y1
-	FSUB
-	FSTP @auxASM23
-	FLD @auxASM23
-	FLD __x2
-	FMUL
-	FSTP @auxASM24
-	FLD @auxASM22
-	FLD @auxASM24
-	FADD
-	FSTP @auxASM25
-	FLD __y1
-	FLD __y2
-	FSUB
-	FSTP @auxASM26
-	FLD @auxASM26
-	FLD __x3
-	FMUL
-	FSTP @auxASM27
-	FLD @auxASM25
-	FLD @auxASM27
-	FADD
-	FSTP @auxASM28
-	FLD @auxASM28
-	FLD _0_5
-	FMUL
-	FSTP @auxASM29
-	FLD @auxASM29
-	FSTP __a1
-	FLD __y5
-	FLD __y6
-	FSUB
-	FSTP @auxASM30
-	FLD @auxASM30
-	FLD __x4
-	FMUL
-	FSTP @auxASM31
-	FLD __y6
-	FLD __y4
-	FSUB
-	FSTP @auxASM32
-	FLD @auxASM32
-	FLD __x5
-	FMUL
-	FSTP @auxASM33
-	FLD @auxASM31
-	FLD @auxASM33
-	FADD
-	FSTP @auxASM34
-	FLD __y4
-	FLD __y5
-	FSUB
-	FSTP @auxASM35
-	FLD @auxASM35
-	FLD __x6
-	FMUL
-	FSTP @auxASM36
-	FLD @auxASM34
-	FLD @auxASM36
-	FADD
-	FSTP @auxASM37
-	FLD @auxASM37
-	FLD _0_5
-	FMUL
-	FSTP @auxASM38
-	FLD @auxASM38
-	FSTP __a2
-	FLD __a1
-	FCOMP _0
-	FSTSW ax
-	SAHF
-	JNE ET_273
-	JMP ET_295
-ET_273:
-	FLD __a2
-	FCOMP _0
-	FSTSW ax
-	SAHF
-	JNE ET_280
-	JMP ET_295
-ET_280:
-	FLD __a1
-	FCOMP __a2
-	FSTSW ax
-	SAHF
-	JBE ET_290
-	FLD __a1
-	FSTP __mayor
-	JMP ET_293
-ET_290:
-	FLD __a2
-	FSTP __mayor
-ET_293:
 	FLD __mayor
 	FSTP __a
-ET_295:
+ET_190:
 	FLD _2025
 	FLD _10000
 	FMUL
-	FSTP @auxASM39
-	FLD _7
-	FLD _100
-	FMUL
-	FSTP @auxASM40
-	FLD @auxASM39
-	FLD @auxASM40
-	FADD
-	FSTP @auxASM41
-	FLD @auxASM41
-	FLD _3
-	FADD
-	FSTP @auxASM42
-	FLD _2025
-	FLD _10000
-	FMUL
-	FSTP @auxASM43
+	FSTP @auxASM21
 	FLD _9
 	FLD _100
 	FMUL
-	FSTP @auxASM44
-	FLD @auxASM43
-	FLD @auxASM44
+	FSTP @auxASM22
+	FLD @auxASM21
+	FLD @auxASM22
 	FADD
-	FSTP @auxASM45
-	FLD @auxASM45
+	FSTP @auxASM23
+	FLD @auxASM23
 	FLD _10
 	FADD
-	FSTP @auxASM46
-	MOV SI, OFFSET @auxASM46
+	FSTP @auxASM24
+	MOV SI, OFFSET @auxASM24
 	MOV DI, OFFSET __fecha
 	CALL COPIAR
 	MOV AX, 4C00h

@@ -5,14 +5,6 @@
 #include "y.tab.h"
 #include "Tabla.h"
 
-#define INT_MAX_VALUE 32768
-#define INT_MIN_VALUE -32768
-#define FLOAT_MAX_VALUE 2147483648
-#define FLOAT_MIN_VALUE -2147483648
-#define MAX_STR_LEN 50
-#define MIN_YEAR 1900
-#define MAX_YEAR 2100
-
 FILE *yyin;
 int yyerror(void);
 
@@ -22,7 +14,6 @@ void validateIntRange(char* str);
 void validateDate(char* str);
 
 void insertInSymbolTable(char* lex, TipoSimbolo tipo);
-void removeChar(char *s, char c);
 
 void handleError(char* str);
 void getLexema(char* str);

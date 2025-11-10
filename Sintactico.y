@@ -6,11 +6,6 @@
 #include "Pila.h"
 #include "Polaca.h"
 
-#define TIPO_INT "INT"
-#define TIPO_FLOAT "FLOAT"
-#define TIPO_STRING "STRING"
-#define TIPO_DATE_CONV "DATE_CONV"
-
 int yystopparser=0;
 FILE  *yyin;
 
@@ -18,10 +13,8 @@ int yyerror();
 int yylex();
 
 lista tabla_simbolos;
-char* archivo_tabla_simbolos = "symbol-table.txt";
 
 t_polaca polaca;
-char* archivo_polaca = "intermediate-code.txt";
 
 Pila pila_celdas;
 
@@ -226,7 +219,7 @@ asignacion:
 	;
 
 while:
-    WHILE { insertarEnPilaCeldaActual();/*insertarPolaca(&polaca,"ET");*/} PAR_A condicion PAR_C {completarBranchOR();} LLA_A bloque {completarBranchWhile();} LLA_C {printf("    WHILE PAR_A Condicion PAR_C LLA_A Bloque LLA_C es While\n");}
+    WHILE { insertarEnPilaCeldaActual(); } PAR_A condicion PAR_C {completarBranchOR();} LLA_A bloque {completarBranchWhile();} LLA_C {printf("    WHILE PAR_A Condicion PAR_C LLA_A Bloque LLA_C es While\n");}
     ;
 
 sentencia_if:
@@ -366,6 +359,7 @@ booleano insertarCeldaEnValorDePila()
 
 /* CONDICIONALES */
 
+/* Permite insertar el branch a realizar, primero negándolo en caso de que tenga un NOT */
 booleano insertarOperadorPolaca()
 {
     if(negadorCondicion)
@@ -399,9 +393,8 @@ char* negarCondicion()
     return NULL;
 }
 
-
-//FRAN: acá entiendo que lo que hacés es,
-//si el operador es OR, entonces insertas en polaca el BI y te guardas en pila el valor de la celda que sigue, para poner el inicio del IF/WHILE
+/* En caso de que el operador lógico sea OR, se completa el branch de la primera condición
+para leer la segunda y se inserta en la polaca el BI, que será completado luego */
 booleano resolverOperadorOR()
 {
     operadorLogicoActual = verTopeDePila(&pila_operadores_logicos);
@@ -420,8 +413,7 @@ booleano resolverOperadorOR()
     return VERDADERO;
 }
 
-
-//NUEVO
+/* Se completa el branch a la parte else del if */
 booleano completarBranchElse()
 {
     char* celdaStr = sacarDePila(&pila_celdas);
@@ -431,6 +423,7 @@ booleano completarBranchElse()
     insertarEnPosicion(&polaca,celda,celdaActualStr);
 }
 
+/* Completo el BI incondicional a la parte verdadera en caso de que sea un OR */
 booleano completarBranchOR()
 {
     operadorLogicoActual = verTopeDePila(&pila_operadores_logicos);
@@ -448,26 +441,27 @@ booleano completarBranchOR()
     return VERDADERO;
 }
 
+/* Se completan los branches del while, primero el salto en caso de que el ciclo termine y
+luego el BI al inicio del while*/
 booleano completarBranchWhile()
 {
     
-    char* tope = sacarDePila(&pila_celdas);//desapilar Z (tope de pila)
+    char* tope = sacarDePila(&pila_celdas);
     int celda = atoi(tope);
     char celdaSig[TAM_MAX];
 
-    insertarPolaca(&polaca,"BI"); // Escribir BI
+    insertarPolaca(&polaca,"BI");
     itoa(polaca.celdaActual + 1,celdaSig,10);
-    insertarEnPosicion(&polaca,celda,celdaSig); // escribir en Z  el nº celda actual + 1
+    insertarEnPosicion(&polaca,celda,celdaSig);
     
-    tope = sacarDePila(&pila_celdas); //desapilar Z (tope de pila)
+    tope = sacarDePila(&pila_celdas);
     celda = atoi(tope);
 
-    insertarPolaca(&polaca, tope); // escribir Z en la celda actual 
+    insertarPolaca(&polaca, tope);
 
     return VERDADERO;
 }
 
-//decidi dejar las variables de las coordenadas sin "_" para que se diferencien de las del usuario
 booleano insertarTriangulo1EnPolaca()
 {
     int i;
@@ -569,7 +563,6 @@ booleano triangleAreaMaximum()
     char branchValue[TAM_MAX];
     insertarCalculoArea1();
     insertarCalculoArea2();
-    //validacion triangularidad: por ahora, lo que hace si alguno de los dos parametros NO ES TRIANGULO, va al final del codigo y no hace nada.
 
     //if(a1 == 0 || a2 == 0) ---> ir al final del codigo
     insertarPolaca(&polaca,"_a1");
@@ -735,18 +728,10 @@ booleano convertDate(char* dia, char* mes, char* anio)
     insertarPolaca(&polaca, dia);
 
     insertarPolaca(&polaca, "+");
-
-    /*
-    ESTO SE COMENTA PARA QUE ANDE
-    insertarPolaca(&polaca, "fecha_conv");
-    insertarPolaca(&polaca, "->");
-    */
     
     insertarValorEnTS(&tabla_simbolos, anio, SIMBOLO_INT);
     insertarValorEnTS(&tabla_simbolos, mes, SIMBOLO_INT);
     insertarValorEnTS(&tabla_simbolos, dia, SIMBOLO_INT);
-    //insertarValorEnTS(&tabla_simbolos, "10000.0", SIMBOLO_REAL);
-    //insertarValorEnTS(&tabla_simbolos, "100.0", SIMBOLO_REAL);
 
     insertarValorEnTS(&tabla_simbolos, "10000", SIMBOLO_INT);
     insertarValorEnTS(&tabla_simbolos, "100", SIMBOLO_INT);
@@ -898,31 +883,30 @@ char* obtenerTipoDatoIDExistente(char* lex)
     return tipo_dato;
 }
 
-
 /* Funciones de Assembler */
 
 void generarAssembler()
 {
 
-    FILE* fAssembler = fopen("final.asm", "wt+");
+    FILE* fAssembler = fopen(archivo_asm, "wt+");
     if(!fAssembler)
     {
         printf("\nError al abrir el archivo final.asm\n");
         exit(1);
     }
 
-    FILE* fBodyAsm = fopen("final.temp", "wt+");
+    FILE* fBodyAsm = fopen(archivo_asm_temp, "wt+");
     if(!fBodyAsm)
     {
         printf("\nError al abrir el archivo final.temp\n");
         exit(1);
     }
 
-    /* Acá guardo los operandos */
+    /* Guardo los operandos */
 
     crearPila(&pilaOperandos);
 
-    /* Acá guardo los resultados parciales de los operandos: 2 + 1 */
+    /* Guardo los resultados parciales de los operandos: 2 + 1 */
 
     crearPila(&pilaAuxAsm);
 
@@ -938,20 +922,20 @@ void generarAssembler()
 
     copiarPolaca(&polaca,&polacaDup);
    
-    /* transforma la polaca intermedia del compilador en una versión limpia con etiquetas (ET_x) y 
+    /* Transforma la polaca intermedia del compilador en una versión limpia con etiquetas (ET_x) y 
     nombres de símbolos válidos para poder traducirla directamente a código assembler.  */
 
     preprocesarPolaca(&polacaDup, &tablaSimbolosDup);
 
-    /* escribo el cuerpo del assembler, la parte CODE: */
+    /* Escribo el cuerpo del assembler, la parte CODE: */
     generarCodeAssembler(fBodyAsm);
 
-    /* escribo la cabecera del assembler: la parte DATA: */
+    /* Escribo la cabecera del assembler: la parte DATA: */
     generarDataAssembler(fAssembler, &tablaSimbolosDup);
 
     mergeArchivos(fAssembler, fBodyAsm);
 
-    //escribo el fin del assembler:
+    /* Escribo el fin del assembler */
     fprintf(fAssembler, "\tMOV AX, 4C00h\n\tINT 21h\n");
     fprintf(fAssembler, "\n\nSTRLEN PROC NEAR\n\tmov bx, 0\nSTRL01:\n\tcmp BYTE PTR [SI+BX],'$'\n\tje STREND\n\tinc BX\n\tjmp STRL01\nSTREND:\n\tret\nSTRLEN ENDP\n");
 	fprintf(fAssembler, "\nCOPIAR PROC NEAR\n\tcall STRLEN\n\tcmp bx,MAXTEXTSIZE\n\tjle COPIARSIZEOK\n\tmov bx,MAXTEXTSIZE\nCOPIARSIZEOK:\n\tmov cx,bx\n\tcld\n\trep movsb\n\tmov al,'$'\n\tmov BYTE PTR [DI],al\n\tret\nCOPIAR ENDP\n");
@@ -968,19 +952,18 @@ void preprocesarPolaca(t_polaca* polaca, lista* listaTS)
     char buffer[100], celda[100], celdaSalto[100], celdaAnt[100];
 
     t_lexema actual;
-    while(celdaActual != polaca->celdaActual) //iteramos para cambiar las celdas con valores (que no sean saltos) a sus respectivos nombres de la tabla de símbolos
+    /* Iteramos para cambiar las celdas con valores (que no sean saltos) a sus respectivos nombres de la tabla de símbolos */
+    while(celdaActual != polaca->celdaActual)
     {
         strcpy(celda, obtenerValorEnPolaca(polaca, celdaActual));
 
         if (esCTEnumerica(celda))
         {
-            //printf("\nSimbolo en polaca: %s", celda);
             buscarSimboloPorValor(listaTS, celda, &actual);
-            //printf("\nSimbolo en tabla: %s", actual.nombre);
             
             if(celdaActual == 0 || !esSalto(celdaAnt))
             {
-                insertarEnPosicion(polaca, celdaActual, actual.nombre); //OJO ACÁ, NO VALIDAMOS LOS EXTREMOS, PUEDE FALLAR!! revisar en caso de error
+                insertarEnPosicion(polaca, celdaActual, actual.nombre);
             }
         }
         else if(esCTEString(celda))
@@ -1003,20 +986,21 @@ void preprocesarPolaca(t_polaca* polaca, lista* listaTS)
     celdaActual = 0;
 
     while(celdaActual != polaca->celdaActual) 
-    { //iteramos para modificar las celdas de saltos por sus respectivas etiquetas
-        //si la celda actual de la polaca es un salto, actualiza la celda del salto con un @ET_numCelda
+    {
+        /* Iteramos para modificar las celdas de saltos por sus respectivas etiquetas
+        si la celda actual de la polaca es un salto, actualiza la celda del salto con un @ET_numCelda */
         strcpy(celda, obtenerValorEnPolaca(polaca, celdaActual));
 
         if(esSalto(celda))
         {
-            //actualiza act+1 con ET_[contenidoActual]
+            /* Actualiza act+1 con ET_[contenidoActual] */
             strcpy(celdaSalto, obtenerValorEnPolaca(polaca, celdaActual+1));
             celdaSaltoInt = atoi(celdaSalto);
 
             sprintf(buffer, "ET_%d", celdaSaltoInt);
             insertarEnPosicion(polaca, celdaActual+1, buffer);
 
-            //actualiza celda del salto con @ET_[celdaActual]: [contenidoActual]
+            /* Actualiza celda del salto con @ET_[celdaActual]: [contenidoActual] */
             if(celdaSaltoInt < polaca->celdaActual)
             {
                 strcpy(celda, obtenerValorEnPolaca(polaca, celdaSaltoInt));
@@ -1083,11 +1067,11 @@ void eliminarCaracteres(char* str, char c)
 int esSalto(char* celda) 
 {
 
-    if(celda[0] == '"') //evita que casos con constantes strings como "a:BI" sean consideradas saltos
+    if(celda[0] == '"') // Evita que casos con constantes strings como "a:BI" sean consideradas saltos
         return 0;
     
 
-    char* celdaAux = strstr(celda, ":"); //si le celda donde cae un salto tenga a su vez otro salto
+    char* celdaAux = strstr(celda, ":"); // Si le celda donde cae un salto tenga a su vez otro salto
     if(celdaAux)
     {
         celdaAux++;
@@ -1115,10 +1099,10 @@ void generarCodeAssembler(FILE* archASM)
 
 void procesarCeldaPolaca(FILE* fAssembler, char* celda) 
 {
-    /* debo verificar si la celda actual corresponde a una etiqueta pendiente de resolución.
-   por un lado, puede tratarse del punto de origen del salto (ET_num), que se obtiene al procesar un salto
-   incondicional o condicional (BIAssembler o comparacionAssembler);
-   y por otro, puede ser el destino del salto (@ET_num:), es decir, la posición donde continúa la ejecución. */
+    /* Debo verificar si la celda actual corresponde a una etiqueta pendiente de resolución.
+    por un lado, puede tratarse del punto de origen del salto (ET_num), que se obtiene al procesar un salto
+    incondicional o condicional (BIAssembler o comparacionAssembler);
+    y por otro, puede ser el destino del salto (@ET_num:), es decir, la posición donde continúa la ejecución. */
 
     t_lexema lexemaActual;
 
@@ -1311,7 +1295,7 @@ void ResEscrituraAsm(FILE* fAssembler)
 
     if(!tipoDatoVar)
     {
-        //este caso sería cuando lo que se va a escribir no está en la TS sino que es un resultado de una operación intermedia
+        /* Este caso sería cuando lo que se va a escribir no está en la TS, sino que es un resultado de una operación intermedia */
         fprintf(fAssembler, "\tDisplayFloat %s, 2\n\tnewLine\n", variable);
         return;
     }
@@ -1406,5 +1390,5 @@ void mergeArchivos(FILE* fAssembler, FILE* fCodeAsm){
     }
 
     fclose(fCodeAsm);
-    remove("final.temp"); 
+    remove(archivo_asm_temp); 
 }
